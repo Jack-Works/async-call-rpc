@@ -1,5 +1,5 @@
 {
-  "name": "async-call",
+  "name": "async-call-rpc",
   "version": "1.0.0",
   "description": "A lightweight JSON RPC server & client",
   "main": "out/index.js",
