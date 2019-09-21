@@ -1,0 +1,28 @@
+{
+  "name": "async-call",
+  "version": "1.0.0",
+  "description": "A lightweight JSON RPC server & client",
+  "main": "out/index.js",
+  "scripts": {
+    "release": "standard-version",
+    "start": "tsc --watch",
+    "prepublishOnly": "rimraf ./out && tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jack-Works/async-call.git"
+  },
+  "keywords": ["jsonrpc"],
+  "author": "Jack Works <zjwpeter@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Jack-Works/async-call/issues"
+  },
+  "homepage": "https://github.com/Jack-Works/async-call#readme",
+  "devDependencies": {
+    "rimraf": "^3.0.0",
+    "standard-version": "^7.0.0",
+    "typescript": "^3.6.3"
+  },
+  "files": ["src", "out"]
+}
