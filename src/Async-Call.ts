@@ -29,6 +29,7 @@
 //#region Serialization
 /**
  * Define how to do serialization and deserialization of remote procedure call
+ * @public
  */
 export interface Serialization {
     /**
@@ -44,6 +45,7 @@ export interface Serialization {
 }
 /**
  * Serialization implementation that do nothing
+ * @public
  */
 export const NoSerialization: Serialization = {
     async serialization(from) {
@@ -57,6 +59,7 @@ export const NoSerialization: Serialization = {
  * Serialization implementation by JSON.parse/stringify
  *
  * @param replacerAndReceiver - Replacer of JSON.parse/stringify
+ * @public
  */
 export const JSONSerialization = (
     [replacer, receiver]: [Parameters<JSON['stringify']>[1], Parameters<JSON['parse']>[1]] = [undefined, undefined],
@@ -74,10 +77,19 @@ export const JSONSerialization = (
 //#endregion
 /**
  * Options for {@link AsyncCall}
+ * @public
  */
 export interface AsyncCallOptions {
     /**
      * A key to prevent collision with other AsyncCalls. Can be anything, but need to be the same on the both side.
+     * This option is useful when you want to run multiple AsyncCall instances on the same message channel.
+     *
+     * @example
+     * these two AsyncCall run on the same channel but they won't affect each other.
+     * ```ts
+     * AsyncCall({}, { messageChannel, key: 'app1' })
+     * AsyncCall({}, { messageChannel, key: 'app2' })
+     * ```
      */
     key: string
     /**
@@ -131,8 +143,9 @@ export interface AsyncCallOptions {
 }
 /**
  * Make all function in the type T Async
+ * @internal
  */
-export type MakeAllFunctionsAsync<T> = {
+export type _MakeAllFunctionsAsync<T> = {
     [key in keyof T]: T[key] extends (...args: infer Args) => infer Return
         ? Return extends PromiseLike<infer U>
             ? (...args: Args) => Promise<U>
@@ -205,14 +218,14 @@ const AsyncCallDefaultOptions = (<T extends Partial<AsyncCallOptions>>(a: T) => 
  * calls.dialog('hello')
  * ```
  *
- * @param implementation - Implementation of this side.
+ * @param thisSideImplementation - Implementation of this side.
  * @param options - Define your own serializer, MessageCenter or other options.
- *
+ * @public
  */
 export function AsyncCall<OtherSideImplementedFunctions = {}>(
-    implementation: object = {},
+    thisSideImplementation: object = {},
     options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>,
-): MakeAllFunctionsAsync<OtherSideImplementedFunctions> {
+): _MakeAllFunctionsAsync<OtherSideImplementedFunctions> {
     const { serializer, key, strict, log, parameterStructures, preferLocalImplementation } = {
         ...AsyncCallDefaultOptions,
         ...options,
@@ -222,16 +235,16 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         methodNotFound: banMethodNotFound = false,
         noUndefined: noUndefinedKeeping = false,
         unknownMessage: banUnknownMessage = false,
-    } = calcStrictOptions(strict)
+    } = _calcStrictOptions(strict)
     const {
         beCalled: logBeCalled = true,
         localError: logLocalError = true,
         remoteError: logRemoteError = true,
         type: logType = 'pretty',
         sendLocalStack = false,
-    } = calcLogOptions(log)
+    } = _calcLogOptions(log)
     const console = getConsole()
-    type PromiseParam = Parameters<(ConstructorParameters<typeof Promise>)[0]>
+    type PromiseParam = Parameters<ConstructorParameters<typeof Promise>[0]>
     const requestContext = new Map<string | number, { f: PromiseParam; stack: string }>()
     async function onRequest(data: Request): Promise<Response | undefined> {
         let frameworkStack: string = ''
@@ -239,8 +252,8 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             // ? We're mapping any method starts with 'rpc.' to a Symbol.for
             const key = (data.method.startsWith('rpc.')
                 ? Symbol.for(data.method)
-                : data.method) as keyof typeof implementation
-            const executor: unknown = implementation[key]
+                : data.method) as keyof typeof thisSideImplementation
+            const executor: unknown = thisSideImplementation[key]
             if (!executor || typeof executor !== 'function') {
                 if (!banMethodNotFound) {
                     if (logLocalError) console.debug('Receive remote call, but not implemented.', key, data)
@@ -279,7 +292,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                     }
                 }
                 const result = await promise
-                if (result === $AsyncCallIgnoreResponse) return
+                if (result === _AsyncCallIgnoreResponse) return
                 return new SuccessResponse(data.id, await promise, !!noUndefinedKeeping)
             } else {
                 return ErrorResponse.InvalidRequest(data.id)
@@ -389,7 +402,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                             new TypeError('[AsyncCall] You cannot call JSON RPC internal methods directly'),
                         )
                     if (preferLocalImplementation && typeof method === 'string') {
-                        const localImpl: unknown = implementation[method as keyof typeof implementation]
+                        const localImpl: unknown = thisSideImplementation[method as keyof typeof thisSideImplementation]
                         if (localImpl && typeof localImpl === 'function') {
                             return new Promise((resolve, reject) => {
                                 try {
@@ -401,7 +414,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                         }
                     }
                     return new Promise((resolve, reject) => {
-                        const id = generateRandomID()
+                        const id = _generateRandomID()
                         const param0 = params[0]
                         const sendingStack = sendLocalStack ? stack : ''
                         const param =
@@ -420,7 +433,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                 }
             },
         },
-    ) as MakeAllFunctionsAsync<OtherSideImplementedFunctions>
+    ) as _MakeAllFunctionsAsync<OtherSideImplementedFunctions>
 
     async function handleSingleMessage(data: SuccessResponse | ErrorResponse | Request) {
         if (hasKey(data, 'method')) {
@@ -437,16 +450,19 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     }
 }
 
-export const $AsyncIteratorStart = Symbol.for('rpc.async-iterator.start')
-export const $AsyncIteratorNext = Symbol.for('rpc.async-iterator.next')
-export const $AsyncIteratorReturn = Symbol.for('rpc.async-iterator.return')
-export const $AsyncIteratorThrow = Symbol.for('rpc.async-iterator.throw')
-export const $AsyncCallIgnoreResponse = Symbol.for('AsyncCall: This response should be ignored.')
+/** @internal */
+export const _AsyncIteratorStart = Symbol.for('rpc.async-iterator.start')
+/** @internal */
+export const _AsyncIteratorNext = Symbol.for('rpc.async-iterator.next')
+/** @internal */
+export const _AsyncIteratorReturn = Symbol.for('rpc.async-iterator.return')
+/** @internal */
+export const _AsyncIteratorThrow = Symbol.for('rpc.async-iterator.throw')
+/** @internal */
+export const _AsyncCallIgnoreResponse = Symbol.for('AsyncCall: This response should be ignored.')
 
-/**
- * @internal
- */
-export function generateRandomID() {
+/** @internal */
+export function _generateRandomID() {
     return Math.random()
         .toString(36)
         .slice(2)
@@ -455,7 +471,7 @@ export function generateRandomID() {
 /**
  * @internal
  */
-export function calcLogOptions(log: AsyncCallOptions['log']): Exclude<typeof log, boolean> {
+function _calcLogOptions(log: AsyncCallOptions['log']): Exclude<AsyncCallOptions['log'], boolean> {
     const logAllOn = { beCalled: true, localError: true, remoteError: true, type: 'pretty' } as const
     const logAllOff = { beCalled: false, localError: false, remoteError: false, type: 'basic' } as const
     return typeof log === 'boolean' ? (log ? logAllOn : logAllOff) : log
@@ -464,7 +480,7 @@ export function calcLogOptions(log: AsyncCallOptions['log']): Exclude<typeof log
 /**
  * @internal
  */
-export function calcStrictOptions(strict: AsyncCallOptions['strict']): Exclude<typeof strict, boolean> {
+export function _calcStrictOptions(strict: AsyncCallOptions['strict']): Exclude<AsyncCallOptions['strict'], boolean> {
     const strictAllOn = { methodNotFound: true, unknownMessage: true, noUndefined: true }
     const strictAllOff = { methodNotFound: false, unknownMessage: false, noUndefined: false }
     return typeof strict === 'boolean' ? (strict ? strictAllOn : strictAllOff) : strict

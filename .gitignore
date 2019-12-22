@@ -1,4 +1,5 @@
 out/
+temp/
 # Logs
 logs
 *.log

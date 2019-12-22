@@ -8,7 +8,9 @@
   "scripts": {
     "release": "standard-version",
     "start": "tsc --watch",
-    "prepublishOnly": "rimraf ./out && tsc"
+    "prepublishOnly": "rimraf ./out && tsc",
+    "doc:api": "api-extractor run --local --verbose",
+    "doc:md": "api-documenter markdown -o docs -i temp"
   },
   "repository": {
     "type": "git",
@@ -24,9 +26,11 @@
   },
   "homepage": "https://github.com/Jack-Works/async-call#readme",
   "devDependencies": {
+    "@microsoft/api-extractor": "latest",
+    "@microsoft/api-documenter": "latest",
     "rimraf": "^3.0.0",
-    "standard-version": "^7.0.0",
-    "typescript": "^3.6.3"
+    "standard-version": "^7.0.1",
+    "typescript": "^3.7.2"
   },
   "files": [
     "src",
