@@ -136,6 +136,7 @@ class PlayGroundChannel {
     static client = document.createElement('a')
     // actor: 'server' | 'client'
     constructor(actor) {
+        this.actor = actor
         PlayGroundChannel[actor].addEventListener('targetEventChannel', e => {
             const detail = e.detail
             for (const f of this.listener) {
