@@ -7,10 +7,11 @@
   "module": "out/index.js",
   "scripts": {
     "release": "standard-version",
-    "start": "tsc --watch",
+    "start": "node ./watch.js",
     "prepublishOnly": "rimraf ./out && tsc",
     "doc:api": "api-extractor run --local --verbose",
-    "doc:md": "api-documenter markdown -o docs -i temp"
+    "doc:md": "api-documenter markdown -o docs -i temp",
+    "doc:preview": "docsify serve ."
   },
   "repository": {
     "type": "git",

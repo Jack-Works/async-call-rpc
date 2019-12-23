@@ -4,14 +4,10 @@
 
 ## AsyncCallOptions.strict property
 
-Strict options
+Strict options. See [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md)
 
 <b>Signature:</b>
 
 ```typescript
-strict: {
-        methodNotFound?: boolean;
-        noUndefined?: boolean;
-        unknownMessage?: boolean;
-    } | boolean;
+strict: AsyncCallStrictJSONRPC | boolean;
 ```

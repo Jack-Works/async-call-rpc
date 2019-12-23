@@ -1,34 +1,9 @@
 /**
- * This is a light implementation of JSON RPC 2.0
- *
- * https://www.jsonrpc.org/specification
- *
- * -----------------------------------------------------------------------------
- * Extends to the specification:
- *
- * Request object:
- *      remoteStack?: string
- *          This property will help server print the log better.
- *
- * Error object:
- *      data?: { stack?: string, type?: string }
- *          This property will help client to build a better Error object.
- *              Supported value for "type" field (Defined in ECMAScript standard):
- *                  Error, EvalError, RangeError, ReferenceError,
- *                  SyntaxError, TypeError, URIError
- *
- * Response object:
- *      resultIsUndefined?: boolean
- *          This property is a hint. If the client is run in JavaScript,
- *          it should treat "result: null" as "result: undefined"
- * -----------------------------------------------------------------------------
- * Implemented JSON RPC extension (internal methods):
- * None
+ * See the document at https://github.com/Jack-Works/async-call/
  */
-
 //#region Serialization
 /**
- * Define how to do serialization and deserialization of remote procedure call
+ * Serialization and deserialization of the JSON RPC payload
  * @public
  */
 export interface Serialization {
@@ -43,8 +18,10 @@ export interface Serialization {
      */
     deserialization(serialized: unknown): PromiseLike<any>
 }
+
 /**
  * Serialization implementation that do nothing
+ * @remarks {@link Serialization}
  * @public
  */
 export const NoSerialization: Serialization = {
@@ -55,33 +32,94 @@ export const NoSerialization: Serialization = {
         return serialized
     },
 }
+
 /**
- * Serialization implementation by JSON.parse/stringify
+ * Create a serialization by JSON.parse/stringify
  *
- * @param replacerAndReceiver - Replacer of JSON.parse/stringify
+ * @param replacerAndReceiver - Replacer and receiver of JSON.parse/stringify
+ * @param space - Adds indentation, white space, and line break characters to the return-value JSON text to make it easier to read.
+ * @remarks {@link Serialization}
  * @public
  */
 export const JSONSerialization = (
-    [replacer, receiver]: [Parameters<JSON['stringify']>[1], Parameters<JSON['parse']>[1]] = [undefined, undefined],
+    replacerAndReceiver: [Parameters<JSON['stringify']>[1], Parameters<JSON['parse']>[1]] = [undefined, undefined],
     space?: string | number | undefined,
 ) =>
     ({
         async serialization(from) {
-            return JSON.stringify(from, replacer, space)
+            return JSON.stringify(from, replacerAndReceiver[0], space)
         },
         async deserialization(serialized) {
-            return JSON.parse(serialized as string, receiver)
+            return JSON.parse(serialized as string, replacerAndReceiver[1])
         },
     } as Serialization)
 
+/**
+ * What should AsyncCall log to console.
+ * @public
+ */
+export interface AsyncCallLogLevel {
+    /**
+     * Print the log from the client when act as server
+     * @defaultValue true
+     */
+    beCalled?: boolean
+    /**
+     * Print errors of self when act as a server
+     * @defaultValue true
+     */
+    localError?: boolean
+    /**
+     * Print remote errors when act as a client
+     * @defaultValue true
+     */
+    remoteError?: boolean
+    /**
+     * Send the local call stack to remote when act as a client
+     * @defaultValue false
+     */
+    sendLocalStack?: boolean
+    /**
+     * How to print the log, 'pretty' is recommended in browser.
+     * @defaultValue 'pretty'
+     */
+    type?: 'basic' | 'pretty'
+}
+
+/**
+ * Control the behavior that different from the JSON RPC spec.
+ * @public
+ */
+export interface AsyncCallStrictJSONRPC {
+    /**
+     * Return an error when the requested method is not defined
+     * @defaultValue false
+     */
+    methodNotFound?: boolean
+    /**
+     * don't try to keep `undefined` result (then it will be `null`)
+     * @defaultValue false
+     */
+    noUndefined?: boolean
+    /**
+     * send an error when receive invalid JSON RPC payload
+     * @defaultValue false
+     */
+    unknownMessage?: boolean
+}
 //#endregion
+
 /**
  * Options for {@link AsyncCall}
  * @public
  */
 export interface AsyncCallOptions {
     /**
-     * A key to prevent collision with other AsyncCalls. Can be anything, but need to be the same on the both side.
+     * A key to prevent collision with other AsyncCalls.
+     *
+     * @remarks
+     * The value can be anything, but need to be same on both sides.
+     *
      * This option is useful when you want to run multiple AsyncCall instances on the same message channel.
      *
      * @example
@@ -90,67 +128,78 @@ export interface AsyncCallOptions {
      * AsyncCall({}, { messageChannel, key: 'app1' })
      * AsyncCall({}, { messageChannel, key: 'app2' })
      * ```
+     *
+     * @defaultValue `default-jsonrpc`
      */
     key: string
     /**
-     * How to serialization and deserialization parameters and return values
+     * How to serialization and deserialization JSON RPC payload
      *
      * @remarks
-     * We offer some built-in serializer:
-     * - NoSerialization (Do not do any serialization)
-     * - JSONSerialization (Use JSON.parse/stringify)
+     * See {@link Serialization}.
+     * There is some built-in serializer:
+     *
+     * - {@link NoSerialization} (Do not do any serialization)
+     *
+     * - {@link JSONSerialization} (Use JSON.parse/stringify)
+     *
+     * @defaultValue {@link NoSerialization}
      */
     serializer: Serialization
     /**
-     * A class that can let you transfer messages between two sides
+     * The message channel can let you transport messages between server and client
+     * @example
+     * ```ts
+     * const messageChannel = {
+     *      on(event, callback) {
+     *          document.addEventListener('remote-data', x => callback(x.details))
+     *      }
+     *      emit(event, data) {
+     *          fetch('/server', { body: data })
+     *      }
+     * }
+     * ```
      */
     messageChannel: {
         on(event: string, callback: (data: unknown) => void): void
         emit(event: string, data: unknown): void
     }
-    /** Log what to console */
-    log:
-        | {
-              beCalled?: boolean
-              localError?: boolean
-              remoteError?: boolean
-              sendLocalStack?: boolean
-              type?: 'basic' | 'pretty'
-          }
-        | boolean
-    /** Strict options */
-    strict:
-        | {
-              /** if method not found, return an error */
-              methodNotFound?: boolean
-              /** do not try to keep `undefined` during transfer (if true, undefined will become null) */
-              noUndefined?: boolean
-              /** send an error when receive unknown message on the channel */
-              unknownMessage?: boolean
-          }
-        | boolean
+    /**
+     * Choose log level. See {@link AsyncCallLogLevel}
+     * @defaultValue true
+     */
+    log: AsyncCallLogLevel | boolean
+    /**
+     * Strict options. See {@link AsyncCallStrictJSONRPC}
+     * @defaultValue false
+     */
+    strict: AsyncCallStrictJSONRPC | boolean
     /**
      * How parameters passed to remote
-     * https://www.jsonrpc.org/specification#parameter_structures
+     * @remarks
+     * See {@link https://www.jsonrpc.org/specification#parameter_structures}
      * @defaultValue "by-position"
      */
     parameterStructures: 'by-position' | 'by-name'
     /**
-     * If `implementation` has the function required, call it directly instead of send it to remote.
+     * Prefer local implementation than remote.
+     * @remarks
+     * If you call a RPC method and it is also defined in the local, open this flag will call the local implementation directly instead of send a RPC request.
      * @defaultValue false
      */
     preferLocalImplementation: boolean
 }
+
 /**
  * Make all function in the type T Async
  * @internal
  */
-export type _MakeAllFunctionsAsync<T> = {
+export type _AsyncVersionOf<T> = {
     [key in keyof T]: T[key] extends (...args: infer Args) => infer Return
         ? Return extends PromiseLike<infer U>
             ? (...args: Args) => Promise<U>
             : (...args: Args) => Promise<Return>
-        : T[key]
+        : never
 }
 
 const AsyncCallDefaultOptions = (<T extends Partial<AsyncCallOptions>>(a: T) => a)({
@@ -161,71 +210,23 @@ const AsyncCallDefaultOptions = (<T extends Partial<AsyncCallOptions>>(a: T) => 
     parameterStructures: 'by-position',
     preferLocalImplementation: false,
 } as const)
+
 /**
- * Async call between different context.
+ * Create a RPC server & client.
  *
  * @remarks
- * Async call is a high level abstraction of MessageCenter.
+ * See {@link AsyncCallOptions}
  *
- * # Shared code
- *
- * - How to stringify/parse parameters/returns should be shared, defaults to NoSerialization.
- *
- * - `key` should be shared.
- *
- * # One side
- *
- * - Should provide some functions then export its type (for example, `BackgroundCalls`)
- *
- * - `const call = AsyncCall<ForegroundCalls>(backgroundCalls)`
- *
- * - Then you can `call` any method on `ForegroundCalls`
- *
- * # Other side
- *
- * - Should provide some functions then export its type (for example, `ForegroundCalls`)
- *
- * - `const call = AsyncCall<BackgroundCalls>(foregroundCalls)`
- *
- * - Then you can `call` any method on `BackgroundCalls`
- *
- * Note: Two sides can implement the same function
- *
- * @example
- * For example, here is a mono repo.
- *
- * Code for UI part:
- * ```ts
- * const UI = {
- *      async dialog(text: string) {
- *          alert(text)
- *      },
- * }
- * export type UI = typeof UI
- * const callsClient = AsyncCall<Server>(UI)
- * callsClient.sendMail('hello world', 'what')
- * ```
- *
- * Code for server part
- * ```ts
- * const Server = {
- *      async sendMail(text: string, to: string) {
- *          return true
- *      }
- * }
- * export type Server = typeof Server
- * const calls = AsyncCall<UI>(Server)
- * calls.dialog('hello')
- * ```
- *
- * @param thisSideImplementation - Implementation of this side.
- * @param options - Define your own serializer, MessageCenter or other options.
+ * @param thisSideImplementation - The implementation when this AsyncCall acts as a JSON RPC server.
+ * @param options - {@link AsyncCallOptions}
+ * @typeParam OtherSideImplementedFunctions - The type of the API that server expose. For any function on this interface, AsyncCall will convert it to the Promised type.
+ * @returns Same as the `OtherSideImplementedFunctions` type parameter, but every function in that interface becomes async and non-function value is removed.
  * @public
  */
 export function AsyncCall<OtherSideImplementedFunctions = {}>(
     thisSideImplementation: object = {},
     options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>,
-): _MakeAllFunctionsAsync<OtherSideImplementedFunctions> {
+): _AsyncVersionOf<OtherSideImplementedFunctions> {
     const { serializer, key, strict, log, parameterStructures, preferLocalImplementation } = {
         ...AsyncCallDefaultOptions,
         ...options,
@@ -433,7 +434,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                 }
             },
         },
-    ) as _MakeAllFunctionsAsync<OtherSideImplementedFunctions>
+    ) as _AsyncVersionOf<OtherSideImplementedFunctions>
 
     async function handleSingleMessage(data: SuccessResponse | ErrorResponse | Request) {
         if (hasKey(data, 'method')) {
@@ -471,7 +472,7 @@ export function _generateRandomID() {
 /**
  * @internal
  */
-function _calcLogOptions(log: AsyncCallOptions['log']): Exclude<AsyncCallOptions['log'], boolean> {
+function _calcLogOptions(log: AsyncCallOptions['log']): AsyncCallLogLevel {
     const logAllOn = { beCalled: true, localError: true, remoteError: true, type: 'pretty' } as const
     const logAllOff = { beCalled: false, localError: false, remoteError: false, type: 'basic' } as const
     return typeof log === 'boolean' ? (log ? logAllOn : logAllOff) : log
@@ -480,7 +481,7 @@ function _calcLogOptions(log: AsyncCallOptions['log']): Exclude<AsyncCallOptions
 /**
  * @internal
  */
-export function _calcStrictOptions(strict: AsyncCallOptions['strict']): Exclude<AsyncCallOptions['strict'], boolean> {
+export function _calcStrictOptions(strict: AsyncCallOptions['strict']): AsyncCallStrictJSONRPC {
     const strictAllOn = { methodNotFound: true, unknownMessage: true, noUndefined: true }
     const strictAllOff = { methodNotFound: false, unknownMessage: false, noUndefined: false }
     return typeof strict === 'boolean' ? (strict ? strictAllOn : strictAllOff) : strict

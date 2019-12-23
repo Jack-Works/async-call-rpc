@@ -1,3 +1,6 @@
+/**
+ * See the document at https://github.com/Jack-Works/async-call/
+ */
 import {
     AsyncCallOptions,
     AsyncCall,
@@ -26,7 +29,7 @@ export type _UnboxPromise<T> = T extends PromiseLike<infer U> ? U : T
  * Make all generator in the type T becomes AsyncGenerator
  * @internal
  */
-export type _MakeAllGeneratorFunctionsAsync<T> = {
+export type _AsyncGeneratorVersionOf<T> = {
     [key in keyof T]: T[key] extends (
         ...args: infer Args
     ) => Iterator<infer Yield, infer Return, infer Next> | AsyncIterator<infer Yield, infer Return, infer Next>
@@ -38,13 +41,47 @@ export type _MakeAllGeneratorFunctionsAsync<T> = {
         : T[key]
 }
 /**
- * This function provides the async generator version of the AsyncCall
+ * The async generator version of the AsyncCall
+ * @param thisSideImplementation - The implementation when this AsyncCall acts as a JSON RPC server.
+ * @param options - {@link AsyncCallOptions}
+ * @typeParam OtherSideImplementedFunctions - The type of the API that server expose. For any function on this interface, AsyncCall will convert it to the Promised type.
+ * @remarks
+ *
+ * To use AsyncGeneratorCall, the server and the client MUST support the following JSON RPC internal methods:
+ *
+ * Warning: Due to technical limitation, AsyncGeneratorCall will leak memory before
+ * {@link https://github.com/tc39/proposal-weakrefs | the ECMAScript WeakRef proposal} shipped.
+ *
+ * - `rpc.async-iterator.start`
+ *
+ * - `rpc.async-iterator.next`
+ *
+ * - `rpc.async-iterator.return`
+ *
+ * - `rpc.async-iterator.throw`
+ *
+ * @example
+ * ```ts
+ * const server = {
+ *      async *generator() {
+ *          let last = 0
+ *          while (true) yield last++
+ *      },
+ * }
+ * type Server = typeof server
+ * const serverRPC = AsyncGeneratorCall<Server>({}, { messageChannel })
+ * async function main() {
+ *      for await (const x of serverRPC.generator()) {
+ *          console.log('Server yielded number', x)
+ *      }
+ * }
+ * ```
  * @public
  */
 export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
-    implementation: object = {},
+    thisSideImplementation: object = {},
     options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>,
-): _MakeAllGeneratorFunctionsAsync<OtherSideImplementedFunctions> {
+): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions> {
     const iterators = new Map<string, Iterator<unknown> | AsyncIterator<unknown>>()
     const strict = _calcStrictOptions(options.strict || false)
     function findIterator(id: string, label: string) {
@@ -57,7 +94,7 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
     }
     const server = {
         [_AsyncIteratorStart](method, args) {
-            const iteratorGenerator: unknown = Reflect.get(implementation, method)
+            const iteratorGenerator: unknown = Reflect.get(thisSideImplementation, method)
             if (typeof iteratorGenerator !== 'function') {
                 if (strict.methodNotFound) throw new Error(method + ' is not a function')
                 else return _AsyncCallIgnoreResponse
@@ -108,5 +145,5 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
             })()
         }
     }
-    return new Proxy({}, { get: proxyTrap }) as _MakeAllGeneratorFunctionsAsync<OtherSideImplementedFunctions>
+    return new Proxy({}, { get: proxyTrap }) as _AsyncGeneratorVersionOf<OtherSideImplementedFunctions>
 }

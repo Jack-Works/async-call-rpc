@@ -16,11 +16,11 @@ export interface AsyncCallOptions
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [key](./async-call-rpc.asynccalloptions.key.md) | <code>string</code> | A key to prevent collision with other AsyncCalls. Can be anything, but need to be the same on the both side. This option is useful when you want to run multiple AsyncCall instances on the same message channel. |
-|  [log](./async-call-rpc.asynccalloptions.log.md) | <code>{</code><br/><code>        beCalled?: boolean;</code><br/><code>        localError?: boolean;</code><br/><code>        remoteError?: boolean;</code><br/><code>        sendLocalStack?: boolean;</code><br/><code>        type?: 'basic' &#124; 'pretty';</code><br/><code>    } &#124; boolean</code> | Log what to console |
-|  [messageChannel](./async-call-rpc.asynccalloptions.messagechannel.md) | <code>{</code><br/><code>        on(event: string, callback: (data: unknown) =&gt; void): void;</code><br/><code>        emit(event: string, data: unknown): void;</code><br/><code>    }</code> | A class that can let you transfer messages between two sides |
-|  [parameterStructures](./async-call-rpc.asynccalloptions.parameterstructures.md) | <code>'by-position' &#124; 'by-name'</code> | How parameters passed to remote https://www.jsonrpc.org/specification\#parameter\_structures |
-|  [preferLocalImplementation](./async-call-rpc.asynccalloptions.preferlocalimplementation.md) | <code>boolean</code> | If <code>implementation</code> has the function required, call it directly instead of send it to remote. |
-|  [serializer](./async-call-rpc.asynccalloptions.serializer.md) | <code>Serialization</code> | How to serialization and deserialization parameters and return values |
-|  [strict](./async-call-rpc.asynccalloptions.strict.md) | <code>{</code><br/><code>        methodNotFound?: boolean;</code><br/><code>        noUndefined?: boolean;</code><br/><code>        unknownMessage?: boolean;</code><br/><code>    } &#124; boolean</code> | Strict options |
+|  [key](./async-call-rpc.asynccalloptions.key.md) | <code>string</code> | A key to prevent collision with other AsyncCalls. |
+|  [log](./async-call-rpc.asynccalloptions.log.md) | <code>AsyncCallLogLevel &#124; boolean</code> | Choose log level. See [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) |
+|  [messageChannel](./async-call-rpc.asynccalloptions.messagechannel.md) | <code>{</code><br/><code>        on(event: string, callback: (data: unknown) =&gt; void): void;</code><br/><code>        emit(event: string, data: unknown): void;</code><br/><code>    }</code> | The message channel can let you transport messages between server and client |
+|  [parameterStructures](./async-call-rpc.asynccalloptions.parameterstructures.md) | <code>'by-position' &#124; 'by-name'</code> | How parameters passed to remote |
+|  [preferLocalImplementation](./async-call-rpc.asynccalloptions.preferlocalimplementation.md) | <code>boolean</code> | Prefer local implementation than remote. |
+|  [serializer](./async-call-rpc.asynccalloptions.serializer.md) | <code>Serialization</code> | How to serialization and deserialization JSON RPC payload |
+|  [strict](./async-call-rpc.asynccalloptions.strict.md) | <code>AsyncCallStrictJSONRPC &#124; boolean</code> | Strict options. See [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) |
 

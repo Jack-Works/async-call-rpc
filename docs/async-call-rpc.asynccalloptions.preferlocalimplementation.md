@@ -4,10 +4,15 @@
 
 ## AsyncCallOptions.preferLocalImplementation property
 
-If `implementation` has the function required, call it directly instead of send it to remote.
+Prefer local implementation than remote.
 
 <b>Signature:</b>
 
 ```typescript
 preferLocalImplementation: boolean;
 ```
+
+## Remarks
+
+If you call a RPC method and it is also defined in the local, open this flag will call the local implementation directly instead of send a RPC request.
+

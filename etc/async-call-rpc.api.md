@@ -4,24 +4,27 @@
 
 ```ts
 
-// Warning: (ae-incompatible-release-tags) The symbol "AsyncCall" is marked as @public, but its signature references "_MakeAllFunctionsAsync" which is marked as @internal
+// Warning: (ae-incompatible-release-tags) The symbol "AsyncCall" is marked as @public, but its signature references "_AsyncVersionOf" which is marked as @internal
 //
 // @public
-export function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: object | undefined, options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>): _MakeAllFunctionsAsync<OtherSideImplementedFunctions>;
+export function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: object | undefined, options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>): _AsyncVersionOf<OtherSideImplementedFunctions>;
 
 // @internal (undocumented)
 export const _AsyncCallIgnoreResponse: unique symbol;
 
 // @public
+export interface AsyncCallLogLevel {
+    beCalled?: boolean;
+    localError?: boolean;
+    remoteError?: boolean;
+    sendLocalStack?: boolean;
+    type?: 'basic' | 'pretty';
+}
+
+// @public
 export interface AsyncCallOptions {
     key: string;
-    log: {
-        beCalled?: boolean;
-        localError?: boolean;
-        remoteError?: boolean;
-        sendLocalStack?: boolean;
-        type?: 'basic' | 'pretty';
-    } | boolean;
+    log: AsyncCallLogLevel | boolean;
     messageChannel: {
         on(event: string, callback: (data: unknown) => void): void;
         emit(event: string, data: unknown): void;
@@ -29,17 +32,27 @@ export interface AsyncCallOptions {
     parameterStructures: 'by-position' | 'by-name';
     preferLocalImplementation: boolean;
     serializer: Serialization;
-    strict: {
-        methodNotFound?: boolean;
-        noUndefined?: boolean;
-        unknownMessage?: boolean;
-    } | boolean;
+    strict: AsyncCallStrictJSONRPC | boolean;
 }
 
-// Warning: (ae-incompatible-release-tags) The symbol "AsyncGeneratorCall" is marked as @public, but its signature references "_MakeAllGeneratorFunctionsAsync" which is marked as @internal
+// @public
+export interface AsyncCallStrictJSONRPC {
+    methodNotFound?: boolean;
+    noUndefined?: boolean;
+    unknownMessage?: boolean;
+}
+
+// Warning: (ae-incompatible-release-tags) The symbol "AsyncGeneratorCall" is marked as @public, but its signature references "_AsyncGeneratorVersionOf" which is marked as @internal
 //
 // @public
-export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(implementation: object | undefined, options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>): _MakeAllGeneratorFunctionsAsync<OtherSideImplementedFunctions>;
+export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: object | undefined, options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions>;
+
+// @internal
+export type _AsyncGeneratorVersionOf<T> = {
+    [key in keyof T]: T[key] extends (...args: infer Args) => Iterator<infer Yield, infer Return, infer Next> | AsyncIterator<infer Yield, infer Return, infer Next> ? (...args: Args) => AsyncIterator<_UnboxPromise<Yield>, _UnboxPromise<Return>, _UnboxPromise<Next>> & {
+        [Symbol.asyncIterator](): AsyncIterator<_UnboxPromise<Yield>, _UnboxPromise<Return>, _UnboxPromise<Next>>;
+    } : T[key];
+};
 
 // @internal (undocumented)
 export const _AsyncIteratorNext: unique symbol;
@@ -53,26 +66,19 @@ export const _AsyncIteratorStart: unique symbol;
 // @internal (undocumented)
 export const _AsyncIteratorThrow: unique symbol;
 
+// @internal
+export type _AsyncVersionOf<T> = {
+    [key in keyof T]: T[key] extends (...args: infer Args) => infer Return ? Return extends PromiseLike<infer U> ? (...args: Args) => Promise<U> : (...args: Args) => Promise<Return> : never;
+};
+
 // @internal (undocumented)
-export function _calcStrictOptions(strict: AsyncCallOptions['strict']): Exclude<AsyncCallOptions['strict'], boolean>;
+export function _calcStrictOptions(strict: AsyncCallOptions['strict']): AsyncCallStrictJSONRPC;
 
 // @internal (undocumented)
 export function _generateRandomID(): string;
 
 // @public
-export const JSONSerialization: ([replacer, receiver]?: [(string | number)[] | null | undefined, ((this: any, key: string, value: any) => any) | undefined], space?: string | number | undefined) => Serialization;
-
-// @internal
-export type _MakeAllFunctionsAsync<T> = {
-    [key in keyof T]: T[key] extends (...args: infer Args) => infer Return ? Return extends PromiseLike<infer U> ? (...args: Args) => Promise<U> : (...args: Args) => Promise<Return> : T[key];
-};
-
-// @internal
-export type _MakeAllGeneratorFunctionsAsync<T> = {
-    [key in keyof T]: T[key] extends (...args: infer Args) => Iterator<infer Yield, infer Return, infer Next> | AsyncIterator<infer Yield, infer Return, infer Next> ? (...args: Args) => AsyncIterator<_UnboxPromise<Yield>, _UnboxPromise<Return>, _UnboxPromise<Next>> & {
-        [Symbol.asyncIterator](): AsyncIterator<_UnboxPromise<Yield>, _UnboxPromise<Return>, _UnboxPromise<Next>>;
-    } : T[key];
-};
+export const JSONSerialization: (replacerAndReceiver?: [(string | number)[] | null | undefined, ((this: any, key: string, value: any) => any) | undefined], space?: string | number | undefined) => Serialization;
 
 // @public
 export const NoSerialization: Serialization;
@@ -86,7 +92,5 @@ export interface Serialization {
 // @internal
 export type _UnboxPromise<T> = T extends PromiseLike<infer U> ? U : T;
 
-
-// (No @packageDocumentation comment for this package)
 
 ```

@@ -4,13 +4,19 @@
 
 ## AsyncCallOptions.key property
 
-A key to prevent collision with other AsyncCalls. Can be anything, but need to be the same on the both side. This option is useful when you want to run multiple AsyncCall instances on the same message channel.
+A key to prevent collision with other AsyncCalls.
 
 <b>Signature:</b>
 
 ```typescript
 key: string;
 ```
+
+## Remarks
+
+The value can be anything, but need to be same on both sides.
+
+This option is useful when you want to run multiple AsyncCall instances on the same message channel.
 
 ## Example
 

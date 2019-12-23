@@ -4,10 +4,15 @@
 
 ## JSONSerialization variable
 
-Serialization implementation by JSON.parse/stringify
+Create a serialization by JSON.parse/stringify
 
 <b>Signature:</b>
 
 ```typescript
-JSONSerialization: ([replacer, receiver]?: [(string | number)[] | null | undefined, ((this: any, key: string, value: any) => any) | undefined], space?: string | number | undefined) => Serialization
+JSONSerialization: (replacerAndReceiver?: [(string | number)[] | null | undefined, ((this: any, key: string, value: any) => any) | undefined], space?: string | number | undefined) => Serialization
 ```
+
+## Remarks
+
+[Serialization](./async-call-rpc.serialization.md)
+

@@ -4,7 +4,7 @@
 
 ## AsyncCallOptions.serializer property
 
-How to serialization and deserialization parameters and return values
+How to serialization and deserialization JSON RPC payload
 
 <b>Signature:</b>
 
@@ -14,5 +14,9 @@ serializer: Serialization;
 
 ## Remarks
 
-We offer some built-in serializer: - NoSerialization (Do not do any serialization) - JSONSerialization (Use JSON.parse/stringify)
+See [Serialization](./async-call-rpc.serialization.md)<!-- -->. There is some built-in serializer:
+
+- [NoSerialization](./async-call-rpc.noserialization.md) (Do not do any serialization)
+
+- [JSONSerialization](./async-call-rpc.jsonserialization.md) (Use JSON.parse/stringify)
 

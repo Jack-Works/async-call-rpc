@@ -11,3 +11,8 @@ Serialization implementation that do nothing
 ```typescript
 NoSerialization: Serialization
 ```
+
+## Remarks
+
+[Serialization](./async-call-rpc.serialization.md)
+

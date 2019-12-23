@@ -4,7 +4,7 @@
 
 ## AsyncCallOptions.messageChannel property
 
-A class that can let you transfer messages between two sides
+The message channel can let you transport messages between server and client
 
 <b>Signature:</b>
 
@@ -14,3 +14,19 @@ messageChannel: {
         emit(event: string, data: unknown): void;
     };
 ```
+
+## Example
+
+
+```ts
+const messageChannel = {
+     on(event, callback) {
+         document.addEventListener('remote-data', x => callback(x.details))
+     }
+     emit(event, data) {
+         fetch('/server', { body: data })
+     }
+}
+
+```
+

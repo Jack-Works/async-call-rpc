@@ -4,16 +4,10 @@
 
 ## AsyncCallOptions.log property
 
-Log what to console
+Choose log level. See [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md)
 
 <b>Signature:</b>
 
 ```typescript
-log: {
-        beCalled?: boolean;
-        localError?: boolean;
-        remoteError?: boolean;
-        sendLocalStack?: boolean;
-        type?: 'basic' | 'pretty';
-    } | boolean;
+log: AsyncCallLogLevel | boolean;
 ```

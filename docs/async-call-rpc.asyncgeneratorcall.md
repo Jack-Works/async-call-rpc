@@ -4,22 +4,56 @@
 
 ## AsyncGeneratorCall() function
 
-This function provides the async generator version of the AsyncCall
+The async generator version of the AsyncCall
 
 <b>Signature:</b>
 
 ```typescript
-export declare function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(implementation: object | undefined, options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>): _MakeAllGeneratorFunctionsAsync<OtherSideImplementedFunctions>;
+export declare function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: object | undefined, options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  implementation | <code>object &#124; undefined</code> |  |
-|  options | <code>Partial&lt;AsyncCallOptions&gt; &amp; Pick&lt;AsyncCallOptions, 'messageChannel'&gt;</code> |  |
+|  thisSideImplementation | <code>object &#124; undefined</code> | The implementation when this AsyncCall acts as a JSON RPC server. |
+|  options | <code>Partial&lt;AsyncCallOptions&gt; &amp; Pick&lt;AsyncCallOptions, 'messageChannel'&gt;</code> | [AsyncCallOptions](./async-call-rpc.asynccalloptions.md) |
 
 <b>Returns:</b>
 
-`_MakeAllGeneratorFunctionsAsync<OtherSideImplementedFunctions>`
+`_AsyncGeneratorVersionOf<OtherSideImplementedFunctions>`
+
+## Remarks
+
+To use AsyncGeneratorCall, the server and the client MUST support the following JSON RPC internal methods:
+
+Warning: Due to technical limitation, AsyncGeneratorCall will leak memory before [the ECMAScript WeakRef proposal](https://github.com/tc39/proposal-weakrefs) shipped.
+
+- `rpc.async-iterator.start`
+
+- `rpc.async-iterator.next`
+
+- `rpc.async-iterator.return`
+
+- `rpc.async-iterator.throw`
+
+## Example
+
+
+```ts
+const server = {
+     async *generator() {
+         let last = 0
+         while (true) yield last++
+     },
+}
+type Server = typeof server
+const serverRPC = AsyncGeneratorCall<Server>({}, { messageChannel })
+async function main() {
+     for await (const x of serverRPC.generator()) {
+         console.log('Server yielded number', x)
+     }
+}
+
+```
 

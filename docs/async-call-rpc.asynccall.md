@@ -4,81 +4,28 @@
 
 ## AsyncCall() function
 
-Async call between different context.
+Create a RPC server &amp; client.
 
 <b>Signature:</b>
 
 ```typescript
-export declare function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: object | undefined, options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>): _MakeAllFunctionsAsync<OtherSideImplementedFunctions>;
+export declare function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: object | undefined, options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>): _AsyncVersionOf<OtherSideImplementedFunctions>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  thisSideImplementation | <code>object &#124; undefined</code> | Implementation of this side. |
-|  options | <code>Partial&lt;AsyncCallOptions&gt; &amp; Pick&lt;AsyncCallOptions, 'messageChannel'&gt;</code> | Define your own serializer, MessageCenter or other options. |
+|  thisSideImplementation | <code>object &#124; undefined</code> | The implementation when this AsyncCall acts as a JSON RPC server. |
+|  options | <code>Partial&lt;AsyncCallOptions&gt; &amp; Pick&lt;AsyncCallOptions, 'messageChannel'&gt;</code> | [AsyncCallOptions](./async-call-rpc.asynccalloptions.md) |
 
 <b>Returns:</b>
 
-`_MakeAllFunctionsAsync<OtherSideImplementedFunctions>`
+`_AsyncVersionOf<OtherSideImplementedFunctions>`
+
+Same as the `OtherSideImplementedFunctions` type parameter, but every function in that interface becomes async and non-function value is removed.
 
 ## Remarks
 
-Async call is a high level abstraction of MessageCenter.
-
-\# Shared code
-
-- How to stringify/parse parameters/returns should be shared, defaults to NoSerialization.
-
-- `key` should be shared.
-
-\# One side
-
-- Should provide some functions then export its type (for example, `BackgroundCalls`<!-- -->)
-
-- `const call = AsyncCall<ForegroundCalls>(backgroundCalls)`
-
-- Then you can `call` any method on `ForegroundCalls`
-
-\# Other side
-
-- Should provide some functions then export its type (for example, `ForegroundCalls`<!-- -->)
-
-- `const call = AsyncCall<BackgroundCalls>(foregroundCalls)`
-
-- Then you can `call` any method on `BackgroundCalls`
-
-Note: Two sides can implement the same function
-
-## Example
-
-For example, here is a mono repo.
-
-Code for UI part:
-
-```ts
-const UI = {
-     async dialog(text: string) {
-         alert(text)
-     },
-}
-export type UI = typeof UI
-const callsClient = AsyncCall<Server>(UI)
-callsClient.sendMail('hello world', 'what')
-
-```
-Code for server part
-
-```ts
-const Server = {
-     async sendMail(text: string, to: string) {
-         return true
-     }
-}
-export type Server = typeof Server
-const calls = AsyncCall<UI>(Server)
-calls.dialog('hello')
-
-```
+See [AsyncCallOptions](./async-call-rpc.asynccalloptions.md)
 

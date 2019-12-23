@@ -4,7 +4,7 @@
 
 ## Serialization interface
 
-Define how to do serialization and deserialization of remote procedure call
+Serialization and deserialization of the JSON RPC payload
 
 <b>Signature:</b>
 

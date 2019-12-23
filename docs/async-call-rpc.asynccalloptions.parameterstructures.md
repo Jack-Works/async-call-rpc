@@ -4,10 +4,15 @@
 
 ## AsyncCallOptions.parameterStructures property
 
-How parameters passed to remote https://www.jsonrpc.org/specification\#parameter\_structures
+How parameters passed to remote
 
 <b>Signature:</b>
 
 ```typescript
 parameterStructures: 'by-position' | 'by-name';
 ```
+
+## Remarks
+
+See [https://www.jsonrpc.org/specification\#parameter\_structures](https://www.jsonrpc.org/specification#parameter_structures)
+
