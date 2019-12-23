@@ -56,14 +56,14 @@
  *
  * ```ts
  * interface JSONRPC_Internal_Methods {
- *      // These 4 methods represents the Async Iterator protocol in ECMAScript
- *      // this methods starts an async iterator, return the id
+ *      // These 4 methods represent the Async Iterator protocol in ECMAScript
+ *      // this method starts an async iterator, return the id
  *      'rpc.async-iterator.start'(method: string, params: unknown[]): Promise<string>
- *      // this methods execute `next` method on the previous iterator started by `rpc.async-iterator.start`
+ *      // this method executes `next` method on the previous iterator started by `rpc.async-iterator.start`
  *      'rpc.async-iterator.next'(id: string, value: unknown): Promise<IteratorResult<unknown>>
- *      // this methods execute `return` method on the previous iterator started by `rpc.async-iterator.start`
+ *      // this method executes `return` method on the previous iterator started by `rpc.async-iterator.start`
  *      'rpc.async-iterator.return'(id: string, value: unknown): Promise<IteratorResult<unknown>>
- *      // this methods execute `throw` method on the previous iterator started by `rpc.async-iterator.start`
+ *      // this method executes `throw` method on the previous iterator started by `rpc.async-iterator.start`
  *      'rpc.async-iterator.throw'(id: string, value: unknown): Promise<IteratorResult<unknown>>
  * }
  * ```
