@@ -1,6 +1,6 @@
 {
   "name": "async-call-rpc",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "type": "module",
   "description": "A lightweight JSON RPC server & client",
   "main": "out/index.js",
