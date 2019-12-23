@@ -1,14 +1,14 @@
 {
   "name": "async-call-rpc",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "description": "A lightweight JSON RPC server & client",
   "main": "out/index.js",
   "module": "out/index.js",
   "scripts": {
-    "release": "standard-version",
+    "release": "rimraf ./out && standard-version",
     "start": "node ./watch.js",
-    "prepublishOnly": "rimraf ./out && tsc",
+    "prepublishOnly": "tsc",
     "doc:api": "api-extractor run --local --verbose",
     "doc:md": "api-documenter markdown -o docs -i temp",
     "doc:preview": "docsify serve ."
