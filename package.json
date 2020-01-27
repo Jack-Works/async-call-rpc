@@ -33,7 +33,7 @@
     "docsify-cli": "^4.4.0",
     "rimraf": "^3.0.0",
     "standard-version": "^7.1.0",
-    "typescript": "^3.7.5"
+    "typescript": "^3.8.0-beta"
   },
   "files": [
     "src",

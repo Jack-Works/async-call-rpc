@@ -129,22 +129,30 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
         if (typeof key !== 'string') throw new TypeError('[*AsyncCall] Only string can be the method name')
         return function(...args: unknown[]) {
             const id = remote[_AsyncIteratorStart](key, args)
-            return new (class implements AsyncIterableIterator<unknown>, AsyncIterator<unknown, unknown, unknown> {
-                async return(val: unknown) {
-                    return remote[_AsyncIteratorReturn](await id, val)
-                }
-                async next(val?: unknown) {
-                    return remote[_AsyncIteratorNext](await id, val)
-                }
-                async throw(val?: unknown) {
-                    return remote[_AsyncIteratorThrow](await id, val)
-                }
-                [Symbol.asyncIterator]() {
-                    return this
-                }
-                [Symbol.toStringTag] = key
-            })()
+            return new AsyncCallIterator(remote, id, key)
         }
     }
     return new Proxy({}, { get: proxyTrap }) as _AsyncGeneratorVersionOf<OtherSideImplementedFunctions>
+}
+class AsyncCallIterator implements AsyncIterableIterator<unknown>, AsyncIterator<unknown, unknown, unknown> {
+    #remoteImpl: AsyncGeneratorInternalMethods
+    #id: Promise<string>
+    constructor(remoteImpl: AsyncGeneratorInternalMethods, id: Promise<string>, key: string) {
+        this.#remoteImpl = remoteImpl
+        this.#id = id
+        this[Symbol.toStringTag] = key
+    }
+    async return(val: unknown) {
+        return this.#remoteImpl[_AsyncIteratorReturn](await this.#id, val)
+    }
+    async next(val?: unknown) {
+        return this.#remoteImpl[_AsyncIteratorNext](await this.#id, val)
+    }
+    async throw(val?: unknown) {
+        return this.#remoteImpl[_AsyncIteratorThrow](await this.#id, val)
+    }
+    [Symbol.asyncIterator]() {
+        return this
+    }
+    [Symbol.toStringTag]: string
 }
