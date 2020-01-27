@@ -7,7 +7,7 @@
 // Warning: (ae-incompatible-release-tags) The symbol "AsyncCall" is marked as @public, but its signature references "_AsyncVersionOf" which is marked as @internal
 //
 // @public
-export function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: object | undefined, options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>): _AsyncVersionOf<OtherSideImplementedFunctions>;
+export function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: object | Promise<object> | undefined, options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>): _AsyncVersionOf<OtherSideImplementedFunctions>;
 
 // @internal (undocumented)
 export const _AsyncCallIgnoreResponse: unique symbol;
@@ -46,7 +46,7 @@ export interface AsyncCallStrictJSONRPC {
 // Warning: (ae-incompatible-release-tags) The symbol "AsyncGeneratorCall" is marked as @public, but its signature references "_AsyncGeneratorVersionOf" which is marked as @internal
 //
 // @public
-export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: object | undefined, options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions>;
+export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: object | Promise<object> | undefined, options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions>;
 
 // @internal
 export type _AsyncGeneratorVersionOf<T> = {

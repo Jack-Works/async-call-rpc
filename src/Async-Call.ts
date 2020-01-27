@@ -224,16 +224,24 @@ const AsyncCallDefaultOptions = (<T extends Partial<AsyncCallOptions>>(a: T) => 
  * @remarks
  * See {@link AsyncCallOptions}
  *
- * @param thisSideImplementation - The implementation when this AsyncCall acts as a JSON RPC server.
+ * thisSideImplementation can be a Promise so you can write:
+ *
+ * ```ts
+ * export const service = AsyncCall(typeof window === 'object' ? {} : import('./backend/service.js'), {})
+ * ```
+ *
+ * @param thisSideImplementation - The implementation when this AsyncCall acts as a JSON RPC server. Can be a Promise.
  * @param options - {@link AsyncCallOptions}
  * @typeParam OtherSideImplementedFunctions - The type of the API that server expose. For any function on this interface, AsyncCall will convert it to the Promised type.
  * @returns Same as the `OtherSideImplementedFunctions` type parameter, but every function in that interface becomes async and non-function value is removed.
  * @public
  */
 export function AsyncCall<OtherSideImplementedFunctions = {}>(
-    thisSideImplementation: object = {},
+    thisSideImplementation: object | Promise<object> = {},
     options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>,
 ): _AsyncVersionOf<OtherSideImplementedFunctions> {
+    let resolvedThisSideImplementation: object | undefined = undefined
+    Promise.resolve(thisSideImplementation).then(x => (resolvedThisSideImplementation = x))
     const { serializer, key, strict, log, parameterStructures, preferLocalImplementation } = {
         ...AsyncCallDefaultOptions,
         ...options,
@@ -255,13 +263,12 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     type PromiseParam = Parameters<ConstructorParameters<typeof Promise>[0]>
     const requestContext = new Map<string | number, { f: PromiseParam; stack: string }>()
     async function onRequest(data: Request): Promise<Response | undefined> {
+        if (!resolvedThisSideImplementation) await thisSideImplementation
         let frameworkStack: string = ''
         try {
             // ? We're mapping any method starts with 'rpc.' to a Symbol.for
-            const key = (data.method.startsWith('rpc.')
-                ? Symbol.for(data.method)
-                : data.method) as keyof typeof thisSideImplementation
-            const executor: unknown = thisSideImplementation[key]
+            const key = (data.method.startsWith('rpc.') ? Symbol.for(data.method) : data.method) as keyof object
+            const executor: unknown = resolvedThisSideImplementation![key]
             if (!executor || typeof executor !== 'function') {
                 if (!banMethodNotFound) {
                     if (logLocalError) console.debug('Receive remote call, but not implemented.', key, data)
@@ -410,8 +417,8 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                         return Promise.reject(
                             new TypeError('[AsyncCall] You cannot call JSON RPC internal methods directly'),
                         )
-                    if (preferLocalImplementation && typeof method === 'string') {
-                        const localImpl: unknown = thisSideImplementation[method as keyof typeof thisSideImplementation]
+                    if (preferLocalImplementation && resolvedThisSideImplementation && typeof method === 'string') {
+                        const localImpl: unknown = resolvedThisSideImplementation[method as keyof object]
                         if (localImpl && typeof localImpl === 'function') {
                             return new Promise((resolve, reject) => {
                                 try {

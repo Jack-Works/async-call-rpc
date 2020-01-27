@@ -7,7 +7,7 @@ import {
     _calcStrictOptions,
     _generateRandomID,
     _AsyncCallIgnoreResponse,
-} from './Async-Call'
+} from './Async-Call.js'
 
 const _AsyncIteratorStart = Symbol.for('rpc.async-iterator.start')
 const _AsyncIteratorNext = Symbol.for('rpc.async-iterator.next')
@@ -83,7 +83,7 @@ type IterResult = IteratorResult<unknown> | Promise<IteratorResult<unknown>>
  * @public
  */
 export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
-    thisSideImplementation: object = {},
+    thisSideImplementation: object | Promise<object> = {},
     options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>,
 ): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions> {
     const iterators = new Map<string, Iter>()
@@ -103,8 +103,8 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
         return result
     }
     const server = {
-        [_AsyncIteratorStart](method, args) {
-            const iteratorGenerator: unknown = Reflect.get(thisSideImplementation, method)
+        async [_AsyncIteratorStart](method, args) {
+            const iteratorGenerator: unknown = Reflect.get(await thisSideImplementation, method)
             if (typeof iteratorGenerator !== 'function') {
                 if (strict.methodNotFound) throw new Error(method + ' is not a function')
                 else return _AsyncCallIgnoreResponse
@@ -132,7 +132,7 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
         if (typeof key !== 'string') throw new TypeError('[*AsyncCall] Only string can be the method name')
         return function(...args: unknown[]) {
             const id = remote[_AsyncIteratorStart](key, args)
-            return new AsyncGenerator(remote, id, key)
+            return new AsyncGenerator(remote, id)
         }
     }
     return new Proxy({}, { get: proxyTrap }) as _AsyncGeneratorVersionOf<OtherSideImplementedFunctions>
@@ -147,7 +147,7 @@ class AsyncGenerator implements AsyncIterableIterator<unknown>, AsyncIterator<un
         })
         return val
     }
-    constructor(remoteImpl: AsyncGeneratorInternalMethods, id: Promise<string>, key: string) {
+    constructor(remoteImpl: AsyncGeneratorInternalMethods, id: Promise<string>) {
         this.#remoteImpl = remoteImpl
         this.#id = id
         this.#done = false

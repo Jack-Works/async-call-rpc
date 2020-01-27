@@ -9,14 +9,14 @@ Create a RPC server &amp; client.
 <b>Signature:</b>
 
 ```typescript
-export declare function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: object | undefined, options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>): _AsyncVersionOf<OtherSideImplementedFunctions>;
+export declare function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: object | Promise<object> | undefined, options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>): _AsyncVersionOf<OtherSideImplementedFunctions>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  thisSideImplementation | <code>object &#124; undefined</code> | The implementation when this AsyncCall acts as a JSON RPC server. |
+|  thisSideImplementation | <code>object &#124; Promise&lt;object&gt; &#124; undefined</code> | The implementation when this AsyncCall acts as a JSON RPC server. Can be a Promise. |
 |  options | <code>Partial&lt;AsyncCallOptions&gt; &amp; Pick&lt;AsyncCallOptions, 'messageChannel'&gt;</code> | [AsyncCallOptions](./async-call-rpc.asynccalloptions.md) |
 
 <b>Returns:</b>
@@ -28,4 +28,11 @@ Same as the `OtherSideImplementedFunctions` type parameter, but every function i
 ## Remarks
 
 See [AsyncCallOptions](./async-call-rpc.asynccalloptions.md)
+
+thisSideImplementation can be a Promise so you can write:
+
+```ts
+export const service = AsyncCall(typeof window === 'object' ? {} : import('./backend/service.js'), {})
+
+```
 

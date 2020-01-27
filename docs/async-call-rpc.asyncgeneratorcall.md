@@ -9,14 +9,14 @@ The async generator version of the AsyncCall
 <b>Signature:</b>
 
 ```typescript
-export declare function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: object | undefined, options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions>;
+export declare function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: object | Promise<object> | undefined, options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  thisSideImplementation | <code>object &#124; undefined</code> | The implementation when this AsyncCall acts as a JSON RPC server. |
+|  thisSideImplementation | <code>object &#124; Promise&lt;object&gt; &#124; undefined</code> | The implementation when this AsyncCall acts as a JSON RPC server. |
 |  options | <code>Partial&lt;AsyncCallOptions&gt; &amp; Pick&lt;AsyncCallOptions, 'messageChannel'&gt;</code> | [AsyncCallOptions](./async-call-rpc.asynccalloptions.md) |
 
 <b>Returns:</b>
