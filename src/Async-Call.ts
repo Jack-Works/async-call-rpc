@@ -459,14 +459,6 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
 }
 
 /** @internal */
-export const _AsyncIteratorStart = Symbol.for('rpc.async-iterator.start')
-/** @internal */
-export const _AsyncIteratorNext = Symbol.for('rpc.async-iterator.next')
-/** @internal */
-export const _AsyncIteratorReturn = Symbol.for('rpc.async-iterator.return')
-/** @internal */
-export const _AsyncIteratorThrow = Symbol.for('rpc.async-iterator.throw')
-/** @internal */
 export const _AsyncCallIgnoreResponse = Symbol.for('AsyncCall: This response should be ignored.')
 
 /** @internal */

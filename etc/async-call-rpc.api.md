@@ -55,18 +55,6 @@ export type _AsyncGeneratorVersionOf<T> = {
     } : T[key];
 };
 
-// @internal (undocumented)
-export const _AsyncIteratorNext: unique symbol;
-
-// @internal (undocumented)
-export const _AsyncIteratorReturn: unique symbol;
-
-// @internal (undocumented)
-export const _AsyncIteratorStart: unique symbol;
-
-// @internal (undocumented)
-export const _AsyncIteratorThrow: unique symbol;
-
 // @internal
 export type _AsyncVersionOf<T> = {
     [key in keyof T]: T[key] extends (...args: infer Args) => infer Return ? Return extends PromiseLike<infer U> ? (...args: Args) => Promise<U> : (...args: Args) => Promise<Return> : never;

@@ -6,12 +6,13 @@ import {
     AsyncCall,
     _calcStrictOptions,
     _generateRandomID,
-    _AsyncIteratorStart,
-    _AsyncIteratorNext,
-    _AsyncIteratorReturn,
-    _AsyncIteratorThrow,
     _AsyncCallIgnoreResponse,
 } from './Async-Call'
+
+const _AsyncIteratorStart = Symbol('rpc.async-iterator.start')
+const _AsyncIteratorNext = Symbol('rpc.async-iterator.next')
+const _AsyncIteratorReturn = Symbol('rpc.async-iterator.return')
+const _AsyncIteratorThrow = Symbol('rpc.async-iterator.throw')
 
 interface AsyncGeneratorInternalMethods {
     [_AsyncIteratorStart](method: string, params: unknown[]): Promise<string>
