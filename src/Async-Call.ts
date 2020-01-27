@@ -306,15 +306,16 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                 return ErrorResponse.InvalidRequest(data.id)
             }
         } catch (e) {
-            e.stack = frameworkStack
-                .split('\n')
-                .reduce((stack, fstack) => stack.replace(fstack + '\n', ''), e.stack || '')
+            if (typeof e === 'object' && 'stack' in e)
+                e.stack = frameworkStack
+                    .split('\n')
+                    .reduce((stack, fstack) => stack.replace(fstack + '\n', ''), e.stack || '')
             if (logLocalError) console.error(e)
             let name = 'Error'
-            name = e.constructor.name
+            name = e?.constructor?.name || 'Error'
             const DOMException = getDOMException()
             if (typeof DOMException === 'function' && e instanceof DOMException) name = 'DOMException:' + e.name
-            return new ErrorResponse(data.id, -1, e.message, e.stack, name)
+            return new ErrorResponse(data.id, -1, e?.message, e?.stack, name)
         }
     }
     async function onResponse(data: Response): Promise<void> {
@@ -325,8 +326,8 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         if (hasKey(data, 'error')) {
             errorMessage = data.error.message
             errorCode = data.error.code
-            remoteErrorStack = (data.error.data && data.error.data.stack) || '<remote stack not available>'
-            errorType = (data.error.data && data.error.data.type) || 'Error'
+            remoteErrorStack = data.error.data?.stack ?? '<remote stack not available>'
+            errorType = data.error.data?.type || 'Error'
             if (logRemoteError)
                 logType === 'basic'
                     ? console.error(`${errorType}: ${errorMessage}(${errorCode}) @${data.id}\n${remoteErrorStack}`)
@@ -379,7 +380,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             }
         } catch (e) {
             console.error(e, data, result)
-            send(ErrorResponse.ParseError(e.stack))
+            send(ErrorResponse.ParseError(e?.stack))
         }
         async function send(res?: Response | (Response | undefined)[]) {
             if (Array.isArray(res)) {
