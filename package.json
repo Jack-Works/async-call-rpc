@@ -27,11 +27,11 @@
   },
   "homepage": "https://github.com/Jack-Works/async-call#readme",
   "devDependencies": {
-    "@microsoft/api-extractor": "latest",
     "@microsoft/api-documenter": "latest",
+    "@microsoft/api-extractor": "latest",
     "rimraf": "^3.0.0",
-    "standard-version": "^7.0.1",
-    "typescript": "^3.7.2"
+    "standard-version": "^7.1.0",
+    "typescript": "^3.7.5"
   },
   "files": [
     "src",
