@@ -11,6 +11,7 @@
     "prepublishOnly": "tsc",
     "doc:api": "api-extractor run --local --verbose",
     "doc:md": "api-documenter markdown -o docs -i temp",
+    "doc": "npm run doc:api && npm run doc:md",
     "doc:preview": "docsify serve ."
   },
   "repository": {
@@ -29,12 +30,14 @@
   "devDependencies": {
     "@microsoft/api-documenter": "latest",
     "@microsoft/api-extractor": "latest",
+    "docsify-cli": "^4.4.0",
     "rimraf": "^3.0.0",
     "standard-version": "^7.1.0",
     "typescript": "^3.7.5"
   },
   "files": [
     "src",
-    "out"
+    "out",
+    "tsconfig.json"
   ]
 }

@@ -25,6 +25,7 @@ export interface AsyncCallLogLevel {
 export interface AsyncCallOptions {
     key: string;
     log: AsyncCallLogLevel | boolean;
+    logger: Console_2;
     messageChannel: {
         on(event: string, callback: (data: unknown) => void): void;
         emit(event: string, data: unknown): void;
@@ -73,6 +74,22 @@ export type _AsyncVersionOf<T> = {
 
 // @internal (undocumented)
 export function _calcStrictOptions(strict: AsyncCallOptions['strict']): AsyncCallStrictJSONRPC;
+
+// @public
+interface Console_2 {
+    // (undocumented)
+    debug(...args: unknown[]): void;
+    // (undocumented)
+    error(...args: unknown[]): void;
+    // (undocumented)
+    groupCollapsed(...args: unknown[]): void;
+    // (undocumented)
+    groupEnd(...args: unknown[]): void;
+    // (undocumented)
+    log(...args: unknown[]): void;
+}
+
+export { Console_2 as Console }
 
 // @internal (undocumented)
 export function _generateRandomID(): string;

@@ -171,6 +171,7 @@ class PlayGroundChannel {
 |  [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) | What should AsyncCall log to console. |
 |  [AsyncCallOptions](./async-call-rpc.asynccalloptions.md) | Options for [AsyncCall()](./async-call-rpc.asynccall.md) |
 |  [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) | Control the behavior that different from the JSON RPC spec. |
+|  [Console\_2](./async-call-rpc.console_2.md) | The minimal Console interface that AsyncCall needs. |
 |  [Serialization](./async-call-rpc.serialization.md) | Serialization and deserialization of the JSON RPC payload |
 
 ## Variables

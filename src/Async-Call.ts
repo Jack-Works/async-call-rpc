@@ -147,6 +147,13 @@ export interface AsyncCallOptions {
      */
     serializer: Serialization
     /**
+     * The logger of AsyncCall
+     * @remarks
+     * See {@link Console}
+     * @defaultValue globalThis.console
+     */
+    logger: Console
+    /**
      * The message channel can let you transport messages between server and client
      * @example
      * ```ts
@@ -244,7 +251,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         type: logType = 'pretty',
         sendLocalStack = false,
     } = _calcLogOptions(log)
-    const console = getConsole()
+    const console = getConsole(options.logger)
     type PromiseParam = Parameters<ConstructorParameters<typeof Promise>[0]>
     const requestContext = new Map<string | number, { f: PromiseParam; stack: string }>()
     async function onRequest(data: Request): Promise<Response | undefined> {
@@ -305,7 +312,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             if (logLocalError) console.error(e)
             let name = 'Error'
             name = e.constructor.name
-            const DOMException = haveDOMException()
+            const DOMException = getDOMException()
             if (typeof DOMException === 'function' && e instanceof DOMException) name = 'DOMException:' + e.name
             return new ErrorResponse(data.id, -1, e.message, e.stack, name)
         }
@@ -416,7 +423,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                     }
                     return new Promise((resolve, reject) => {
                         const id = _generateRandomID()
-                        const param0 = params[0]
+                        const [param0] = params
                         const sendingStack = sendLocalStack ? stack : ''
                         const param =
                             parameterStructures === 'by-name' && params.length === 1 && isObject(param0)
@@ -562,7 +569,7 @@ const errors: Record<string, typeof EvalError> = {
  */
 function RecoverError(type: string, message: string, code: number, stack: string) {
     try {
-        const DOMException = haveDOMException()
+        const DOMException = getDOMException()
         if (type.startsWith('DOMException:') && DOMException) {
             const [, name] = type.split('DOMException:')
             return new DOMException(message, name)
@@ -578,20 +585,26 @@ function RecoverError(type: string, message: string, code: number, stack: string
         return new Error(`E${code} ${type}: ${message}\n${stack}`)
     }
 }
-function removeStackHeader(stack: string = '') {
+function removeStackHeader(stack = '') {
     return stack.replace(/^.+\n.+\n/, '')
 }
-function haveDOMException(): { new (message: string, name: string): any } | undefined {
+function getDOMException(): { new (message: string, name: string): any } | undefined {
     return Reflect.get(globalThis, 'DOMException')
 }
-function getConsole(): {
+//#region Console
+/**
+ * The minimal Console interface that AsyncCall needs.
+ * @public
+ */
+export interface Console {
     debug(...args: unknown[]): void
     log(...args: unknown[]): void
     groupCollapsed(...args: unknown[]): void
     groupEnd(...args: unknown[]): void
     error(...args: unknown[]): void
-} {
-    const console = Reflect.get(globalThis, 'console') as ReturnType<typeof getConsole>
+}
+function getConsole(_console?: Console): Console {
+    const console: Console = _console || globalThis.console
     const defaultLog = (...args: unknown[]) => {
         if (!console || !console.log) throw new Error('Except a console object on the globalThis')
         console.log(...args)
@@ -605,3 +618,4 @@ function getConsole(): {
     }
     return Object.assign({}, defaultConsole, console)
 }
+//#endregion
