@@ -2,44 +2,6 @@
  * A light implementation of {@link https://www.jsonrpc.org/specification | JSON RPC 2.0}
  *
  * @remarks
- * Runtime requirement: At least ECMAScript 6, `globalThis`, well known Symbol `Symbol.asyncIterator` if you use Async Call remote generator function support.
- *
- * ====================================
- *
- * Install
- *
- * Node: `npm install async-call`
- *
- * Browser: `import { AsyncCall } from 'https://unpkg.com/async-call-rpc@latest/out/index.js?module'`
- *
- * Deno: `import { AsyncCall } from 'https://unpkg.com/async-call-rpc@latest/src/Async-Call.ts'`
- *
- * Other environment: You may copy the `out/Async-Call.js` or `src/Async-Call.ts` to your project.
- *
- * Async Call has no dependency so you can run it on any modern ECMAScript platform.
- *
- * ====================================
- *
- * Extends to the specification
- *
- * ```ts
- * interface JSONRPC_Request_object {
- *      // This property will help server print the log better.
- *      remoteStack?: string
- * }
- * ```
- *
- * ```ts
- * interface JSONRPC_Error_object {
- *      // This property will help client to build a better Error object.
- *      data?: {
- *          stack?: string,
- *          // Supported value for "type" field (Defined in ECMAScript standard):
- *          type?: string | 'Error' | 'EvalError' | 'RangeError'
- *              | 'ReferenceError' | 'SyntaxError' | 'TypeError' | 'URIError'
- *      }
- * }
- * ```
  *
  * ```ts
  * interface JSONRPC_Response_object {
