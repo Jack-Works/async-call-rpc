@@ -21,7 +21,7 @@ interface AsyncGeneratorInternalMethods {
     [_AsyncIteratorThrow](id: string, value: unknown): Promise<IteratorResult<unknown>>
 }
 /**
- * Unbox the Promise<T> into T if possiblea   aaaaaaaaaaaa
+ * Unbox the Promise<T> into T if possible
  * @internal
  */
 export type _UnboxPromise<T> = T extends PromiseLike<infer U> ? U : T

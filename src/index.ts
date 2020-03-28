@@ -6,7 +6,7 @@
  *
  * ====================================
  *
- * Install aaaaaaaaaaaaaaaaaaaaaaaaaa
+ * Install
  *
  * Node: `npm install async-call`
  *
