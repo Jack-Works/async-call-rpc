@@ -12,7 +12,7 @@ Runtime requirement: At least ECMAScript 6, `globalThis`<!-- -->, well known Sym
 
 ====================================
 
-Install aaaaaaaaaaaaaaaaaaaaaaaaaa
+Install
 
 Node: `npm install async-call`
 
