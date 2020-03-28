@@ -16,7 +16,7 @@ jobs:
                   node-version: '13.x'
             - run: npm ci
             - name: Building
-              run: npx tsc
+              run: npm run build
             - name: Check updates to documents
               run: npm run doc
             - uses: stefanzweifel/git-auto-commit-action@v4.1.1
