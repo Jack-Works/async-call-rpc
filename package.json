@@ -8,6 +8,7 @@
   "scripts": {
     "release": "rimraf ./out && standard-version",
     "start": "node ./watch.js",
+    "build": "tsc",
     "prepublishOnly": "tsc",
     "doc:api": "api-extractor run --local --verbose",
     "doc:md": "api-documenter markdown -o docs -i temp",
