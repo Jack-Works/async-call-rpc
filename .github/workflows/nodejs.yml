@@ -14,8 +14,8 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
-              with:
-                  ref: ${{ github.event.pull_request.head.ref }}
+            #   with:
+            #       ref: ${{ github.event.pull_request.head.ref }}
             - uses: actions/setup-node@v1
               with:
                   node-version: '13.x'
@@ -24,11 +24,11 @@ jobs:
               run: npx tsc
             - name: Check updates to documents
               run: npm run doc
-            - name: Commit new documents
-              run: |
-                  git config --global user.name 'Github Actions'
-                  git config --global user.email 'actions@github.com'
-                  git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-                  git add .
-                  git commit -am "chore(docs): update docs"
-                  git push
+            - uses: stefanzweifel/git-auto-commit-action@v4.1.1
+              with:
+                  commit_message: 'chore(docs): update documents'
+                  branch: ${{ github.head_ref }}
+                  file_pattern: \*.md
+                  commit_user_name: GitHub Actions
+                  commit_user_email: actions@github.com
+                  commit_author: GitHub Actions <actions@github.com>
