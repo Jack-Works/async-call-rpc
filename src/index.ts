@@ -148,5 +148,3 @@ class PlayGroundChannel {
 
 export * from './Async-Call'
 export * from './Async-Call-Generator'
-
-console.log('test')
