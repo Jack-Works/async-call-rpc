@@ -28,7 +28,7 @@ jobs:
               with:
                   commit_message: 'chore(docs): update documents'
                   branch: ${{ github.head_ref }}
-                  file_pattern: \*.md
+                  file_pattern: '**/*.md'
                   commit_user_name: GitHub Actions
                   commit_user_email: actions@github.com
                   commit_author: GitHub Actions <actions@github.com>
