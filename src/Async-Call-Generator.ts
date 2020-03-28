@@ -1,5 +1,7 @@
 /**
  * See the document at https://github.com/Jack-Works/async-call/
+ *
+ * test update docs
  */
 import {
     AsyncCallOptions,
