@@ -241,7 +241,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>,
 ): _AsyncVersionOf<OtherSideImplementedFunctions> {
     let resolvedThisSideImplementation: object | undefined = undefined
-    Promise.resolve(thisSideImplementation).then(x => (resolvedThisSideImplementation = x))
+    Promise.resolve(thisSideImplementation).then((x) => (resolvedThisSideImplementation = x))
     const { serializer, key, strict, log, parameterStructures, preferLocalImplementation } = {
         ...AsyncCallDefaultOptions,
         ...options,
@@ -376,8 +376,8 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             } else if (Array.isArray(data) && data.every(isJSONRPCObject) && data.length !== 0) {
                 const result = await Promise.all(data.map(handleSingleMessage))
                 // ? Response
-                if (data.every(x => x === undefined)) return
-                await send(result.filter(x => x))
+                if (data.every((x) => x === undefined)) return
+                await send(result.filter((x) => x))
             } else {
                 if (banUnknownMessage) {
                     await send(ErrorResponse.InvalidRequest((data as any).id || null))
@@ -391,7 +391,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         }
         async function send(res?: Response | (Response | undefined)[]) {
             if (Array.isArray(res)) {
-                const reply = res.map(x => x).filter(x => x!.id !== undefined)
+                const reply = res.map((x) => x).filter((x) => x!.id !== undefined)
                 if (reply.length === 0) return
                 message.emit(key, await serializer.serialization(reply))
             } else {
@@ -438,7 +438,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                                 ? param0
                                 : params
                         const request = new Request(id, method as string, param, sendingStack)
-                        serializer.serialization(request).then(data => {
+                        serializer.serialization(request).then((data) => {
                             message.emit(key, data)
                             requestContext.set(id, {
                                 f: [resolve, reject],
@@ -471,9 +471,7 @@ export const _AsyncCallIgnoreResponse = Symbol.for('AsyncCall: This response sho
 
 /** @internal */
 export function _generateRandomID() {
-    return Math.random()
-        .toString(36)
-        .slice(2)
+    return Math.random().toString(36).slice(2)
 }
 
 /**
@@ -500,6 +498,7 @@ class Request {
     readonly jsonrpc = '2.0'
     constructor(public id: ID, public method: string, public params: unknown[] | object, public remoteStack: string) {
         const request: Request = { id, method, params, jsonrpc, remoteStack }
+        // @ts-ignore
         if (request.remoteStack.length === 0) delete request.remoteStack
         return request
     }
@@ -604,7 +603,7 @@ export interface Console {
     error(...args: unknown[]): void
 }
 function getConsole(_console?: Console): Console {
-    const console: Console = _console || globalThis.console
+    const console: Console = _console || (globalThis as any).console
     const defaultLog = (...args: unknown[]) => {
         if (!console || !console.log) throw new Error('Except a console object on the globalThis')
         console.log(...args)
