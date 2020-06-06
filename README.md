@@ -1,6 +1,6 @@
 # Async Call
 
-See the document at [./docs/async-call-rpc.md](https://jack-works.github.io/async-call/async-call-rpc.html), [or the playground](https://jack-works.github.io/async-call/async-call-rpc.html)
+See the document at [./docs/async-call-rpc.md](https://jack-works.github.io/async-call/async-call-rpc.html), [or the playground](https://jack-works.github.io/async-call/)
 
 -   This package ships ES2018 syntax (leave async function untransformed).
 
