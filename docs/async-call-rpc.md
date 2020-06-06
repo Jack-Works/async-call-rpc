@@ -14,13 +14,26 @@ Runtime requirement: At least ECMAScript 6, `globalThis`<!-- -->, well known Sym
 
 Install
 
-Node: `npm install async-call`
+Node:
 
-Browser: `import { AsyncCall } from 'https://unpkg.com/async-call-rpc@latest/out/index.js?module'`
+```js
+// Full version
+require('async-rpc-call') // or
+import * as RPC from 'async-rpc-call'
 
-Deno: `import { AsyncCall } from 'https://unpkg.com/async-call-rpc@latest/src/Async-Call.ts'`
+// Base version
+require('async-rpc-call/base') // or
+import * as RPC from 'async-rpc-call/base'
 
-Other environment: You may copy the `out/Async-Call.js` or `src/Async-Call.ts` to your project.
+```
+Browser or Deno:
+
+```js
+import * as full from 'https://unpkg.com/async-call-rpc@latest/out/full.mjs'
+import * as base from 'https://unpkg.com/async-call-rpc@latest/out/base.mjs'
+
+```
+UMD: Please check out Please checkout https://www.jsdelivr.com/package/npm/async-call-rpc?path=out
 
 Async Call has no dependency so you can run it on any modern ECMAScript platform.
 

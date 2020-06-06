@@ -1,14 +1,41 @@
 # Async Call
 
-See the document at [./docs/async-call-rpc.md](./docs/async-call-rpc.md)
+See the document at [./docs/async-call-rpc.md](https://jack-works.github.io/async-call/async-call-rpc.html)
+
+## Entry
+
+There are two entry, `base` or `full`. The `full` version support a private JSON RPC extension (The remote ECMAScript async generator `AsyncGeneratorCall`).
+
+### Browser / Deno
+
+```js
+import * as full from 'https://unpkg.com/async-call-rpc@latest/out/full.mjs'
+import * as base from 'https://unpkg.com/async-call-rpc@latest/out/base.mjs'
+```
+
+### Browser (UMD)
+
+Please checkout https://www.jsdelivr.com/package/npm/async-call-rpc?path=out
+
+### Node:
+
+```js
+// Full version
+require('async-rpc-call') // or
+import * as RPC from 'async-rpc-call'
+
+// Base version
+require('async-rpc-call/base') // or
+import * as RPC from 'async-rpc-call/base'
+```
 
 ## Playground
 
 ```js
 function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms))
+    return new Promise((resolve) => setTimeout(resolve, ms))
 }
-import('https://unpkg.com/async-call-rpc@latest/out/index.js?module').then(x => {
+import('https://unpkg.com/async-call-rpc').then((x) => {
     Object.assign(globalThis, x)
     console.log('AsyncCall, AsyncGeneratorCall, JSONSerialization, NoSerialization is available in globalThis.')
     console.log('Try to run: await server.add(42, 0)')
@@ -32,7 +59,7 @@ class PlayGroundChannel {
     // actor: 'server' | 'client'
     constructor(actor) {
         this.actor = actor
-        PlayGroundChannel[actor].addEventListener('targetEventChannel', e => {
+        PlayGroundChannel[actor].addEventListener('targetEventChannel', (e) => {
             const detail = e.detail
             for (const f of this.listener) {
                 try {
