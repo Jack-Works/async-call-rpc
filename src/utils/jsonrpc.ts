@@ -1,3 +1,5 @@
+import { DOMException, DOMExceptionHeader } from './error'
+
 const jsonrpc = '2.0'
 type ID = string | number | null | undefined
 
@@ -29,15 +31,16 @@ export type ErrorResponse = JSONRPC &
         error: { code: number; message: string; data?: { stack?: string; type?: string } }
     }>
 
-export function ErrorResponse(
-    id: ID,
-    code: number,
-    message: string,
-    stack: string,
-    type: string = 'Error',
-): ErrorResponse {
+export function ErrorResponse(id: ID, code: number, message: string, stack: string, e?: unknown): ErrorResponse {
+    let type = toString('Error', () => (e as any)?.constructor?.name)
+    if (DOMException && e instanceof DOMException) type = DOMExceptionHeader + e.name
+    if (typeof e === 'string' || typeof e === 'number' || typeof e === 'boolean' || typeof e === 'bigint') {
+        type = 'Error'
+        message = String(e)
+    }
     if (id === undefined) id = null
     code = Math.floor(code)
+    if (Number.isNaN(code)) code = -1
     const error: ErrorResponse['error'] = { code, message, data: { stack, type } }
     return { error, id, jsonrpc }
 }
@@ -75,4 +78,13 @@ export function hasKey<T, Q extends string>(
         [key in Q]: unknown
     } {
     return key in obj
+}
+
+function toString(def: string, val: () => any) {
+    let str = def
+    try {
+        str = val()
+    } catch {}
+    if (typeof str !== 'string') return def
+    return str
 }

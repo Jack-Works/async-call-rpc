@@ -32,5 +32,52 @@
         </script>
         <script src="//unpkg.com/docsify@4.10.2/lib/docsify.min.js"></script>
         <script src="//unpkg.com/prismjs@1.17.1/components/prism-typescript.js"></script>
+        <script src="./out/full.cjs"></script>
+        <script>
+            Object.assign(globalThis, AsyncCall)
+            class PlayGroundChannel {
+                static server = document.createElement('a')
+                static client = document.createElement('a')
+                // actor: 'server' | 'client'
+                constructor(actor) {
+                    this.actor = actor
+                    PlayGroundChannel[actor].addEventListener('targetEventChannel', (e) => {
+                        const detail = e.detail
+                        for (const f of this.listener) {
+                            try {
+                                f(detail)
+                            } catch {}
+                        }
+                    })
+                }
+                listener = []
+                on(_, cb) {
+                    this.listener.push(cb)
+                }
+                emit(_, data) {
+                    PlayGroundChannel[this.actor === 'client' ? 'server' : 'client'].dispatchEvent(
+                        new CustomEvent('targetEventChannel', { detail: data }),
+                    )
+                }
+            }
+            const server = new PlayGroundChannel('server')
+            const client = new PlayGroundChannel('client')
+            let count = 0
+            function define(def, key = `server${count++}`) {
+                // define server
+                AsyncCall(def, { messageChannel: server, key })
+                // define client
+                globalThis[key] = AsyncCall({}, { messageChannel: client, key })
+                console.log('Server is available as global variable', key, globalThis[key])
+            }
+            function sleep(ms) {
+                return new Promise((resolve) => setTimeout(resolve, ms))
+            }
+            define({
+                async add(a, b) {
+                    throw 1
+                },
+            })
+        </script>
     </body>
 </html>

@@ -7,7 +7,7 @@ export { JSONSerialization, NoSerialization, Serialization } from './utils/seria
 import { Console, getConsole } from './utils/console'
 export { Console } from './utils/console'
 import { Request, Response, ErrorResponse, SuccessResponse, hasKey, isJSONRPCObject, isObject } from './utils/jsonrpc'
-import { removeStackHeader, DOMException, RecoverError, DOMExceptionHeader } from './utils/error'
+import { removeStackHeader, RecoverError } from './utils/error'
 import { generateRandomID } from './utils/generateRandomID'
 import { normalizeStrictOptions, normalizeLogOptions } from './utils/normalizeOptions'
 import { AsyncCallIgnoreResponse } from './utils/internalSymbol'
@@ -275,10 +275,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                     .split('\n')
                     .reduce((stack, fstack) => stack.replace(fstack + '\n', ''), e.stack || '')
             if (logLocalError) console.error(e)
-            let name = 'Error'
-            name = e?.constructor?.name || 'Error'
-            if (DOMException && e instanceof DOMException) name = DOMExceptionHeader + e.name
-            return ErrorResponse(data.id, -1, e?.message, e?.stack, name)
+            return ErrorResponse(data.id, -1, e?.message, e?.stack, e)
         }
     }
     async function onResponse(data: Response): Promise<void> {
