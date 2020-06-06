@@ -1,58 +1,15 @@
 /**
  * See the document at https://github.com/Jack-Works/async-call/
  */
-//#region Serialization
-/**
- * Serialization and deserialization of the JSON RPC payload
- * @public
- */
-export interface Serialization {
-    /**
-     * Do serialization
-     * @param from - original data
-     */
-    serialization(from: any): PromiseLike<unknown>
-    /**
-     * Do deserialization
-     * @param serialized - Serialized data
-     */
-    deserialization(serialized: unknown): PromiseLike<any>
-}
 
-/**
- * Serialization implementation that do nothing
- * @remarks {@link Serialization}
- * @public
- */
-export const NoSerialization: Serialization = {
-    async serialization(from) {
-        return from
-    },
-    async deserialization(serialized) {
-        return serialized
-    },
-}
-
-/**
- * Create a serialization by JSON.parse/stringify
- *
- * @param replacerAndReceiver - Replacer and receiver of JSON.parse/stringify
- * @param space - Adds indentation, white space, and line break characters to the return-value JSON text to make it easier to read.
- * @remarks {@link Serialization}
- * @public
- */
-export const JSONSerialization = (
-    replacerAndReceiver: [Parameters<JSON['stringify']>[1], Parameters<JSON['parse']>[1]] = [undefined, undefined],
-    space?: string | number | undefined,
-) =>
-    ({
-        async serialization(from) {
-            return JSON.stringify(from, replacerAndReceiver[0], space)
-        },
-        async deserialization(serialized) {
-            return JSON.parse(serialized as string, replacerAndReceiver[1])
-        },
-    } as Serialization)
+import { Serialization, NoSerialization } from './utils/serialization'
+export { JSONSerialization, NoSerialization, Serialization } from './utils/serialization'
+import { Console, getConsole } from './utils/console'
+export { Console } from './utils/console'
+import { Request, Response, ErrorResponse, SuccessResponse, hasKey, isJSONRPCObject, isObject } from './utils/jsonrpc'
+import { removeStackHeader, DOMException, RecoverError, DOMExceptionHeader } from './utils/error'
+import { generateRandomID } from './utils/generateRandomID'
+import { normalizeStrictOptions, normalizeLogOptions } from './utils/normalizeOptions'
 
 /**
  * What should AsyncCall log to console.
@@ -107,7 +64,6 @@ export interface AsyncCallStrictJSONRPC {
      */
     unknownMessage?: boolean
 }
-//#endregion
 
 /**
  * Options for {@link AsyncCall}
@@ -251,14 +207,14 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         methodNotFound: banMethodNotFound = false,
         noUndefined: noUndefinedKeeping = false,
         unknownMessage: banUnknownMessage = false,
-    } = _calcStrictOptions(strict)
+    } = normalizeStrictOptions(strict)
     const {
         beCalled: logBeCalled = true,
         localError: logLocalError = true,
         remoteError: logRemoteError = true,
         type: logType = 'pretty',
         sendLocalStack = false,
-    } = _calcLogOptions(log)
+    } = normalizeLogOptions(log)
     const console = getConsole(options.logger)
     type PromiseParam = Parameters<ConstructorParameters<typeof Promise>[0]>
     const requestContext = new Map<string | number, { f: PromiseParam; stack: string }>()
@@ -308,7 +264,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                 }
                 const result = await promise
                 if (result === _AsyncCallIgnoreResponse) return
-                return new SuccessResponse(data.id, await promise, !!noUndefinedKeeping)
+                return SuccessResponse(data.id, await promise, !!noUndefinedKeeping)
             } else {
                 return ErrorResponse.InvalidRequest(data.id)
             }
@@ -320,9 +276,8 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             if (logLocalError) console.error(e)
             let name = 'Error'
             name = e?.constructor?.name || 'Error'
-            const DOMException = getDOMException()
-            if (typeof DOMException === 'function' && e instanceof DOMException) name = 'DOMException:' + e.name
-            return new ErrorResponse(data.id, -1, e?.message, e?.stack, name)
+            if (DOMException && e instanceof DOMException) name = DOMExceptionHeader + e.name
+            return ErrorResponse(data.id, -1, e?.message, e?.stack, name)
         }
     }
     async function onResponse(data: Response): Promise<void> {
@@ -430,14 +385,14 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                         }
                     }
                     return new Promise((resolve, reject) => {
-                        const id = _generateRandomID()
+                        const id = generateRandomID()
                         const [param0] = params
                         const sendingStack = sendLocalStack ? stack : ''
                         const param =
                             parameterStructures === 'by-name' && params.length === 1 && isObject(param0)
                                 ? param0
                                 : params
-                        const request = new Request(id, method as string, param, sendingStack)
+                        const request = Request(id, method as string, param, sendingStack)
                         serializer.serialization(request).then((data) => {
                             message.emit(key, data)
                             requestContext.set(id, {
@@ -468,153 +423,3 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
 
 /** @internal */
 export const _AsyncCallIgnoreResponse = Symbol.for('AsyncCall: This response should be ignored.')
-
-/** @internal */
-export function _generateRandomID() {
-    return Math.random().toString(36).slice(2)
-}
-
-/**
- * @internal
- */
-function _calcLogOptions(log: AsyncCallOptions['log']): AsyncCallLogLevel {
-    const logAllOn = { beCalled: true, localError: true, remoteError: true, type: 'pretty' } as const
-    const logAllOff = { beCalled: false, localError: false, remoteError: false, type: 'basic' } as const
-    return typeof log === 'boolean' ? (log ? logAllOn : logAllOff) : log
-}
-
-/**
- * @internal
- */
-export function _calcStrictOptions(strict: AsyncCallOptions['strict']): AsyncCallStrictJSONRPC {
-    const strictAllOn = { methodNotFound: true, unknownMessage: true, noUndefined: true }
-    const strictAllOff = { methodNotFound: false, unknownMessage: false, noUndefined: false }
-    return typeof strict === 'boolean' ? (strict ? strictAllOn : strictAllOff) : strict
-}
-
-const jsonrpc = '2.0'
-type ID = string | number | null | undefined
-class Request {
-    readonly jsonrpc = '2.0'
-    constructor(public id: ID, public method: string, public params: unknown[] | object, public remoteStack: string) {
-        const request: Request = { id, method, params, jsonrpc, remoteStack }
-        // @ts-ignore
-        if (request.remoteStack.length === 0) delete request.remoteStack
-        return request
-    }
-}
-class SuccessResponse {
-    readonly jsonrpc = '2.0'
-    // ? This is not in the spec !
-    resultIsUndefined?: boolean
-    constructor(public id: ID, public result: any, noUndefinedKeeping: boolean) {
-        const obj = { id, jsonrpc, result: result === undefined ? null : result } as this
-        if (!noUndefinedKeeping && result === undefined) obj.resultIsUndefined = true
-        return obj
-    }
-}
-class ErrorResponse {
-    readonly jsonrpc = '2.0'
-    error: { code: number; message: string; data?: { stack?: string; type?: string } }
-    constructor(public id: ID, code: number, message: string, stack: string, type: string = 'Error') {
-        if (id === undefined) id = null
-        code = Math.floor(code)
-        const error = (this.error = { code, message, data: { stack, type } })
-        return { error, id, jsonrpc }
-    }
-    // Pre defined error in section 5.1
-    static readonly ParseError = (stack = '') => new ErrorResponse(null, -32700, 'Parse error', stack)
-    static readonly InvalidRequest = (id: ID) => new ErrorResponse(id, -32600, 'Invalid Request', '')
-    static readonly MethodNotFound = (id: ID) => new ErrorResponse(id, -32601, 'Method not found', '')
-    static readonly InvalidParams = (id: ID) => new ErrorResponse(id, -32602, 'Invalid params', '')
-    static readonly InternalError = (id: ID, message: string = '') =>
-        new ErrorResponse(id, -32603, 'Internal error' + message, '')
-}
-
-type Response = SuccessResponse | ErrorResponse
-function isJSONRPCObject(data: any): data is Response | Request {
-    if (!isObject(data)) return false
-    if (!hasKey(data, 'jsonrpc')) return false
-    if (data.jsonrpc !== '2.0') return false
-    if (hasKey(data, 'params')) {
-        const params = (data as Request).params
-        if (!Array.isArray(params) && !isObject(params)) return false
-    }
-    return true
-}
-function isObject(params: any): params is object {
-    return typeof params === 'object' && params !== null
-}
-function hasKey<T, Q extends string>(obj: T, key: Q): obj is T & { [key in Q]: unknown } {
-    return key in obj
-}
-class CustomError extends Error {
-    constructor(public name: string, message: string, public code: number, public stack: string) {
-        super(message)
-    }
-}
-/** These Error is defined in ECMAScript spec */
-const errors: Record<string, typeof EvalError> = {
-    Error,
-    EvalError,
-    RangeError,
-    ReferenceError,
-    SyntaxError,
-    TypeError,
-    URIError,
-}
-/**
- * AsyncCall support somehow transfer ECMAScript Error
- */
-function RecoverError(type: string, message: string, code: number, stack: string) {
-    try {
-        const DOMException = getDOMException()
-        if (type.startsWith('DOMException:') && DOMException) {
-            const [, name] = type.split('DOMException:')
-            return new DOMException(message, name)
-        } else if (type in errors) {
-            const e = new errors[type](message)
-            e.stack = stack
-            Object.assign(e, { code })
-            return e
-        } else {
-            return new CustomError(type, message, code, stack)
-        }
-    } catch {
-        return new Error(`E${code} ${type}: ${message}\n${stack}`)
-    }
-}
-function removeStackHeader(stack = '') {
-    return stack.replace(/^.+\n.+\n/, '')
-}
-function getDOMException(): { new (message: string, name: string): any } | undefined {
-    return Reflect.get(globalThis, 'DOMException')
-}
-//#region Console
-/**
- * The minimal Console interface that AsyncCall needs.
- * @public
- */
-export interface Console {
-    debug(...args: unknown[]): void
-    log(...args: unknown[]): void
-    groupCollapsed(...args: unknown[]): void
-    groupEnd(...args: unknown[]): void
-    error(...args: unknown[]): void
-}
-function getConsole(_console?: Console): Console {
-    const console: Console = _console || (globalThis as any).console
-    const defaultLog = (...args: unknown[]) => {
-        if (!console || !console.log) throw new Error('Except a console object on the globalThis')
-        console.log(...args)
-    }
-    const defaultConsole = {
-        debug: defaultLog,
-        error: defaultLog,
-        groupCollapsed: defaultLog,
-        groupEnd: defaultLog,
-        log: defaultLog,
-    }
-    return Object.assign({}, defaultConsole, console)
-}
-//#endregion

@@ -60,9 +60,6 @@ export type _AsyncVersionOf<T> = {
     [key in keyof T]: T[key] extends (...args: infer Args) => infer Return ? Return extends PromiseLike<infer U> ? (...args: Args) => Promise<U> : (...args: Args) => Promise<Return> : never;
 };
 
-// @internal (undocumented)
-export function _calcStrictOptions(strict: AsyncCallOptions['strict']): AsyncCallStrictJSONRPC;
-
 // @public
 interface Console_2 {
     // (undocumented)
@@ -78,9 +75,6 @@ interface Console_2 {
 }
 
 export { Console_2 as Console }
-
-// @internal (undocumented)
-export function _generateRandomID(): string;
 
 // @public
 export const JSONSerialization: (replacerAndReceiver?: [Parameters<JSON['stringify']>[1], Parameters<JSON['parse']>[1]], space?: string | number | undefined) => Serialization;

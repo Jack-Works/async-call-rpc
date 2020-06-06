@@ -1,13 +1,9 @@
 /**
  * See the document at https://github.com/Jack-Works/async-call/
  */
-import {
-    AsyncCallOptions,
-    AsyncCall,
-    _calcStrictOptions,
-    _generateRandomID,
-    _AsyncCallIgnoreResponse,
-} from './Async-Call.js'
+import { AsyncCallOptions, AsyncCall, _AsyncCallIgnoreResponse } from './Async-Call.js'
+import { normalizeStrictOptions } from './utils/normalizeOptions'
+import { generateRandomID } from './utils/generateRandomID'
 
 const _AsyncIteratorStart = Symbol.for('rpc.async-iterator.start')
 const _AsyncIteratorNext = Symbol.for('rpc.async-iterator.next')
@@ -42,7 +38,7 @@ export type _AsyncGeneratorVersionOf<T> = {
         : T[key]
 }
 
-type Iter = Iterator<unknown> | AsyncIterator<unknown>
+type Iter = Iterator<unknown, unknown, unknown> | AsyncIterator<unknown>
 type IterResult = IteratorResult<unknown> | Promise<IteratorResult<unknown>>
 /**
  * The async generator version of the AsyncCall
@@ -87,7 +83,7 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
     options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>,
 ): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions> {
     const iterators = new Map<string, Iter>()
-    const strict = _calcStrictOptions(options.strict || false)
+    const strict = normalizeStrictOptions(options.strict || false)
     function findIterator(
         id: string,
         label: keyof Iter,
@@ -99,7 +95,7 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
             else return _AsyncCallIgnoreResponse
         }
         const result = next(it)
-        isFinished(result).then(x => x && iterators.delete(id))
+        isFinished(result, () => iterators.delete(id))
         return result
     }
     const server = {
@@ -110,18 +106,18 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
                 else return _AsyncCallIgnoreResponse
             }
             const iterator = iteratorGenerator(...args)
-            const id = _generateRandomID()
+            const id = generateRandomID()
             iterators.set(id, iterator)
             return Promise.resolve(id)
         },
         [_AsyncIteratorNext](id, val) {
-            return findIterator(id, 'next', it => it.next(val as any))
+            return findIterator(id, 'next', (it) => it.next(val as any))
         },
         [_AsyncIteratorReturn](id, val) {
-            return findIterator(id, 'return', it => it.return?.(val))
+            return findIterator(id, 'return', (it) => it.return?.(val))
         },
         [_AsyncIteratorThrow](id, val) {
-            return findIterator(id, 'throw', it => it.throw?.(val))
+            return findIterator(id, 'throw', (it) => it.throw?.(val))
         },
     } as AsyncGeneratorInternalMethods
     const remote = AsyncCall<AsyncGeneratorInternalMethods>(server, options)
@@ -130,7 +126,7 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
         key: string | number | symbol,
     ): (...args: unknown[]) => AsyncIterableIterator<unknown> {
         if (typeof key !== 'string') throw new TypeError('[*AsyncCall] Only string can be the method name')
-        return function(...args: unknown[]) {
+        return function (...args: unknown[]) {
             const id = remote[_AsyncIteratorStart](key, args)
             return new AsyncGenerator(remote, id)
         }
@@ -142,9 +138,7 @@ class AsyncGenerator implements AsyncIterableIterator<unknown>, AsyncIterator<un
     #id: Promise<string>
     #done: boolean
     #check = (val: IterResult) => {
-        isFinished(val).then(x => {
-            if (x) this.#done = true
-        })
+        isFinished(val, () => (this.#done = true))
         return val
     }
     constructor(remoteImpl: AsyncGeneratorInternalMethods, id: Promise<string>) {
@@ -153,23 +147,26 @@ class AsyncGenerator implements AsyncIterableIterator<unknown>, AsyncIterator<un
         this.#done = false
     }
     async return(val: unknown) {
-        if (this.#done) return Promise.resolve({ done: true, value: val })
+        if (this.#done) return makeIteratorResult(true, val)
         return this.#check(this.#remoteImpl[_AsyncIteratorReturn](await this.#id, val))
     }
     async next(val?: unknown) {
-        if (this.#done) return Promise.resolve({ done: true, value: undefined })
+        if (this.#done) return makeIteratorResult(true)
         return this.#check(this.#remoteImpl[_AsyncIteratorNext](await this.#id, val))
     }
     async throw(val?: unknown) {
-        if (this.#done) return Promise.reject(val)
+        if (this.#done) throw val
         return this.#check(this.#remoteImpl[_AsyncIteratorThrow](await this.#id, val))
     }
     [Symbol.asyncIterator]() {
         return this
     }
 }
-function isFinished(result?: IterResult) {
-    return Promise.resolve(result)
-        .then(x => x ?? { done: true, value: undefined })
-        .then(x => !!x.done)
+async function isFinished(result: IterResult | undefined, cb: () => void) {
+    const x = await result
+    !!x?.done && cb
+}
+
+function makeIteratorResult(done: boolean, value: unknown = undefined): IteratorResult<unknown, unknown> {
+    return { done, value }
 }
