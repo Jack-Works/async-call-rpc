@@ -16,9 +16,9 @@ deserialization(serialized: unknown): PromiseLike<any>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  serialized | <code>unknown</code> | Serialized data |
+|  serialized | unknown | Serialized data |
 
 <b>Returns:</b>
 
-`PromiseLike<any>`
+PromiseLike&lt;any&gt;
 

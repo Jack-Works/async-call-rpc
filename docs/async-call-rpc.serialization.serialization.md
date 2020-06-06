@@ -16,9 +16,9 @@ serialization(from: any): PromiseLike<unknown>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  from | <code>any</code> | original data |
+|  from | any | original data |
 
 <b>Returns:</b>
 
-`PromiseLike<unknown>`
+PromiseLike&lt;unknown&gt;
 

@@ -83,7 +83,7 @@ export { Console_2 as Console }
 export function _generateRandomID(): string;
 
 // @public
-export const JSONSerialization: (replacerAndReceiver?: [(string | number)[] | null | undefined, ((this: any, key: string, value: any) => any) | undefined], space?: string | number | undefined) => Serialization;
+export const JSONSerialization: (replacerAndReceiver?: [Parameters<JSON['stringify']>[1], Parameters<JSON['parse']>[1]], space?: string | number | undefined) => Serialization;
 
 // @public
 export const NoSerialization: Serialization;

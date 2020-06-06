@@ -16,12 +16,12 @@ export interface AsyncCallOptions
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [key](./async-call-rpc.asynccalloptions.key.md) | <code>string</code> | A key to prevent collision with other AsyncCalls. |
-|  [log](./async-call-rpc.asynccalloptions.log.md) | <code>AsyncCallLogLevel &#124; boolean</code> | Choose log level. See [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) |
-|  [logger](./async-call-rpc.asynccalloptions.logger.md) | <code>Console</code> | The logger of AsyncCall |
-|  [messageChannel](./async-call-rpc.asynccalloptions.messagechannel.md) | <code>{</code><br/><code>        on(event: string, callback: (data: unknown) =&gt; void): void;</code><br/><code>        emit(event: string, data: unknown): void;</code><br/><code>    }</code> | The message channel can let you transport messages between server and client |
-|  [parameterStructures](./async-call-rpc.asynccalloptions.parameterstructures.md) | <code>'by-position' &#124; 'by-name'</code> | How parameters passed to remote |
-|  [preferLocalImplementation](./async-call-rpc.asynccalloptions.preferlocalimplementation.md) | <code>boolean</code> | Prefer local implementation than remote. |
-|  [serializer](./async-call-rpc.asynccalloptions.serializer.md) | <code>Serialization</code> | How to serialization and deserialization JSON RPC payload |
-|  [strict](./async-call-rpc.asynccalloptions.strict.md) | <code>AsyncCallStrictJSONRPC &#124; boolean</code> | Strict options. See [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) |
+|  [key](./async-call-rpc.asynccalloptions.key.md) | string | A key to prevent collision with other AsyncCalls. |
+|  [log](./async-call-rpc.asynccalloptions.log.md) | [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) \| boolean | Choose log level. See [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) |
+|  [logger](./async-call-rpc.asynccalloptions.logger.md) | Console | The logger of AsyncCall |
+|  [messageChannel](./async-call-rpc.asynccalloptions.messagechannel.md) | { on(event: string, callback: (data: unknown) =&gt; void): void; emit(event: string, data: unknown): void; } | The message channel can let you transport messages between server and client |
+|  [parameterStructures](./async-call-rpc.asynccalloptions.parameterstructures.md) | 'by-position' \| 'by-name' | How parameters passed to remote |
+|  [preferLocalImplementation](./async-call-rpc.asynccalloptions.preferlocalimplementation.md) | boolean | Prefer local implementation than remote. |
+|  [serializer](./async-call-rpc.asynccalloptions.serializer.md) | [Serialization](./async-call-rpc.serialization.md) | How to serialization and deserialization JSON RPC payload |
+|  [strict](./async-call-rpc.asynccalloptions.strict.md) | [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) \| boolean | Strict options. See [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) |
 

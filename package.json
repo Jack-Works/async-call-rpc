@@ -8,12 +8,13 @@
   "scripts": {
     "release": "rimraf ./out && standard-version",
     "start": "node ./watch.js",
-    "build": "tsc",
-    "prepublishOnly": "tsc",
+    "build": "tsc --declaration --outDir ./es/",
+    "prepublishOnly": "npm run roll && npm run build && npm run doc",
     "doc:api": "api-extractor run --local --verbose",
     "doc:md": "api-documenter markdown -o docs -i temp",
     "doc": "npm run doc:api && npm run doc:md",
-    "doc:preview": "docsify serve ."
+    "doc:preview": "docsify serve .",
+    "roll": "rollup -c"
   },
   "repository": {
     "type": "git",
@@ -31,13 +32,14 @@
   "devDependencies": {
     "@microsoft/api-documenter": "latest",
     "@microsoft/api-extractor": "latest",
-    "@rollup/plugin-typescript": "^4.1.1",
-    "docsify-cli": "^4.4.0",
-    "rimraf": "^3.0.0",
-    "rollup": "^2.10.5",
+    "@rollup/plugin-typescript": "^4.1.2",
+    "docsify-cli": "^4.4.1",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.13.1",
+    "rollup-plugin-terser": "^6.1.0",
     "standard-version": "^8.0.0",
     "tslib": "^2.0.0",
-    "typescript": "^3.9.3"
+    "typescript": "^3.9.5"
   },
   "files": [
     "src",

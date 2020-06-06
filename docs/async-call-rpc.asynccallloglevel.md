@@ -16,9 +16,9 @@ export interface AsyncCallLogLevel
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [beCalled](./async-call-rpc.asynccallloglevel.becalled.md) | <code>boolean</code> | Print the log from the client when act as server |
-|  [localError](./async-call-rpc.asynccallloglevel.localerror.md) | <code>boolean</code> | Print errors of self when act as a server |
-|  [remoteError](./async-call-rpc.asynccallloglevel.remoteerror.md) | <code>boolean</code> | Print remote errors when act as a client |
-|  [sendLocalStack](./async-call-rpc.asynccallloglevel.sendlocalstack.md) | <code>boolean</code> | Send the local call stack to remote when act as a client |
-|  [type](./async-call-rpc.asynccallloglevel.type.md) | <code>'basic' &#124; 'pretty'</code> | How to print the log, 'pretty' is recommended in browser. |
+|  [beCalled](./async-call-rpc.asynccallloglevel.becalled.md) | boolean | Print the log from the client when act as server |
+|  [localError](./async-call-rpc.asynccallloglevel.localerror.md) | boolean | Print errors of self when act as a server |
+|  [remoteError](./async-call-rpc.asynccallloglevel.remoteerror.md) | boolean | Print remote errors when act as a client |
+|  [sendLocalStack](./async-call-rpc.asynccallloglevel.sendlocalstack.md) | boolean | Send the local call stack to remote when act as a client |
+|  [type](./async-call-rpc.asynccallloglevel.type.md) | 'basic' \| 'pretty' | How to print the log, 'pretty' is recommended in browser. |
 

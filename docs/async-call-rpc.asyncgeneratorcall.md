@@ -16,12 +16,12 @@ export declare function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(t
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  thisSideImplementation | <code>object &#124; Promise&lt;object&gt; &#124; undefined</code> | The implementation when this AsyncCall acts as a JSON RPC server. |
-|  options | <code>Partial&lt;AsyncCallOptions&gt; &amp; Pick&lt;AsyncCallOptions, 'messageChannel'&gt;</code> | [AsyncCallOptions](./async-call-rpc.asynccalloptions.md) |
+|  thisSideImplementation | object \| Promise&lt;object&gt; \| undefined | The implementation when this AsyncCall acts as a JSON RPC server. |
+|  options | Partial&lt;[AsyncCallOptions](./async-call-rpc.asynccalloptions.md)<!-- -->&gt; &amp; Pick&lt;[AsyncCallOptions](./async-call-rpc.asynccalloptions.md)<!-- -->, 'messageChannel'&gt; | [AsyncCallOptions](./async-call-rpc.asynccalloptions.md) |
 
 <b>Returns:</b>
 
-`_AsyncGeneratorVersionOf<OtherSideImplementedFunctions>`
+\_AsyncGeneratorVersionOf&lt;OtherSideImplementedFunctions&gt;
 
 ## Remarks
 

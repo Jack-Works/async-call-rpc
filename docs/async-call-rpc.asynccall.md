@@ -16,12 +16,12 @@ export declare function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideIm
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  thisSideImplementation | <code>object &#124; Promise&lt;object&gt; &#124; undefined</code> | The implementation when this AsyncCall acts as a JSON RPC server. Can be a Promise. |
-|  options | <code>Partial&lt;AsyncCallOptions&gt; &amp; Pick&lt;AsyncCallOptions, 'messageChannel'&gt;</code> | [AsyncCallOptions](./async-call-rpc.asynccalloptions.md) |
+|  thisSideImplementation | object \| Promise&lt;object&gt; \| undefined | The implementation when this AsyncCall acts as a JSON RPC server. Can be a Promise. |
+|  options | Partial&lt;[AsyncCallOptions](./async-call-rpc.asynccalloptions.md)<!-- -->&gt; &amp; Pick&lt;[AsyncCallOptions](./async-call-rpc.asynccalloptions.md)<!-- -->, 'messageChannel'&gt; | [AsyncCallOptions](./async-call-rpc.asynccalloptions.md) |
 
 <b>Returns:</b>
 
-`_AsyncVersionOf<OtherSideImplementedFunctions>`
+\_AsyncVersionOf&lt;OtherSideImplementedFunctions&gt;
 
 Same as the `OtherSideImplementedFunctions` type parameter, but every function in that interface becomes async and non-function value is removed.
 

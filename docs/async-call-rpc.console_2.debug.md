@@ -14,9 +14,9 @@ debug(...args: unknown[]): void;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  args | <code>unknown[]</code> |  |
+|  args | unknown\[\] |  |
 
 <b>Returns:</b>
 
-`void`
+void
 
