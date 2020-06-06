@@ -10,6 +10,7 @@ import { Request, Response, ErrorResponse, SuccessResponse, hasKey, isJSONRPCObj
 import { removeStackHeader, DOMException, RecoverError, DOMExceptionHeader } from './utils/error'
 import { generateRandomID } from './utils/generateRandomID'
 import { normalizeStrictOptions, normalizeLogOptions } from './utils/normalizeOptions'
+import { AsyncCallIgnoreResponse } from './utils/internalSymbol'
 
 /**
  * What should AsyncCall log to console.
@@ -263,7 +264,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                     }
                 }
                 const result = await promise
-                if (result === _AsyncCallIgnoreResponse) return
+                if (result === AsyncCallIgnoreResponse) return
                 return SuccessResponse(data.id, await promise, !!noUndefinedKeeping)
             } else {
                 return ErrorResponse.InvalidRequest(data.id)
@@ -420,6 +421,3 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         return undefined
     }
 }
-
-/** @internal */
-export const _AsyncCallIgnoreResponse = Symbol.for('AsyncCall: This response should be ignored.')

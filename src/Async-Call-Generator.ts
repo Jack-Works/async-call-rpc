@@ -1,7 +1,8 @@
 /**
  * See the document at https://github.com/Jack-Works/async-call/
  */
-import { AsyncCallOptions, AsyncCall, _AsyncCallIgnoreResponse } from './Async-Call.js'
+import { AsyncCallOptions, AsyncCall } from './Async-Call.js'
+import { AsyncCallIgnoreResponse } from './utils/internalSymbol'
 import { normalizeStrictOptions } from './utils/normalizeOptions'
 import { generateRandomID } from './utils/generateRandomID'
 
@@ -88,11 +89,11 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
         id: string,
         label: keyof Iter,
         next: (iterator: Iter) => IterResult | undefined,
-    ): undefined | IterResult | typeof _AsyncCallIgnoreResponse {
+    ): undefined | IterResult | typeof AsyncCallIgnoreResponse {
         const it = iterators.get(id)
         if (!it) {
             if (strict.methodNotFound) throw new Error(`Remote iterator not found while executing ${label}`)
-            else return _AsyncCallIgnoreResponse
+            else return AsyncCallIgnoreResponse
         }
         const result = next(it)
         isFinished(result, () => iterators.delete(id))
@@ -103,7 +104,7 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
             const iteratorGenerator: unknown = Reflect.get(await thisSideImplementation, method)
             if (typeof iteratorGenerator !== 'function') {
                 if (strict.methodNotFound) throw new Error(method + ' is not a function')
-                else return _AsyncCallIgnoreResponse
+                else return AsyncCallIgnoreResponse
             }
             const iterator = iteratorGenerator(...args)
             const id = generateRandomID()

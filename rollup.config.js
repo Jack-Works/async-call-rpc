@@ -55,6 +55,7 @@ function outputMatrix(name, format) {
                     ecma: 2018,
                     unsafe_arrows: true,
                     passes: 2,
+                    unsafe_symbols: true,
                 },
                 output: {
                     ecma: 2018,

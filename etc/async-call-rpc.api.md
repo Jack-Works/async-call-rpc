@@ -9,9 +9,6 @@
 // @public
 export function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: object | Promise<object> | undefined, options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>): _AsyncVersionOf<OtherSideImplementedFunctions>;
 
-// @internal (undocumented)
-export const _AsyncCallIgnoreResponse: unique symbol;
-
 // @public
 export interface AsyncCallLogLevel {
     beCalled?: boolean;
