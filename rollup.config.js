@@ -1,6 +1,7 @@
 import rollup from 'rollup'
 import ts from '@rollup/plugin-typescript'
 import { terser } from 'rollup-plugin-terser'
+import dts from 'rollup-plugin-dts'
 
 /** @returns {rollup.RollupOptions} */
 const shared = () => ({
@@ -19,7 +20,21 @@ const full = {
     output: outputMatrix('full', ['es', 'umd']),
     ...shared(),
 }
-export default [base, full]
+
+/** @type {rollup.RollupOptions[]} */
+const dtsConfig = [
+    {
+        input: './es/Async-Call.d.ts',
+        output: [{ file: './out/base.es.d.ts', format: 'es' }],
+        plugins: [dts()],
+    },
+    {
+        input: './es/index.d.ts',
+        output: [{ file: './out/full.es.d.ts', format: 'es' }],
+        plugins: [dts()],
+    },
+]
+export default [base, full, ...dtsConfig]
 
 /**
  * @param {string} name
