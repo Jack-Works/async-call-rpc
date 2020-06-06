@@ -4,6 +4,8 @@
  * @remarks
  * Runtime requirement: At least ECMAScript 6, `globalThis`, well known Symbol `Symbol.asyncIterator` if you use Async Call remote generator function support.
  *
+ * This package ships ES2018 syntax (leave async function untransformed).
+ *
  * ====================================
  *
  * Install

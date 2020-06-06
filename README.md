@@ -2,6 +2,10 @@
 
 See the document at [./docs/async-call-rpc.md](https://jack-works.github.io/async-call/async-call-rpc.html)
 
+-   This package ships ES2018 syntax (leave async function untransformed).
+
+-   Runtime requirement: At least ECMAScript 6, `globalThis`, well known Symbol `Symbol.asyncIterator` if you use Async Call remote generator function support.
+
 ## Entry
 
 There are two entry, `base` or `full`. The `full` version support a private JSON RPC extension (The remote ECMAScript async generator `AsyncGeneratorCall`).
