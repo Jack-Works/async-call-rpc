@@ -3,8 +3,19 @@
   "version": "1.0.4",
   "type": "module",
   "description": "A lightweight JSON RPC server & client",
-  "main": "out/index.js",
-  "module": "out/index.js",
+  "main": "out/full.cjs",
+  "module": "out/full.mjs",
+  "types": "./out/full.es.d.ts",
+  "exports": {
+    ".": {
+      "require": "./out/full.cjs",
+      "import": "./out/full.mjs"
+    },
+    "./base": {
+      "require": "./out/base.cjs",
+      "import": "./out/base.mjs"
+    }
+  },
   "scripts": {
     "release": "rimraf ./out && standard-version",
     "start": "node ./watch.js",

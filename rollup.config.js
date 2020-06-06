@@ -25,12 +25,12 @@ const full = {
 const dtsConfig = [
     {
         input: './es/Async-Call.d.ts',
-        output: [{ file: './out/base.es.d.ts', format: 'es' }],
+        output: [{ file: './out/base.d.ts', format: 'es' }],
         plugins: [dts()],
     },
     {
         input: './es/index.d.ts',
-        output: [{ file: './out/full.es.d.ts', format: 'es' }],
+        output: [{ file: './out/full.d.ts', format: 'es' }],
         plugins: [dts()],
     },
 ]
@@ -38,15 +38,16 @@ export default [base, full, ...dtsConfig]
 
 /**
  * @param {string} name
- * @param {rollup.ModuleFormat[]} format
+ * @param {('es' | 'umd')[]} format
  * @returns {rollup.OutputOptions[]}
  */
 function outputMatrix(name, format) {
     return format.map((f) => ({
-        file: `./out/${name}.${f}.js`,
+        file: `./out/${name}.${f === 'es' ? 'm' : 'c'}js`,
         name: 'AsyncCall',
         sourcemap: true,
-        banner: '/// <reference types="./full.es.d.ts" />',
+        format: f,
+        banner: `/// <reference types="./${name}.d.ts" />`,
         plugins: [
             terser({
                 compress: {
