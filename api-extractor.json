@@ -256,7 +256,7 @@
          * SUPPORTED TOKENS: <projectFolder>, <packageName>, <unscopedPackageName>
          * DEFAULT VALUE: "<lookup>"
          */
-        // "tsdocMetadataFilePath": "<projectFolder>/dist/tsdoc-metadata.json"
+        "tsdocMetadataFilePath": "<projectFolder>/temp/tsdoc-metadata.json"
     },
 
     /**
