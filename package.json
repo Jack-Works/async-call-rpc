@@ -5,7 +5,7 @@
   "description": "A lightweight JSON RPC server & client",
   "main": "out/full.cjs",
   "module": "out/full.mjs",
-  "types": "./out/full.es.d.ts",
+  "types": "./out/full.d.ts",
   "exports": {
     ".": {
       "require": "./out/full.cjs",
