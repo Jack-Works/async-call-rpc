@@ -29,6 +29,7 @@ export interface AsyncCallOptions {
     };
     parameterStructures: 'by-position' | 'by-name';
     preferLocalImplementation: boolean;
+    preservePauseOnException: boolean;
     serializer: Serialization;
     strict: AsyncCallStrictJSONRPC | boolean;
 }

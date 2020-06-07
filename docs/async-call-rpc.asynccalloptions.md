@@ -22,6 +22,7 @@ export interface AsyncCallOptions
 |  [messageChannel](./async-call-rpc.asynccalloptions.messagechannel.md) | { on(event: string, callback: (data: unknown) =&gt; void): void; emit(event: string, data: unknown): void; } | The message channel can let you transport messages between server and client |
 |  [parameterStructures](./async-call-rpc.asynccalloptions.parameterstructures.md) | 'by-position' \| 'by-name' | How parameters passed to remote |
 |  [preferLocalImplementation](./async-call-rpc.asynccalloptions.preferlocalimplementation.md) | boolean | Prefer local implementation than remote. |
+|  [preservePauseOnException](./async-call-rpc.asynccalloptions.preservepauseonexception.md) | boolean | (Browser) Try to preserve the browser "pause on uncaught exception". |
 |  [serializer](./async-call-rpc.asynccalloptions.serializer.md) | [Serialization](./async-call-rpc.serialization.md) | How to serialization and deserialization JSON RPC payload |
 |  [strict](./async-call-rpc.asynccalloptions.strict.md) | [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) \| boolean | Strict options. See [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) |
 

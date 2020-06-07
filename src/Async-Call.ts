@@ -11,6 +11,7 @@ import { removeStackHeader, RecoverError } from './utils/error'
 import { generateRandomID } from './utils/generateRandomID'
 import { normalizeStrictOptions, normalizeLogOptions } from './utils/normalizeOptions'
 import { AsyncCallIgnoreResponse } from './utils/internalSymbol'
+import { preservePauseOnException as preservePauseOnExceptionCaller } from './utils/preservePauseOnException'
 
 /**
  * What should AsyncCall log to console.
@@ -152,6 +153,18 @@ export interface AsyncCallOptions {
      * @defaultValue false
      */
     preferLocalImplementation: boolean
+    /**
+     * (Browser) Try to preserve the browser "pause on uncaught exception".
+     * @remarks
+     * This options only works for the browser.
+     *
+     * DON'T use it in production. Use it like "preservePauseOnException": process.env.NODE_ENV === "development"
+     *
+     * It's based on a hacky way to preserve the breakpoint. If you find your the server function isn't get called or called twice, try to close this option.
+     *
+     * @defaultValue false
+     */
+    preservePauseOnException: boolean
 }
 
 /**
@@ -173,6 +186,7 @@ const AsyncCallDefaultOptions = (<T extends Partial<AsyncCallOptions>>(a: T) => 
     log: true,
     parameterStructures: 'by-position',
     preferLocalImplementation: false,
+    preservePauseOnException: false,
 } as const)
 
 /**
@@ -199,7 +213,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
 ): _AsyncVersionOf<OtherSideImplementedFunctions> {
     let resolvedThisSideImplementation: object | undefined = undefined
     Promise.resolve(thisSideImplementation).then((x) => (resolvedThisSideImplementation = x))
-    const { serializer, key, strict, log, parameterStructures, preferLocalImplementation } = {
+    const { serializer, key, strict, log, parameterStructures, preferLocalImplementation, preservePauseOnException } = {
         ...AsyncCallDefaultOptions,
         ...options,
     }
@@ -236,13 +250,9 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             if (Array.isArray(params) || (typeof params === 'object' && params !== null)) {
                 const args = Array.isArray(params) ? params : [params]
                 frameworkStack = removeStackHeader(new Error().stack)
-                const promise = new Promise((resolve, reject) => {
-                    try {
-                        resolve(executor(...args))
-                    } catch (e) {
-                        reject(e)
-                    }
-                })
+                const promise = preservePauseOnException
+                    ? preservePauseOnExceptionCaller((x) => (frameworkStack = x), executor, args)
+                    : new Promise((resolve) => resolve(executor(...args)))
                 if (logBeCalled) {
                     if (logType === 'basic')
                         console.log(`${options.key}.${data.method}(${[...args].toString()}) @${data.id}`)
@@ -373,13 +383,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                     if (preferLocalImplementation && resolvedThisSideImplementation && typeof method === 'string') {
                         const localImpl: unknown = resolvedThisSideImplementation[method as keyof object]
                         if (localImpl && typeof localImpl === 'function') {
-                            return new Promise((resolve, reject) => {
-                                try {
-                                    resolve(localImpl(...params))
-                                } catch (e) {
-                                    reject(e)
-                                }
-                            })
+                            return new Promise((resolve) => resolve(localImpl(...params)))
                         }
                     }
                     return new Promise((resolve, reject) => {

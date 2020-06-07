@@ -65,19 +65,27 @@
             let count = 0
             function define(def, key = `server${count++}`) {
                 // define server
-                AsyncCall(def, { messageChannel: server, key })
+                AsyncCall(def, { messageChannel: server, key, preservePauseOnException: true })
                 // define client
                 globalThis[key] = AsyncCall({}, { messageChannel: client, key })
-                console.log('Server is available as global variable', key, globalThis[key])
+                console.log('Server is available as global variable', key, globalThis[key], def)
             }
             function sleep(ms) {
                 return new Promise((resolve) => setTimeout(resolve, ms))
             }
             define({
                 async add(a, b) {
-                    throw 1
+                    return a + b
+                },
+                async error() {
+                    await sleep(200)
+                    throws()
                 },
             })
+            function throws(i = 0) {
+                if (i <= 0) return throws(++i)
+                throw new Error()
+            }
         </script>
     </body>
 </html>
