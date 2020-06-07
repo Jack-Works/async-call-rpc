@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1](https://github.com/Jack-Works/async-call/compare/v2.0.0...v2.0.1) (2020-06-07)
+
+
+### Bug Fixes
+
+* wrong type path ([80c1e18](https://github.com/Jack-Works/async-call/commit/80c1e18ec093c1897eba2d48e23836ac909c7cbb))
+
 ## [2.0.0](https://github.com/Jack-Works/async-call/compare/v1.0.4...v2.0.0) (2020-06-07)
 
 
