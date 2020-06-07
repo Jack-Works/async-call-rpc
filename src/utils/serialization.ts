@@ -8,12 +8,12 @@ export interface Serialization {
      * Do serialization
      * @param from - original data
      */
-    serialization(from: any): PromiseLike<unknown>
+    serialization(from: any): unknown | PromiseLike<unknown>
     /**
      * Do deserialization
      * @param serialized - Serialized data
      */
-    deserialization(serialized: unknown): PromiseLike<any>
+    deserialization(serialized: unknown): unknown | PromiseLike<unknown>
 }
 
 /**

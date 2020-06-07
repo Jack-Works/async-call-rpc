@@ -82,8 +82,8 @@ export const NoSerialization: Serialization;
 
 // @public
 export interface Serialization {
-    deserialization(serialized: unknown): PromiseLike<any>;
-    serialization(from: any): PromiseLike<unknown>;
+    deserialization(serialized: unknown): unknown | PromiseLike<unknown>;
+    serialization(from: any): unknown | PromiseLike<unknown>;
 }
 
 // @internal

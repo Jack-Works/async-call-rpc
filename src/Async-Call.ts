@@ -395,7 +395,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                                 ? param0
                                 : params
                         const request = Request(id, method as string, param, sendingStack)
-                        serializer.serialization(request).then((data) => {
+                        Promise.resolve(serializer.serialization(request)).then((data) => {
                             message.emit(key, data)
                             requestContext.set(id, {
                                 f: [resolve, reject],

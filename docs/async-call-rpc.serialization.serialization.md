@@ -9,7 +9,7 @@ Do serialization
 <b>Signature:</b>
 
 ```typescript
-serialization(from: any): PromiseLike<unknown>;
+serialization(from: any): unknown | PromiseLike<unknown>;
 ```
 
 ## Parameters
@@ -20,5 +20,5 @@ serialization(from: any): PromiseLike<unknown>;
 
 <b>Returns:</b>
 
-PromiseLike&lt;unknown&gt;
+unknown \| PromiseLike&lt;unknown&gt;
 
