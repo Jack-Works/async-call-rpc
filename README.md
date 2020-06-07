@@ -4,7 +4,11 @@ See the document at [./docs/async-call-rpc.md](https://jack-works.github.io/asyn
 
 -   This package ships ES2018 syntax (leave async function untransformed).
 
--   Runtime requirement: At least ECMAScript 6, `globalThis`, well known Symbol `Symbol.asyncIterator` if you use Async Call remote generator function support.
+-   Runtime requirement: At least ECMAScript 6, `globalThis`
+
+-   Well known Symbol `Symbol.asyncIterator` if you use AsyncCallGenerator function support.
+
+-   Note: Because this library is not presuming you are using any ECMAScript engine, therefore you need to implement the MessageChannel interface (`{ on(event: string, callback: (data: unknown) => void): void; emit(event: string, data: unknown): void }`) to let this library exchange message. `emit()` on the client side should call the callback on the server side.
 
 ## Entry
 
