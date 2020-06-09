@@ -6,11 +6,20 @@
 
 [CHANGELOG.md](./CHANGELOG.md) | [Document of AsyncCall](https://jack-works.github.io/async-call/async-call-rpc.asynccall.html) | [Document of AsyncGeneratorCall](https://jack-works.github.io/async-call/async-call-rpc.asyncgeneratorcall.html) | [Playground](https://jack-works.github.io/async-call/)
 
+Chapters:
+
+-   [The first concept: `messageChannel`](#the-first-concept-messagechannel)
+-   [Example](#example)
+-   [Installation](#installation)
+-   [Entries](#entries)
+-   [Implemented JSON RPC internal methods](#implemented-json-rpc-internal-methods)
+-   [Non-standard extension to JSON RPC specification](#non-standard-extension-to-json-rpc-specification)
+
 ## Features
 
--   Zero dependency!
--   Running in any ES6+ environment (+`globalThis`), without any dependency on Web or Node API
--   Simple to define server and simple to use as client
+-   Zero dependencies!
+-   Running in any ES6+ environment (+`globalThis`), no requirement on any Web or Node API
+-   Simple to define a server and simple to use as a client
 -   Full TypeScript support
 -   Support custom serializer to pass complex data types
 -   Support async generator (Require both server and client supports 4 JSON RPC internal methods, and `Symbol.asyncIterator`, `(async function* () {}).constructor.prototype` available)
@@ -20,7 +29,7 @@
 -   NOT support ECMAScript 5 (ES6 `Proxy` is the core of this library)
 -   This package is shipping ECMAScript 2018 syntax (including `async function`). You need to use a transformer to transpile to ES6.
 -   The default configuration is not standard JSON RPC (with a small extension to help easy using in JavaScript). But you can [switch on the "strict" mode](https://jack-works.github.io/async-call/async-call-rpc.asynccallstrictjsonrpc.html)
--   The async generator mode might leaks memory on server. Use it by your own caution.
+-   The async generator mode might leak memory on the server. Use it by your caution.
 -   NOT support JSON RPC 1.0
 
 ## The first concept: `messageChannel`
@@ -29,8 +38,8 @@
 
 The `messageChannel` is the only thing you need to learn to use this library.
 
-This library is designed to not relay on any specific platform. Only require things defined in the ECMAScript specification.
-In the ES spec, there in no I/O related API so it's impossible to communicate with the outer world.
+This library is designed to not rely on any specific platform. Only require things defined in the ECMAScript specification.
+In the ES spec, there is no I/O related API so it's impossible to communicate with the outer world.
 
 Therefore, this library require you to provide an object in the following shape:
 
@@ -46,7 +55,7 @@ In general, the `MessageChannel` should have the following semantics:
 -   When the `data` from the remote arrives (by `addEventListener('message', ...)`, etc), the `callback` should be called.
 -   When the `emit` method is called, the `data` should be sent to the remote properly (by `postMessage` or `fetch`, etc).
 
-> There is a [plan to add built-in messageChannel for Web, Node.JS and Deno](https://github.com/Jack-Works/async-call/issues/15) to simplify the setup.
+> There is a [plan to add built-in messageChannel for Web, Node.JS, and Deno](https://github.com/Jack-Works/async-call/issues/15) to simplify the setup.
 
 The following document will assume you have defined your `messageChannel`.
 
@@ -114,15 +123,15 @@ import { AsyncCall } from 'https://cdn.jsdelivr.net/npm/async-call-rpc@latest/ou
 
 Load the `out/base.mjs` (ES Module) or `out/base.cjs` (UMD, CommonJS or AMD) to your project.
 
-## Entry
+## Entries
 
-> Currently the default entry is `full` but in the next major version it will be `base`.
+> Currently the default entry is `full` but in the next major version, it will be `base`.
 
-This library has 2 entry. `base` and `full`. The difference is the `full` version includes the `AsyncGeneratorCall` but the base version don't.
+This library has 2 entry. `base` and `full`. The difference is the `full` version includes the `AsyncGeneratorCall` but the base version doesn't.
 
 ### Browser / Deno
 
-Please checkout https://www.jsdelivr.com/package/npm/async-call-rpc?path=out
+Please check out https://www.jsdelivr.com/package/npm/async-call-rpc?path=out
 
 ### Node:
 
@@ -158,7 +167,7 @@ interface JSONRPC_Internal_Methods {
 
 ### remoteStack on Request object
 
-This library can send client call stack to the server to make the logger better.
+This library can send the client the call stack to the server to make the logger better.
 
 Controlled by [`option.log.sendLocalStack`](https://jack-works.github.io/async-call/async-call-rpc.asynccallloglevel.sendlocalstack.html). Default to `false`.
 
@@ -185,7 +194,7 @@ interface JSONRPC_Response_object {
 
 ### The implementation-defined Error data
 
-In the JSON RPC specification, this is implementation defined. (Plan to [add API for custom Error data](https://github.com/Jack-Works/async-call/issues/8)).
+In the JSON RPC specification, this is implementation-defined. (Plan to [add API for custom Error data](https://github.com/Jack-Works/async-call/issues/8)).
 
 This library will try to "Recover" the Error object if there is enough information from another side.
 
