@@ -113,7 +113,7 @@ import { AsyncCall } from 'https://cdn.jsdelivr.net/npm/async-call-rpc@latest/ou
 ### UMD
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/async-call-rpc@2.0.1/out/base.cjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/async-call-rpc@2.0.1/out/base.js"></script>
 <script>
     const { AsyncCall } = globalThis.AsyncCall
 </script>
@@ -121,7 +121,7 @@ import { AsyncCall } from 'https://cdn.jsdelivr.net/npm/async-call-rpc@latest/ou
 
 ### In other JS environment
 
-Load the `out/base.mjs` (ES Module) or `out/base.cjs` (UMD, CommonJS or AMD) to your project.
+Load the `out/base.mjs` (ES Module) or `out/base.js` (UMD, CommonJS or AMD) to your project.
 
 ## Entries
 

@@ -135,29 +135,33 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
     return new Proxy({}, { get: proxyTrap }) as _AsyncGeneratorVersionOf<OtherSideImplementedFunctions>
 }
 class AsyncGenerator implements AsyncIterableIterator<unknown>, AsyncIterator<unknown, unknown, unknown> {
-    #remoteImpl: AsyncGeneratorInternalMethods
-    #id: Promise<string>
-    #done: boolean
-    #check = (val: IterResult) => {
-        isFinished(val, () => (this.#done = true))
+    // #remoteImpl
+    private __0: AsyncGeneratorInternalMethods
+    // #id
+    private __1: Promise<string>
+    // #done
+    private __2: boolean
+    // #check
+    private __3 = (val: IterResult) => {
+        isFinished(val, () => (this.__2 = true))
         return val
     }
     constructor(remoteImpl: AsyncGeneratorInternalMethods, id: Promise<string>) {
-        this.#remoteImpl = remoteImpl
-        this.#id = id
-        this.#done = false
+        this.__0 = remoteImpl
+        this.__1 = id
+        this.__2 = false
     }
     async return(val: unknown) {
-        if (this.#done) return makeIteratorResult(true, val)
-        return this.#check(this.#remoteImpl[_AsyncIteratorReturn](await this.#id, val))
+        if (this.__2) return makeIteratorResult(true, val)
+        return this.__3(this.__0[_AsyncIteratorReturn](await this.__1, val))
     }
     async next(val?: unknown) {
-        if (this.#done) return makeIteratorResult(true)
-        return this.#check(this.#remoteImpl[_AsyncIteratorNext](await this.#id, val))
+        if (this.__2) return makeIteratorResult(true)
+        return this.__3(this.__0[_AsyncIteratorNext](await this.__1, val))
     }
     async throw(val?: unknown) {
-        if (this.#done) throw val
-        return this.#check(this.#remoteImpl[_AsyncIteratorThrow](await this.#id, val))
+        if (this.__2) throw val
+        return this.__3(this.__0[_AsyncIteratorThrow](await this.__1, val))
     }
     [Symbol.asyncIterator]() {
         return this

@@ -3,7 +3,7 @@
  * @packageDocumentation
  * @see https://github.com/Jack-Works/async-call
  * @remarks
- * See the introduction at {@link https://github.com/Jack-Works/async-call Github}
+ * See the introduction at {@link https://github.com/Jack-Works/async-call | Github}
  */
 
 export * from './Async-Call'

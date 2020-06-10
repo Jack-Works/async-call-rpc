@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -13,7 +12,9 @@
         <hr />
         Call <code>define(fns)</code> to define a new demo JSON RPC server. Call <code>await sleep(ms)</code> to slow
         down the server.
-        <script>
+        <script type="module">
+            import * as lib from 'https://cdn.jsdelivr.net/npm/async-call-rpc@latest/out/full.mjs'
+            const { AsyncCall } = lib
             class PlayGroundChannel {
                 static server = document.createElement('a')
                 static client = document.createElement('a')
@@ -41,6 +42,8 @@
             }
             const server = new PlayGroundChannel('server')
             const client = new PlayGroundChannel('client')
+            Object.assign(globalThis, lib)
+            Object.assign(globalThis, { server, client, define, sleep })
             let count = 0
             function define(def, key = `server${count++}`) {
                 // define server
@@ -52,15 +55,13 @@
             function sleep(ms) {
                 return new Promise((resolve) => setTimeout(resolve, ms))
             }
-            import('https://unpkg.com/async-call-rpc').then((x) => {
-                Object.assign(globalThis, x)
-                console.log('Try to run: await server0.add(42, 0)')
-                define({
-                    async add(a, b) {
-                        await sleep(1000)
-                        return a + b
-                    },
-                })
+            Object.assign(globalThis, AsyncCall)
+            console.log('Try to run: await server0.add(42, 0)')
+            define({
+                async add(a, b) {
+                    await sleep(1000)
+                    return a + b
+                },
             })
         </script>
     </body>

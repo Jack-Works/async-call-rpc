@@ -5,7 +5,7 @@ import dts from 'rollup-plugin-dts'
 
 /** @returns {rollup.RollupOptions} */
 const shared = () => ({
-    plugins: [ts({})],
+    plugins: [ts()],
 })
 /** @type {rollup.RollupOptions} */
 const base = {
@@ -43,7 +43,7 @@ export default [base, full, ...dtsConfig]
  */
 function outputMatrix(name, format) {
     return format.map((f) => ({
-        file: `./out/${name}.${f === 'es' ? 'm' : 'c'}js`,
+        file: `./out/${name}.${f === 'es' ? 'm' : ''}js`,
         name: 'AsyncCall',
         sourcemap: true,
         format: f,

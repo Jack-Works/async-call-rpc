@@ -1,18 +1,17 @@
 {
   "name": "async-call-rpc",
   "version": "2.0.1",
-  "type": "module",
   "description": "A lightweight JSON RPC server & client",
-  "main": "out/full.cjs",
+  "main": "out/full.js",
   "module": "out/full.mjs",
   "types": "./out/full.d.ts",
   "exports": {
     ".": {
-      "require": "./out/full.cjs",
+      "require": "./out/full.js",
       "import": "./out/full.mjs"
     },
     "./base": {
-      "require": "./out/base.cjs",
+      "require": "./out/base.js",
       "import": "./out/base.mjs"
     }
   },
