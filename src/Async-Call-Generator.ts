@@ -81,7 +81,7 @@ type IterResult = IteratorResult<unknown> | Promise<IteratorResult<unknown>>
  */
 export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
     thisSideImplementation: object | Promise<object> = {},
-    options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>,
+    options: AsyncCallOptions,
 ): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions> {
     const iterators = new Map<string, Iter>()
     const strict = normalizeStrictOptions(options.strict || false)

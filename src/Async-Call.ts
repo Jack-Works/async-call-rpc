@@ -97,7 +97,7 @@ export interface AsyncCallOptions {
      *
      * @defaultValue `default-jsonrpc`
      */
-    key: string
+    key?: string
     /**
      * How to serialization and deserialization JSON RPC payload
      *
@@ -111,14 +111,14 @@ export interface AsyncCallOptions {
      *
      * @defaultValue {@link NoSerialization}
      */
-    serializer: Serialization
+    serializer?: Serialization
     /**
      * The logger of AsyncCall
      * @remarks
      * See {@link Console}
      * @defaultValue globalThis.console
      */
-    logger: Console
+    logger?: Console
     /**
      * The message channel can let you transport messages between server and client
      * @example
@@ -138,26 +138,26 @@ export interface AsyncCallOptions {
      * Choose log level. See {@link AsyncCallLogLevel}
      * @defaultValue true
      */
-    log: AsyncCallLogLevel | boolean
+    log?: AsyncCallLogLevel | boolean
     /**
      * Strict options. See {@link AsyncCallStrictJSONRPC}
      * @defaultValue false
      */
-    strict: AsyncCallStrictJSONRPC | boolean
+    strict?: AsyncCallStrictJSONRPC | boolean
     /**
      * How parameters passed to remote
      * @remarks
      * See {@link https://www.jsonrpc.org/specification#parameter_structures}
      * @defaultValue "by-position"
      */
-    parameterStructures: 'by-position' | 'by-name'
+    parameterStructures?: 'by-position' | 'by-name'
     /**
      * Prefer local implementation than remote.
      * @remarks
      * If you call a RPC method and it is also defined in the local, open this flag will call the local implementation directly instead of send a RPC request.
      * @defaultValue false
      */
-    preferLocalImplementation: boolean
+    preferLocalImplementation?: boolean
     /**
      * (Browser) Try to preserve the browser "pause on uncaught exception".
      * @remarks
@@ -169,7 +169,7 @@ export interface AsyncCallOptions {
      *
      * @defaultValue false
      */
-    preservePauseOnException: boolean
+    preservePauseOnException?: boolean
 }
 
 /**
@@ -184,7 +184,7 @@ export type _AsyncVersionOf<T> = {
         : never
 }
 
-const AsyncCallDefaultOptions = (<T extends Partial<AsyncCallOptions>>(a: T) => a)({
+const AsyncCallDefaultOptions = (<T extends Omit<Required<AsyncCallOptions>, 'messageChannel' | 'logger'>>(a: T) => a)({
     serializer: NoSerialization,
     key: 'default-jsonrpc',
     strict: false,
@@ -214,7 +214,7 @@ const AsyncCallDefaultOptions = (<T extends Partial<AsyncCallOptions>>(a: T) => 
  */
 export function AsyncCall<OtherSideImplementedFunctions = {}>(
     thisSideImplementation: object | Promise<object> = {},
-    options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>,
+    options: AsyncCallOptions,
 ): _AsyncVersionOf<OtherSideImplementedFunctions> {
     let resolvedThisSideImplementation: object | undefined = undefined
     Promise.resolve(thisSideImplementation).then((x) => (resolvedThisSideImplementation = x))
@@ -280,7 +280,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                 }
                 const result = await promise
                 if (result === AsyncCallIgnoreResponse) return
-                return SuccessResponse(data.id, await promise, !!noUndefinedKeeping)
+                return SuccessResponse(data.id, await promise, noUndefinedKeeping)
             } else {
                 return ErrorResponse.InvalidRequest(data.id)
             }
@@ -417,9 +417,10 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         if (hasKey(data, 'method')) {
             return onRequest(data)
         } else if ('error' in data || 'result' in data) {
+            if (hasKey(data, 'resultIsUndefined')) (data as any).result = undefined
             onResponse(data)
         } else {
-            if ('resultIsUndefined' in data) {
+            if (hasKey(data, 'resultIsUndefined')) {
                 ;(data as any).result = undefined
                 onResponse(data)
             } else return ErrorResponse.InvalidRequest((data as any).id)

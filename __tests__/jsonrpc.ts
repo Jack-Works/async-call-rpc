@@ -5,8 +5,8 @@ test('Request', () => {
 })
 
 test('SuccessResponse', () => {
-    expect(SuccessResponse('id', undefined, true)).toMatchSnapshot('undefined-keeping')
-    expect(SuccessResponse('id2', undefined, false)).toMatchSnapshot('undefined-dropping')
+    expect(SuccessResponse('id', undefined, false)).toMatchSnapshot('undefined-keeping')
+    expect(SuccessResponse('id2', undefined, true)).toMatchSnapshot('undefined-dropping')
     expect(SuccessResponse('id3', { data: 'result' }, false)).toMatchSnapshot('success')
 })
 

@@ -24,7 +24,8 @@
     "doc:md": "api-documenter markdown -o docs -i temp",
     "doc": "npm run doc:api && npm run doc:md",
     "doc:preview": "docsify serve .",
-    "roll": "rollup -c"
+    "roll": "rollup -c",
+    "test": "jest --coverage --coverage-provider=v8"
   },
   "repository": {
     "type": "git",

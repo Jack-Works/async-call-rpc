@@ -161,7 +161,6 @@ Object {
   "id": "id2",
   "jsonrpc": "2.0",
   "result": null,
-  "resultIsUndefined": true,
 }
 `;
 
@@ -170,5 +169,6 @@ Object {
   "id": "id",
   "jsonrpc": "2.0",
   "result": null,
+  "resultIsUndefined": true,
 }
 `;
