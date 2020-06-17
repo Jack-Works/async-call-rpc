@@ -68,6 +68,14 @@ export interface AsyncCallStrictJSONRPC {
 }
 
 /**
+ * The message channel interface that allows
+ */
+export interface MessageChannel {
+    on(event: string, eventListener: (data: unknown) => void): void
+    emit(event: string, data: unknown): void
+}
+
+/**
  * Options for {@link AsyncCall}
  * @public
  */
@@ -125,10 +133,7 @@ export interface AsyncCallOptions {
      * }
      * ```
      */
-    messageChannel: {
-        on(event: string, callback: (data: unknown) => void): void
-        emit(event: string, data: unknown): void
-    }
+    messageChannel: MessageChannel
     /**
      * Choose log level. See {@link AsyncCallLogLevel}
      * @defaultValue true

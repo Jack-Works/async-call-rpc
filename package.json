@@ -44,6 +44,7 @@
     "@microsoft/api-extractor": "latest",
     "@rollup/plugin-typescript": "^4.1.2",
     "@types/jest": "^26.0.0",
+    "@types/node": "^14.0.13",
     "docsify-cli": "^4.4.1",
     "jest": "^26.0.1",
     "prettier": "^2.0.5",
