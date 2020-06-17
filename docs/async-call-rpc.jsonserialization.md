@@ -9,7 +9,7 @@ Create a serialization by JSON.parse/stringify
 <b>Signature:</b>
 
 ```typescript
-JSONSerialization: (replacerAndReceiver?: [Parameters<JSON['stringify']>[1], Parameters<JSON['parse']>[1]], space?: string | number | undefined) => Serialization
+JSONSerialization: (replacerAndReceiver?: [(((key: string, value: any) => any) | undefined)?, (((key: string, value: any) => any) | undefined)?], space?: string | number | undefined) => Serialization
 ```
 
 ## Remarks

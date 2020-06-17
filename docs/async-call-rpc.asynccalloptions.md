@@ -18,8 +18,8 @@ export interface AsyncCallOptions
 |  --- | --- | --- |
 |  [key](./async-call-rpc.asynccalloptions.key.md) | string | A key to prevent collision with other AsyncCalls. |
 |  [log](./async-call-rpc.asynccalloptions.log.md) | [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) \| boolean | Choose log level. See [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) |
-|  [logger](./async-call-rpc.asynccalloptions.logger.md) | Console | The logger of AsyncCall |
-|  [messageChannel](./async-call-rpc.asynccalloptions.messagechannel.md) | { on(event: string, callback: (data: unknown) =&gt; void): void; emit(event: string, data: unknown): void; } | The message channel can let you transport messages between server and client |
+|  [logger](./async-call-rpc.asynccalloptions.logger.md) | [Console](./async-call-rpc.console.md) | The logger of AsyncCall |
+|  [messageChannel](./async-call-rpc.asynccalloptions.messagechannel.md) | [MessageChannel](./async-call-rpc.messagechannel.md) | The message channel can let you transport messages between server and client |
 |  [parameterStructures](./async-call-rpc.asynccalloptions.parameterstructures.md) | 'by-position' \| 'by-name' | How parameters passed to remote |
 |  [preferLocalImplementation](./async-call-rpc.asynccalloptions.preferlocalimplementation.md) | boolean | Prefer local implementation than remote. |
 |  [preservePauseOnException](./async-call-rpc.asynccalloptions.preservepauseonexception.md) | boolean | (Browser) Try to preserve the browser "pause on uncaught exception". |

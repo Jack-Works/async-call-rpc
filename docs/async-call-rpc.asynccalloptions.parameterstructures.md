@@ -9,7 +9,7 @@ How parameters passed to remote
 <b>Signature:</b>
 
 ```typescript
-parameterStructures: 'by-position' | 'by-name';
+parameterStructures?: 'by-position' | 'by-name';
 ```
 
 ## Remarks

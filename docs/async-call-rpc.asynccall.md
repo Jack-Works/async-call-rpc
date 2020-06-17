@@ -9,7 +9,7 @@ Create a RPC server &amp; client.
 <b>Signature:</b>
 
 ```typescript
-export declare function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: object | Promise<object> | undefined, options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>): _AsyncVersionOf<OtherSideImplementedFunctions>;
+export declare function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: object | Promise<object> | undefined, options: AsyncCallOptions): _AsyncVersionOf<OtherSideImplementedFunctions>;
 ```
 
 ## Parameters
@@ -17,7 +17,7 @@ export declare function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideIm
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  thisSideImplementation | object \| Promise&lt;object&gt; \| undefined | The implementation when this AsyncCall acts as a JSON RPC server. Can be a Promise. |
-|  options | Partial&lt;[AsyncCallOptions](./async-call-rpc.asynccalloptions.md)<!-- -->&gt; &amp; Pick&lt;[AsyncCallOptions](./async-call-rpc.asynccalloptions.md)<!-- -->, 'messageChannel'&gt; | [AsyncCallOptions](./async-call-rpc.asynccalloptions.md) |
+|  options | [AsyncCallOptions](./async-call-rpc.asynccalloptions.md) | [AsyncCallOptions](./async-call-rpc.asynccalloptions.md) |
 
 <b>Returns:</b>
 

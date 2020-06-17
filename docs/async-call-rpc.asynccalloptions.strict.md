@@ -9,5 +9,5 @@ Strict options. See [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjso
 <b>Signature:</b>
 
 ```typescript
-strict: AsyncCallStrictJSONRPC | boolean;
+strict?: AsyncCallStrictJSONRPC | boolean;
 ```

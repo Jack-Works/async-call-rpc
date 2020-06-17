@@ -9,5 +9,5 @@ Choose log level. See [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md)
 <b>Signature:</b>
 
 ```typescript
-log: AsyncCallLogLevel | boolean;
+log?: AsyncCallLogLevel | boolean;
 ```

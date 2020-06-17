@@ -9,7 +9,7 @@
 <b>Signature:</b>
 
 ```typescript
-preservePauseOnException: boolean;
+preservePauseOnException?: boolean;
 ```
 
 ## Remarks

@@ -69,6 +69,7 @@ export interface AsyncCallStrictJSONRPC {
 
 /**
  * The message channel interface that allows
+ * @public
  */
 export interface MessageChannel {
     on(event: string, eventListener: (data: unknown) => void): void

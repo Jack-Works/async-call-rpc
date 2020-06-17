@@ -7,7 +7,7 @@
 // Warning: (ae-incompatible-release-tags) The symbol "AsyncCall" is marked as @public, but its signature references "_AsyncVersionOf" which is marked as @internal
 //
 // @public
-export function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: object | Promise<object> | undefined, options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>): _AsyncVersionOf<OtherSideImplementedFunctions>;
+export function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: object | Promise<object> | undefined, options: AsyncCallOptions): _AsyncVersionOf<OtherSideImplementedFunctions>;
 
 // @public
 export interface AsyncCallLogLevel {
@@ -20,18 +20,15 @@ export interface AsyncCallLogLevel {
 
 // @public
 export interface AsyncCallOptions {
-    key: string;
-    log: AsyncCallLogLevel | boolean;
-    logger: Console_2;
-    messageChannel: {
-        on(event: string, callback: (data: unknown) => void): void;
-        emit(event: string, data: unknown): void;
-    };
-    parameterStructures: 'by-position' | 'by-name';
-    preferLocalImplementation: boolean;
-    preservePauseOnException: boolean;
-    serializer: Serialization;
-    strict: AsyncCallStrictJSONRPC | boolean;
+    key?: string;
+    log?: AsyncCallLogLevel | boolean;
+    logger?: Console;
+    messageChannel: MessageChannel;
+    parameterStructures?: 'by-position' | 'by-name';
+    preferLocalImplementation?: boolean;
+    preservePauseOnException?: boolean;
+    serializer?: Serialization;
+    strict?: AsyncCallStrictJSONRPC | boolean;
 }
 
 // @public
@@ -44,7 +41,7 @@ export interface AsyncCallStrictJSONRPC {
 // Warning: (ae-incompatible-release-tags) The symbol "AsyncGeneratorCall" is marked as @public, but its signature references "_AsyncGeneratorVersionOf" which is marked as @internal
 //
 // @public
-export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: object | Promise<object> | undefined, options: Partial<AsyncCallOptions> & Pick<AsyncCallOptions, 'messageChannel'>): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions>;
+export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: object | Promise<object> | undefined, options: AsyncCallOptions): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions>;
 
 // @internal
 export type _AsyncGeneratorVersionOf<T> = {
@@ -59,23 +56,29 @@ export type _AsyncVersionOf<T> = {
 };
 
 // @public
-interface Console_2 {
+export interface Console {
     // (undocumented)
-    debug(...args: unknown[]): void;
+    debug?(...args: unknown[]): void;
     // (undocumented)
-    error(...args: unknown[]): void;
+    error?(...args: unknown[]): void;
     // (undocumented)
-    groupCollapsed(...args: unknown[]): void;
+    groupCollapsed?(...args: unknown[]): void;
     // (undocumented)
-    groupEnd(...args: unknown[]): void;
+    groupEnd?(...args: unknown[]): void;
     // (undocumented)
     log(...args: unknown[]): void;
 }
 
-export { Console_2 as Console }
+// @public
+export const JSONSerialization: (replacerAndReceiver?: [(((key: string, value: any) => any) | undefined)?, (((key: string, value: any) => any) | undefined)?], space?: string | number | undefined) => Serialization;
 
 // @public
-export const JSONSerialization: (replacerAndReceiver?: [Parameters<JSON['stringify']>[1], Parameters<JSON['parse']>[1]], space?: string | number | undefined) => Serialization;
+export interface MessageChannel {
+    // (undocumented)
+    emit(event: string, data: unknown): void;
+    // (undocumented)
+    on(event: string, eventListener: (data: unknown) => void): void;
+}
 
 // @public
 export const NoSerialization: Serialization;

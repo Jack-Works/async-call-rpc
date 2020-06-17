@@ -9,7 +9,7 @@ A key to prevent collision with other AsyncCalls.
 <b>Signature:</b>
 
 ```typescript
-key: string;
+key?: string;
 ```
 
 ## Remarks

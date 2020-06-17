@@ -9,10 +9,7 @@ The message channel can let you transport messages between server and client
 <b>Signature:</b>
 
 ```typescript
-messageChannel: {
-        on(event: string, callback: (data: unknown) => void): void;
-        emit(event: string, data: unknown): void;
-    };
+messageChannel: MessageChannel;
 ```
 
 ## Example

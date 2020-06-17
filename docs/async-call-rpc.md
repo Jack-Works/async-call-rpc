@@ -6,8 +6,6 @@
 
 A light implementation of [JSON RPC 2.0](https://www.jsonrpc.org/specification)
 
- https://github.com/Jack-Works/async-call
-
 ## Remarks
 
 See the introduction at [Github](https://github.com/Jack-Works/async-call)
@@ -26,7 +24,8 @@ See the introduction at [Github](https://github.com/Jack-Works/async-call)
 |  [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) | What should AsyncCall log to console. |
 |  [AsyncCallOptions](./async-call-rpc.asynccalloptions.md) | Options for [AsyncCall()](./async-call-rpc.asynccall.md) |
 |  [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) | Control the behavior that different from the JSON RPC spec. |
-|  [Console\_2](./async-call-rpc.console_2.md) | The minimal Console interface that AsyncCall needs. |
+|  [Console](./async-call-rpc.console.md) | The minimal Console interface that AsyncCall needs. |
+|  [MessageChannel](./async-call-rpc.messagechannel.md) | The message channel interface that allows |
 |  [Serialization](./async-call-rpc.serialization.md) | Serialization and deserialization of the JSON RPC payload |
 
 ## Variables
