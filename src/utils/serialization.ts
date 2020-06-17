@@ -22,10 +22,10 @@ export interface Serialization {
  * @public
  */
 export const NoSerialization: Serialization = {
-    async serialization(from) {
+    serialization(from) {
         return from
     },
-    async deserialization(serialized) {
+    deserialization(serialized) {
         return serialized
     },
 }
@@ -39,15 +39,17 @@ export const NoSerialization: Serialization = {
  * @public
  */
 export const JSONSerialization = (
-    replacerAndReceiver: [Parameters<JSON['stringify']>[1], Parameters<JSON['parse']>[1]] = [undefined, undefined],
+    replacerAndReceiver: [((key: string, value: any) => any)?, ((key: string, value: any) => any)?] = [
+        undefined,
+        undefined,
+    ],
     space?: string | number | undefined,
-) =>
-    ({
-        async serialization(from) {
-            return JSON.stringify(from, replacerAndReceiver[0], space)
-        },
-        async deserialization(serialized) {
-            return JSON.parse(serialized as string, replacerAndReceiver[1])
-        },
-    } as Serialization)
+): Serialization => ({
+    serialization(from) {
+        return JSON.stringify(from, replacerAndReceiver[0], space)
+    },
+    deserialization(serialized) {
+        return JSON.parse(serialized as string, replacerAndReceiver[1])
+    },
+})
 //#endregion
