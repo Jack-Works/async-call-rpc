@@ -2,6 +2,11 @@
 
 `async-call-rpc` is a [JSON RPC](https://www.jsonrpc.org/specification) server and client written in TypeScript for any ES6+ environment.
 
+[![Code coverage](https://codecov.io/gh/Jack-Works/async-call-rpc/branch/master/graph/badge.svg)](https://codecov.io/gh/Jack-Works/async-call-rpc)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Jack-Works/async-call-rpc/build)](https://github.com/Jack-Works/async-call-rpc/actions)
+[![npm](https://img.shields.io/npm/v/async-call-rpc)](https://npmjs.org/async-call-rpc)
+![ES2015+](https://img.shields.io/badge/ECMAScript-2015%2B-brightgreen)
+
 ## Links
 
 [CHANGELOG.md](./CHANGELOG.md) | [Document of AsyncCall](https://jack-works.github.io/async-call/async-call-rpc.asynccall.html) | [Document of AsyncGeneratorCall](https://jack-works.github.io/async-call/async-call-rpc.asyncgeneratorcall.html) | [Playground](https://jack-works.github.io/async-call/)

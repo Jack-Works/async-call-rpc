@@ -26,7 +26,10 @@ export async function preservePauseOnException(stackCallback: (x: string) => voi
                 button.click()
             }
         } catch (e) {
-            console.error('Please close preservePauseOnException.', e)
+            try {
+                // @ts-expect-error
+                console.error('Please close preservePauseOnException.', e)
+            } catch {}
             return resolve(f(...args))
         }
     })

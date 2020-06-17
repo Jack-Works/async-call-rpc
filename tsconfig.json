@@ -17,7 +17,10 @@
     // "noUnusedParameters": true /* Report errors on unused parameters. */,
     "noImplicitReturns": true /* Report error when not all code paths in function return a value. */,
     "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */,
-    "rootDir": "./src/"
+    "rootDir": "./src/",
+    // This lib does not require any env
+    "typeRoots": [],
+    "types": []
   },
   "include": ["./src/**/*.ts"]
 }

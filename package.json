@@ -16,15 +16,16 @@
     }
   },
   "scripts": {
-    "release": "rimraf ./out && standard-version",
     "start": "node ./watch.js",
-    "build": "tsc --declaration --outDir ./es/",
-    "prepublishOnly": "npm run build && npm run roll && npm run doc",
+    "prepublishOnly": "npm run build",
+    "release": "rimraf ./out && standard-version",
+    "build:tsc": "tsc --declaration --outDir ./es/",
+    "build:roll": "rollup -c",
+    "build": "npm run build:tsc && npm run build:roll && npm run doc",
     "doc:api": "api-extractor run --local --verbose",
     "doc:md": "api-documenter markdown -o docs -i temp",
-    "doc": "npm run doc:api && npm run doc:md",
     "doc:preview": "docsify serve .",
-    "roll": "rollup -c",
+    "doc": "npm run doc:api && npm run doc:md",
     "test": "jest --coverage --coverage-provider=v8"
   },
   "repository": {
