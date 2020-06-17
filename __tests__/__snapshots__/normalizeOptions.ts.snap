@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`normalize log options 1`] = `
+Object {
+  "beCalled": true,
+  "localError": true,
+  "remoteError": true,
+  "type": "pretty",
+}
+`;
+
+exports[`normalize log options 2`] = `
+Object {
+  "beCalled": false,
+  "localError": false,
+  "remoteError": false,
+  "type": "basic",
+}
+`;
+
+exports[`normalize log options 3`] = `
+Object {
+  "beCalled": true,
+  "localError": false,
+}
+`;
+
+exports[`normalize strict options 1`] = `
+Object {
+  "methodNotFound": true,
+  "noUndefined": true,
+  "unknownMessage": true,
+}
+`;
+
+exports[`normalize strict options 2`] = `
+Object {
+  "methodNotFound": false,
+  "noUndefined": false,
+  "unknownMessage": false,
+}
+`;
+
+exports[`normalize strict options 3`] = `
+Object {
+  "methodNotFound": false,
+  "noUndefined": true,
+}
+`;
