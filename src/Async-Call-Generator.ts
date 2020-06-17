@@ -1,7 +1,7 @@
 /**
  * See the document at https://github.com/Jack-Works/async-call/
  */
-import { AsyncCallOptions, AsyncCall } from './Async-Call.js'
+import { AsyncCallOptions, AsyncCall } from './Async-Call'
 import { AsyncCallIgnoreResponse } from './utils/internalSymbol'
 import { normalizeStrictOptions } from './utils/normalizeOptions'
 import { generateRandomID } from './utils/generateRandomID'
