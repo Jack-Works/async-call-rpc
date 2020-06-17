@@ -4,13 +4,13 @@
  * @public
  */
 export interface Console {
-    debug(...args: unknown[]): void
+    debug?(...args: unknown[]): void
     log(...args: unknown[]): void
-    groupCollapsed(...args: unknown[]): void
-    groupEnd(...args: unknown[]): void
-    error(...args: unknown[]): void
+    groupCollapsed?(...args: unknown[]): void
+    groupEnd?(...args: unknown[]): void
+    error?(...args: unknown[]): void
 }
-export function getConsole(_console?: Console): Console {
+export function getConsole(_console?: Console): Required<Console> {
     const console: Console = _console || (globalThis as any).console
     const defaultLog = (...args: unknown[]) => console.log(...args)
 
