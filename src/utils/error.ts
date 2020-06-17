@@ -17,7 +17,7 @@ export const DOMExceptionHeader = 'DOMException:'
 /**
  * AsyncCall support somehow transfer ECMAScript Error
  */
-export function RecoverError(type: string, message: string, code: number, stack: string) {
+export function RecoverError(type: string, message: string, code: number, stack: string): Error {
     try {
         if (type.startsWith(DOMExceptionHeader) && DOMException) {
             const [, name] = type.split(DOMExceptionHeader)
