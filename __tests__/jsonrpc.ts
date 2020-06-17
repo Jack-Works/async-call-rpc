@@ -16,6 +16,9 @@ test('ErrorResponse', () => {
     expect(ErrorResponse('id2', -123, 'message', 'stack', err)).toMatchSnapshot('normal error')
     expect(ErrorResponse('id', 123, 'message', 'stack', '')).toMatchSnapshot('invalid error object')
     expect(ErrorResponse('id2', -123.456, 'message', 'stack', { stack: 'item' })).toMatchSnapshot('invalid code')
+    expect(ErrorResponse(undefined, 0, '', '')).toMatchSnapshot()
+    expect(ErrorResponse('', -0, '', '')).toMatchSnapshot()
+    expect(ErrorResponse('', NaN, '', '')).toMatchSnapshot()
     expect(ErrorResponse.InternalError('id', 'msg')).toMatchSnapshot('internal error')
     expect(ErrorResponse.InvalidParams('id')).toMatchSnapshot('invalid params')
     expect(ErrorResponse.InvalidRequest('id')).toMatchSnapshot('invalid req')
@@ -32,8 +35,10 @@ test('isJSONRPCObject', () => {
     expect(isJSONRPCObject(Request('id', '', [], ''))).toBe(true)
     expect(isJSONRPCObject(SuccessResponse('id', undefined, false))).toBe(true)
     expect(isJSONRPCObject(ErrorResponse('id', 0, 'msg', 'stack'))).toBe(true)
-    // TODO: add more cases
     expect(isJSONRPCObject({})).toBe(false)
+    expect(isJSONRPCObject(undefined)).toBe(false)
+    expect(isJSONRPCObject({ jsonrpc: '1.0' })).toBe(false)
+    expect(isJSONRPCObject({ jsonrpc: '2.0', params: 1 })).toBe(false)
 })
 
 test('isObject', () => {

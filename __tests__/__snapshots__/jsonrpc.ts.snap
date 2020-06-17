@@ -1,5 +1,50 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ErrorResponse 1`] = `
+Object {
+  "error": Object {
+    "code": 0,
+    "data": Object {
+      "stack": "",
+      "type": "Error",
+    },
+    "message": "",
+  },
+  "id": null,
+  "jsonrpc": "2.0",
+}
+`;
+
+exports[`ErrorResponse 2`] = `
+Object {
+  "error": Object {
+    "code": -0,
+    "data": Object {
+      "stack": "",
+      "type": "Error",
+    },
+    "message": "",
+  },
+  "id": "",
+  "jsonrpc": "2.0",
+}
+`;
+
+exports[`ErrorResponse 3`] = `
+Object {
+  "error": Object {
+    "code": -1,
+    "data": Object {
+      "stack": "",
+      "type": "Error",
+    },
+    "message": "",
+  },
+  "id": "",
+  "jsonrpc": "2.0",
+}
+`;
+
 exports[`ErrorResponse: internal error 1`] = `
 Object {
   "error": Object {
