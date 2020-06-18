@@ -2,15 +2,15 @@ import { removeStackHeader } from './error'
 
 declare const document: any
 export async function preservePauseOnException(stackCallback: (x: string) => void, f: Function, args: any[]) {
-    const iframe = document.createElement('iframe')
-
     const promise = new Promise((resolve, reject) => {
+        let iframe: any = {}
         async function executor() {
             stackCallback(removeStackHeader(new Error().stack))
             // receive the return value
             resolve(await f(...args))
         }
         try {
+            iframe = document.createElement('iframe')
             iframe.style.display = 'none'
             document.body.appendChild(iframe)
             {
@@ -22,7 +22,7 @@ export async function preservePauseOnException(stackCallback: (x: string) => voi
                     new window.Promise((r: any) => {
                         executor().then(r)
                     })
-                window.addEventListener('unhandledrejection', (e: any) => reject(e.reason))
+                window.onunhandledrejection = (e: any) => reject(e.reason)
                 button.click()
             }
         } catch (e) {
@@ -31,8 +31,9 @@ export async function preservePauseOnException(stackCallback: (x: string) => voi
                 console.error('Please close preservePauseOnException.', e)
             } catch {}
             return resolve(f(...args))
+        } finally {
+            iframe?.remove()
         }
     })
-    promise.finally(() => iframe.remove())
     return promise
 }

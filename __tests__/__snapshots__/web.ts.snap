@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DOMException 1`] = `[MyError: Message]`;
+
+exports[`DOMException 2`] = `
+Object {
+  "error": Object {
+    "code": 0,
+    "data": Object {
+      "stack": "stack",
+      "type": "DOMException:name",
+    },
+    "message": "msg",
+  },
+  "id": "id",
+  "jsonrpc": "2.0",
+}
+`;

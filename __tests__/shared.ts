@@ -6,7 +6,7 @@ const impl = {
     add: (x: number, y: number) => x + y,
     undef: () => {},
     throws: async () => {
-        throw new Error()
+        throw new Error('impl error')
     },
 }
 export class JestChannel extends EventEmitter implements MessageChannel {

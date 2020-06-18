@@ -20,7 +20,8 @@
     "rootDir": "./src/",
     // This lib does not require any env
     "typeRoots": [],
-    "types": []
+    "types": [],
+    "esModuleInterop": true
   },
   "include": ["./src/**/*.ts"]
 }

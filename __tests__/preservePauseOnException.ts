@@ -1,12 +1,14 @@
 import { preservePauseOnException } from '../src/utils/preservePauseOnException'
 
 test('preservePauseOnException', async () => {
-    // this doesn't work in Node
-    return expect(() =>
+    let msg = ''
+    console.error = (e: string) => (msg = e)
+    await expect(
         preservePauseOnException(
             () => {},
-            () => {},
+            async () => 1,
             [],
         ),
-    ).rejects
+    ).resolves.toBe(1)
+    expect(msg).toMatchInlineSnapshot(`"Please close preservePauseOnException."`)
 })

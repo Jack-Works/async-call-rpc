@@ -5,7 +5,7 @@ test('AsyncCall basic test', async () => {
     const c = createServer()
     expect(await c.add(1, 3)).toBe(4)
     expect(await c.undef()).toBe(undefined)
-    expect(c.throws()).rejects
+    expect(c.throws()).rejects.toMatchInlineSnapshot(`[Error: impl error]`)
 }, 200)
 
 test('AsyncCall Serialization', async () => {
@@ -18,7 +18,7 @@ test('AsyncCall Serialization', async () => {
 test('AsyncCall strict JSON RPC', async () => {
     const c = createServer({ strict: true })
     // @ts-expect-error
-    await expect(c.add2()).rejects
+    await expect(c.add2()).rejects.toMatchInlineSnapshot(`[Error: Method not found]`)
     await expect(c.undef()).resolves.toBe(null)
 })
 

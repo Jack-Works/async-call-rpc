@@ -1,6 +1,14 @@
-import { RecoverError, DOMExceptionHeader, DOMException, removeStackHeader } from '../src/utils/error'
+beforeAll(() => {
+    globalThis.EvalError = class {
+        constructor() {
+            throw new Error()
+        }
+    } as any
+})
 
-test('error', () => {
+test('error', async () => {
+    const { RecoverError, DOMExceptionHeader, DOMException, removeStackHeader } = await import('../src/utils/error')
+
     expect(DOMExceptionHeader).toMatchInlineSnapshot(`"DOMException:"`)
     expect(DOMException).toBeUndefined() // in Node.
     expect(
@@ -20,4 +28,8 @@ test('error', () => {
     expect(s instanceof SyntaxError).toBeTruthy()
     expect(u).toMatchInlineSnapshot(`[UnknownError: msg]`)
     expect(s instanceof Error).toBeTruthy()
+    expect(RecoverError('EvalError', '', 0, '')).toMatchInlineSnapshot(`
+        [Error: E0 EvalError: 
+        ]
+    `)
 })
