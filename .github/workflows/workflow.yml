@@ -16,7 +16,7 @@ jobs:
               run: npm test
             - uses: codecov/codecov-action@v1
               with:
-                  file: ./coverage/clover.xml
+                  file: ./coverage/coverage-final.json
     build:
         runs-on: ubuntu-latest
         steps:
