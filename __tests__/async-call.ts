@@ -2,10 +2,12 @@ import { NoSerialization, JSONSerialization } from '../src/Async-Call'
 import { createServer } from './shared'
 
 test('AsyncCall basic test', async () => {
+    const snapshot = mockConsoleLog('no logs')
     const c = createServer()
     expect(await c.add(1, 3)).toBe(4)
     expect(await c.undef()).toBe(undefined)
     expect(c.throws()).rejects.toMatchInlineSnapshot(`[Error: impl error]`)
+    snapshot()
 }, 200)
 
 test('AsyncCall Serialization', async () => {

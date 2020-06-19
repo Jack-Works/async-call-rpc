@@ -1,5 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`AsyncCall basic test: no logs console.debug 1`] = `Array []`;
+
+exports[`AsyncCall basic test: no logs console.error 1`] = `Array []`;
+
+exports[`AsyncCall basic test: no logs console.groupCollapsed 1`] = `Array []`;
+
+exports[`AsyncCall basic test: no logs console.groupEnd 1`] = `Array []`;
+
+exports[`AsyncCall basic test: no logs console.log 1`] = `Array []`;
+
+exports[`AsyncCall basic test: no logs console.warn 1`] = `Array []`;
+
 exports[`AsyncCall logs: normal log console.debug 1`] = `
 Array [
   Array [

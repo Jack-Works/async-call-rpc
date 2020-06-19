@@ -306,7 +306,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                     .split('\n')
                     .reduce((stack, fstack) => stack.replace(fstack + '\n', ''), e.stack || '')
             if (logLocalError) console.error(e)
-            return ErrorResponse(data.id, -1, e?.message, e?.stack, e)
+            return ErrorResponse(data.id, -1, e?.message, sendLocalStack ? e?.stack : undefined, e)
         }
     }
     async function onResponse(data: Response): Promise<void> {
