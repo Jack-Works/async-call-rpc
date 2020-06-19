@@ -1,0 +1,91 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AsyncCall logs: normal log console.debug 1`] = `
+Array [
+  Array [
+    "Receive remote call, but not implemented.",
+    "add2",
+    Object {
+      "id": "4fzzzxjylrx",
+      "jsonrpc": "2.0",
+      "method": "add2",
+      "params": Array [
+        1,
+        2,
+      ],
+    },
+  ],
+]
+`;
+
+exports[`AsyncCall logs: normal log console.error 1`] = `
+Array [
+  Array [
+    [Error: impl error],
+  ],
+  Array [
+    "E: impl error(-1) %c@4fzzzxjylrx
+%c<mocked stack>",
+    "color: gray",
+    "",
+  ],
+  Array [
+    [Error: impl error],
+  ],
+  Array [
+    "E: impl error(-1) @4fzzzxjylrx
+<mocked stack>",
+  ],
+]
+`;
+
+exports[`AsyncCall logs: normal log console.groupCollapsed 1`] = `
+Array [
+  Array [
+    "undefined.%cadd%c(%o, %o%c)
+%o %c@4fzzzxjylrx",
+    "color: #d2c057",
+    "",
+    1,
+    2,
+    "",
+    Promise {},
+    "color: gray; font-style: italic;",
+  ],
+  Array [
+    "undefined.%cthrows%c(%c)
+%o %c@4fzzzxjylrx",
+    "color: #d2c057",
+    "",
+    "",
+    Promise {},
+    "color: gray; font-style: italic;",
+  ],
+]
+`;
+
+exports[`AsyncCall logs: normal log console.groupEnd 1`] = `
+Array [
+  Array [],
+  Array [],
+]
+`;
+
+exports[`AsyncCall logs: normal log console.log 1`] = `
+Array [
+  Array [
+    "<mocked stack>",
+  ],
+  Array [
+    "<mocked stack>",
+  ],
+  Array [
+    "undefined.add(1,2) @4fzzzxjylrx",
+  ],
+  Array [
+    "undefined.throws() @4fzzzxjylrx",
+  ],
+]
+`;
+
+exports[`AsyncCall logs: normal log console.warn 1`] = `Array []`;

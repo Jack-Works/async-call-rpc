@@ -22,6 +22,56 @@ test('AsyncCall strict JSON RPC', async () => {
     await expect(c.undef()).resolves.toBe(null)
 })
 
+test('AsyncCall logs', async () => {
+    Math.random = () => 0.123456789
+    globalThis.Error = class E extends Error {
+        constructor(msg: string) {
+            super(msg)
+            this.stack = '<mocked stack>'
+        }
+    } as any
+    const snapshot = mockConsoleLog('normal log')
+    const s = createServer({
+        log: { beCalled: true, localError: true, remoteError: true, sendLocalStack: true, type: 'pretty' },
+    })
+    await s.add(1, 2)
+    await s.throws().catch((e) => e)
+
+    const s2 = createServer({
+        log: { beCalled: true, localError: true, remoteError: true, sendLocalStack: true, type: 'basic' },
+    })
+    await s2.add(1, 2)
+    await s2.throws().catch((e) => e)
+
+    const s3 = createServer({ log: true, strict: { methodNotFound: false } })
+    // @ts-expect-error
+    s3.add2(1, 2)
+    await sleep(200)
+
+    snapshot()
+})
+
 test('AsyncCall internal JSON RPC methods', async () => {
     // TODO
 })
+
+function mockConsoleLog(key: string) {
+    const a = (console.log = jest.fn())
+    const b = (console.error = jest.fn())
+    const c = (console.warn = jest.fn())
+    const d = (console.groupCollapsed = jest.fn())
+    const e = (console.groupEnd = jest.fn())
+    const f = (console.debug = jest.fn())
+    return () => {
+        expect(a.mock.calls).toMatchSnapshot(key + ' console.log')
+        expect(b.mock.calls).toMatchSnapshot(key + ' console.error')
+        expect(c.mock.calls).toMatchSnapshot(key + ' console.warn')
+        expect(d.mock.calls).toMatchSnapshot(key + ' console.groupCollapsed')
+        expect(e.mock.calls).toMatchSnapshot(key + ' console.groupEnd')
+        expect(f.mock.calls).toMatchSnapshot(key + ' console.debug')
+    }
+}
+
+function sleep(x: number) {
+    return new Promise((r, rr) => setTimeout(r, x))
+}
