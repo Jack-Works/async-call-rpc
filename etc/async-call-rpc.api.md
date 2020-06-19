@@ -20,6 +20,7 @@ export interface AsyncCallLogLevel {
 
 // @public
 export interface AsyncCallOptions {
+    idGenerator?(): string | number;
     key?: string;
     log?: AsyncCallLogLevel | boolean;
     logger?: Console;

@@ -83,8 +83,9 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
     thisSideImplementation: object | Promise<object> = {},
     options: AsyncCallOptions,
 ): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions> {
-    const iterators = new Map<string, Iter>()
+    const iterators = new Map<string | number, Iter>()
     const strict = normalizeStrictOptions(options.strict || false)
+    const { idGenerator = generateRandomID } = options
     function findIterator(
         id: string,
         label: keyof Iter,
@@ -107,7 +108,7 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
                 else return AsyncCallIgnoreResponse
             }
             const iterator = iteratorGenerator(...args)
-            const id = generateRandomID()
+            const id = idGenerator()
             iterators.set(id, iterator)
             return Promise.resolve(id)
         },

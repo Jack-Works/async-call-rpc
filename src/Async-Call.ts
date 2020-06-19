@@ -171,6 +171,11 @@ export interface AsyncCallOptions {
      * @defaultValue false
      */
     preservePauseOnException?: boolean
+    /**
+     * The ID generator of each JSON RPC request
+     * @defaultValue () => Math.random().toString(36).slice(2)
+     */
+    idGenerator?(): string | number
 }
 
 /**
@@ -193,7 +198,8 @@ const AsyncCallDefaultOptions = (<T extends Omit<Required<AsyncCallOptions>, 'me
     parameterStructures: 'by-position',
     preferLocalImplementation: false,
     preservePauseOnException: false,
-} as const)
+    idGenerator: generateRandomID,
+})
 
 /**
  * Create a RPC server & client.
@@ -219,7 +225,16 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
 ): _AsyncVersionOf<OtherSideImplementedFunctions> {
     let resolvedThisSideImplementation: object | undefined = undefined
     Promise.resolve(thisSideImplementation).then((x) => (resolvedThisSideImplementation = x))
-    const { serializer, key, strict, log, parameterStructures, preferLocalImplementation, preservePauseOnException } = {
+    const {
+        serializer,
+        key,
+        strict,
+        log,
+        parameterStructures,
+        preferLocalImplementation,
+        preservePauseOnException,
+        idGenerator,
+    } = {
         ...AsyncCallDefaultOptions,
         ...options,
     }
@@ -393,7 +408,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                         }
                     }
                     return new Promise((resolve, reject) => {
-                        const id = generateRandomID()
+                        const id = idGenerator()
                         const [param0] = params
                         const sendingStack = sendLocalStack ? stack : ''
                         const param =

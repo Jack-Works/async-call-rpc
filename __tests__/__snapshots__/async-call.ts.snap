@@ -6,7 +6,7 @@ Array [
     "Receive remote call, but not implemented.",
     "add2",
     Object {
-      "id": "4fzzzxjylrx",
+      "id": 0.9601702866503661,
       "jsonrpc": "2.0",
       "method": "add2",
       "params": Array [
@@ -24,7 +24,7 @@ Array [
     [Error: impl error],
   ],
   Array [
-    "E: impl error(-1) %c@4fzzzxjylrx
+    "E: impl error(-1) %c@-0.9899924966004454
 %c<mocked stack>",
     "color: gray",
     "",
@@ -33,7 +33,7 @@ Array [
     [Error: impl error],
   ],
   Array [
-    "E: impl error(-1) @4fzzzxjylrx
+    "E: impl error(-1) @0.28366218546322625
 <mocked stack>",
   ],
 ]
@@ -43,7 +43,7 @@ exports[`AsyncCall logs: normal log console.groupCollapsed 1`] = `
 Array [
   Array [
     "undefined.%cadd%c(%o, %o%c)
-%o %c@4fzzzxjylrx",
+%o %c@-0.4161468365471424",
     "color: #d2c057",
     "",
     1,
@@ -54,7 +54,7 @@ Array [
   ],
   Array [
     "undefined.%cthrows%c(%c)
-%o %c@4fzzzxjylrx",
+%o %c@-0.9899924966004454",
     "color: #d2c057",
     "",
     "",
@@ -80,10 +80,10 @@ Array [
     "<mocked stack>",
   ],
   Array [
-    "undefined.add(1,2) @4fzzzxjylrx",
+    "undefined.add(1,2) @-0.6536436208636119",
   ],
   Array [
-    "undefined.throws() @4fzzzxjylrx",
+    "undefined.throws() @0.28366218546322625",
   ],
 ]
 `;

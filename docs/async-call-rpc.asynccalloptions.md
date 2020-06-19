@@ -26,3 +26,9 @@ export interface AsyncCallOptions
 |  [serializer](./async-call-rpc.asynccalloptions.serializer.md) | [Serialization](./async-call-rpc.serialization.md) | How to serialization and deserialization JSON RPC payload |
 |  [strict](./async-call-rpc.asynccalloptions.strict.md) | [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) \| boolean | Strict options. See [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) |
 
+## Methods
+
+|  Method | Description |
+|  --- | --- |
+|  [idGenerator()](./async-call-rpc.asynccalloptions.idgenerator.md) | The ID generator of each JSON RPC request |
+

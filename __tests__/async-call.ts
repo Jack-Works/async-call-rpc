@@ -23,7 +23,8 @@ test('AsyncCall strict JSON RPC', async () => {
 })
 
 test('AsyncCall logs', async () => {
-    Math.random = () => 0.123456789
+    let i = 2
+    const idGen = () => Math.cos(i++)
     globalThis.Error = class E extends Error {
         constructor(msg: string) {
             super(msg)
@@ -33,17 +34,19 @@ test('AsyncCall logs', async () => {
     const snapshot = mockConsoleLog('normal log')
     const s = createServer({
         log: { beCalled: true, localError: true, remoteError: true, sendLocalStack: true, type: 'pretty' },
+        idGenerator: idGen,
     })
     await s.add(1, 2)
     await s.throws().catch((e) => e)
 
     const s2 = createServer({
         log: { beCalled: true, localError: true, remoteError: true, sendLocalStack: true, type: 'basic' },
+        idGenerator: idGen,
     })
     await s2.add(1, 2)
     await s2.throws().catch((e) => e)
 
-    const s3 = createServer({ log: true, strict: { methodNotFound: false } })
+    const s3 = createServer({ log: true, strict: { methodNotFound: false }, idGenerator: idGen })
     // @ts-expect-error
     s3.add2(1, 2)
     await sleep(200)
