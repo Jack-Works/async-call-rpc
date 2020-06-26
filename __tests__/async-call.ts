@@ -1,4 +1,4 @@
-import { NoSerialization, JSONSerialization } from '../src/Async-Call'
+import { NoSerialization, JSONSerialization, AsyncCall } from '../src/Async-Call'
 import { createServer, timeout, sleep, mockError } from './shared'
 
 test('AsyncCall basic test', async () => {
@@ -22,6 +22,22 @@ test('AsyncCall strict JSON RPC', async () => {
     // @ts-expect-error
     await expect(c.add2()).rejects.toMatchInlineSnapshot(`[Error: Method not found]`)
     // TODO: test unknown message
+})
+
+test('AsyncCall preferLocal', async () => {
+    const x = AsyncCall<any>(
+        { f: () => 1 },
+        {
+            messageChannel: {
+                on() {},
+                emit() {
+                    throw new Error('')
+                },
+            } as any,
+            preferLocalImplementation: true,
+        },
+    )
+    expect(x.f()).resolves.toBe(1)
 })
 
 test('AsyncCall logs', async () => {
