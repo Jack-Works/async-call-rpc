@@ -4,10 +4,6 @@ exports[`ErrorResponse 1`] = `
 Object {
   "error": Object {
     "code": 0,
-    "data": Object {
-      "stack": "",
-      "type": "Error",
-    },
     "message": "",
   },
   "id": null,
@@ -19,10 +15,6 @@ exports[`ErrorResponse 2`] = `
 Object {
   "error": Object {
     "code": -0,
-    "data": Object {
-      "stack": "",
-      "type": "Error",
-    },
     "message": "",
   },
   "id": "",
@@ -34,28 +26,9 @@ exports[`ErrorResponse 3`] = `
 Object {
   "error": Object {
     "code": -1,
-    "data": Object {
-      "stack": "",
-      "type": "Error",
-    },
     "message": "",
   },
   "id": "",
-  "jsonrpc": "2.0",
-}
-`;
-
-exports[`ErrorResponse: internal error 1`] = `
-Object {
-  "error": Object {
-    "code": -32603,
-    "data": Object {
-      "stack": "",
-      "type": "Error",
-    },
-    "message": "Internal errormsg",
-  },
-  "id": "id",
   "jsonrpc": "2.0",
 }
 `;
@@ -64,43 +37,9 @@ exports[`ErrorResponse: invalid code 1`] = `
 Object {
   "error": Object {
     "code": -124,
-    "data": Object {
-      "stack": "stack",
-      "type": "Object",
-    },
     "message": "message",
   },
   "id": "id2",
-  "jsonrpc": "2.0",
-}
-`;
-
-exports[`ErrorResponse: invalid error object 1`] = `
-Object {
-  "error": Object {
-    "code": 123,
-    "data": Object {
-      "stack": "stack",
-      "type": "Error",
-    },
-    "message": "",
-  },
-  "id": "id",
-  "jsonrpc": "2.0",
-}
-`;
-
-exports[`ErrorResponse: invalid params 1`] = `
-Object {
-  "error": Object {
-    "code": -32602,
-    "data": Object {
-      "stack": "",
-      "type": "Error",
-    },
-    "message": "Invalid params",
-  },
-  "id": "id",
   "jsonrpc": "2.0",
 }
 `;
@@ -109,10 +48,6 @@ exports[`ErrorResponse: invalid req 1`] = `
 Object {
   "error": Object {
     "code": -32600,
-    "data": Object {
-      "stack": "",
-      "type": "Error",
-    },
     "message": "Invalid Request",
   },
   "id": "id",
@@ -124,10 +59,6 @@ exports[`ErrorResponse: method not found 1`] = `
 Object {
   "error": Object {
     "code": -32601,
-    "data": Object {
-      "stack": "",
-      "type": "Error",
-    },
     "message": "Method not found",
   },
   "id": "id",
@@ -140,8 +71,7 @@ Object {
   "error": Object {
     "code": -123,
     "data": Object {
-      "stack": "stack",
-      "type": "Error",
+      "_data_": 1,
     },
     "message": "message",
   },
@@ -155,8 +85,7 @@ Object {
   "error": Object {
     "code": -32700,
     "data": Object {
-      "stack": "stack",
-      "type": "Error",
+      "my_data": true,
     },
     "message": "Parse error",
   },

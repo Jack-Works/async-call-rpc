@@ -24,6 +24,7 @@ export interface AsyncCallOptions {
     key?: string;
     log?: AsyncCallLogLevel | boolean;
     logger?: Console;
+    mapError?: ErrorMapFunction<unknown>;
     messageChannel: MessageChannel;
     parameterStructures?: 'by-position' | 'by-name';
     preferLocalImplementation?: boolean;
@@ -68,6 +69,18 @@ export interface Console {
     // (undocumented)
     log(...args: unknown[]): void;
 }
+
+// @public (undocumented)
+export type ErrorMapFunction<T = unknown> = (error: unknown, request: Readonly<{
+    jsonrpc: '2.0';
+    id?: string | number | null;
+    method: string;
+    params: readonly unknown[] | object;
+}>) => {
+    code: number;
+    message: string;
+    data?: T;
+};
 
 // @public
 export const JSONSerialization: (replacerAndReceiver?: [(((key: string, value: any) => any) | undefined)?, (((key: string, value: any) => any) | undefined)?], space?: string | number | undefined, undefinedKeepingBehavior?: 'keep' | 'null' | false) => Serialization;

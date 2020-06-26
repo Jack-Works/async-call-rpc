@@ -6,7 +6,17 @@ import { Serialization, NoSerialization } from './utils/serialization'
 export { JSONSerialization, NoSerialization, Serialization } from './utils/serialization'
 import { Console, getConsole } from './utils/console'
 export { Console } from './utils/console'
-import { Request, Response, ErrorResponse, SuccessResponse, hasKey, isJSONRPCObject, isObject } from './utils/jsonrpc'
+import {
+    Request,
+    Response,
+    ErrorResponseMapped,
+    SuccessResponse,
+    hasKey,
+    isJSONRPCObject,
+    isObject,
+    ErrorResponse,
+    defaultErrorMapper,
+} from './utils/jsonrpc'
 import { removeStackHeader, RecoverError } from './utils/error'
 import { generateRandomID } from './utils/generateRandomID'
 import { normalizeStrictOptions, normalizeLogOptions } from './utils/normalizeOptions'
@@ -51,7 +61,7 @@ export interface AsyncCallLogLevel {
  */
 export interface AsyncCallStrictJSONRPC {
     /**
-     * Return an error when the requested method is not defined
+     * Return an error when the requested method is not defined, otherwise, ignore the request.
      * @defaultValue true
      */
     methodNotFound?: boolean
@@ -171,6 +181,29 @@ export interface AsyncCallOptions {
      * @defaultValue () => Math.random().toString(36).slice(2)
      */
     idGenerator?(): string | number
+    /**
+     * Control the error response data
+     * @param error The happened Error
+     * @param request The request object
+     */
+    mapError?: ErrorMapFunction<unknown>
+}
+
+/**
+ * @public
+ */
+export type ErrorMapFunction<T = unknown> = (
+    error: unknown,
+    request: Readonly<{
+        jsonrpc: '2.0'
+        id?: string | number | null
+        method: string
+        params: readonly unknown[] | object
+    }>,
+) => {
+    code: number
+    message: string
+    data?: T
 }
 
 /**
@@ -185,7 +218,9 @@ export type _AsyncVersionOf<T> = {
         : never
 }
 
-const AsyncCallDefaultOptions = (<T extends Omit<Required<AsyncCallOptions>, 'messageChannel' | 'logger'>>(a: T) => a)({
+const AsyncCallDefaultOptions = (<T extends Omit<Required<AsyncCallOptions>, 'messageChannel' | 'logger' | 'mapError'>>(
+    a: T,
+) => a)({
     serializer: NoSerialization,
     key: 'default-jsonrpc',
     strict: true,
@@ -230,6 +265,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         preferLocalImplementation,
         preservePauseOnException,
         idGenerator,
+        mapError,
     } = {
         ...AsyncCallDefaultOptions,
         ...options,
@@ -302,7 +338,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                     .split('\n')
                     .reduce((stack, fstack) => stack.replace(fstack + '\n', ''), e.stack || '')
             if (logLocalError) console.error(e)
-            return ErrorResponse(data.id, -1, e?.message, sendLocalStack ? e?.stack : undefined, e)
+            return ErrorResponseMapped(data, e, mapError || defaultErrorMapper(sendLocalStack ? e.stack : void 0))
         }
     }
     async function onResponse(data: Response): Promise<undefined> {
@@ -311,10 +347,18 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             errorCode = 0,
             errorType = 'Error'
         if (hasKey(data, 'error')) {
-            errorMessage = data.error.message
-            errorCode = data.error.code
-            remoteErrorStack = data.error.data?.stack ?? '<remote stack not available>'
-            errorType = data.error.data?.type || 'Error'
+            const e = data.error
+            errorMessage = e.message
+            errorCode = e.code
+            const detail = e.data
+
+            if (isObject(detail) && hasKey(detail, 'stack') && typeof detail.stack === 'string')
+                remoteErrorStack = detail.stack
+            else remoteErrorStack = '<remote stack not available>'
+
+            if (isObject(detail) && hasKey(detail, 'type') && typeof detail.type === 'string') errorType = detail.type
+            else errorType = 'Error'
+
             if (logRemoteError)
                 logType === 'basic'
                     ? console.error(`${errorType}: ${errorMessage}(${errorCode}) @${data.id}\n${remoteErrorStack}`)
@@ -368,7 +412,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             }
         } catch (e) {
             if (logLocalError) console.error(e, data, result)
-            send(ErrorResponse.ParseError(e?.stack))
+            send(ErrorResponseMapped.ParseError(e, mapError || defaultErrorMapper(e?.stack)))
         }
         async function send(res?: Response | (Response | undefined)[]) {
             if (Array.isArray(res)) {
@@ -427,11 +471,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     async function handleSingleMessage(
         data: SuccessResponse | ErrorResponse | Request,
     ): Promise<SuccessResponse | ErrorResponse | undefined> {
-        if (hasKey(data, 'method')) {
-            return onRequest(data)
-        } else if ('error' in data || 'result' in data) {
-            return onResponse(data)
-        }
-        return ErrorResponse.InvalidRequest(data.id)
+        if (hasKey(data, 'method')) return onRequest(data)
+        return onResponse(data)
     }
 }

@@ -22,17 +22,15 @@ Array [
 
 exports[`Bad messages: in 1`] = `
 Array [
-  "{\\"error\\":{\\"code\\":-32700,\\"message\\":\\"Parse error\\",\\"data\\":{\\"stack\\":\\"<mocked stack>\\",\\"type\\":\\"Error\\"}},\\"id\\":null,\\"jsonrpc\\":\\"2.0\\"}",
-  "{\\"error\\":{\\"code\\":-32600,\\"message\\":\\"Invalid Request\\",\\"data\\":{\\"stack\\":\\"\\",\\"type\\":\\"Error\\"}},\\"id\\":\\"id0\\",\\"jsonrpc\\":\\"2.0\\"}",
-  "{\\"error\\":{\\"code\\":-32600,\\"message\\":\\"Invalid Request\\",\\"data\\":{\\"stack\\":\\"\\",\\"type\\":\\"Error\\"}},\\"id\\":null,\\"jsonrpc\\":\\"2.0\\"}",
-  "{\\"error\\":{\\"code\\":-32600,\\"message\\":\\"Invalid Request\\",\\"data\\":{\\"stack\\":\\"\\",\\"type\\":\\"Error\\"}},\\"id\\":\\"id1\\",\\"jsonrpc\\":\\"2.0\\"}",
+  "{\\"error\\":{\\"code\\":-32700,\\"message\\":\\"Parse error\\",\\"data\\":{\\"stack\\":\\"<mocked stack>\\",\\"type\\":\\"SyntaxError\\"}},\\"id\\":null,\\"jsonrpc\\":\\"2.0\\"}",
+  "{\\"error\\":{\\"code\\":-32600,\\"message\\":\\"Invalid Request\\"},\\"id\\":\\"id0\\",\\"jsonrpc\\":\\"2.0\\"}",
+  "{\\"error\\":{\\"code\\":-32600,\\"message\\":\\"Invalid Request\\"},\\"id\\":null,\\"jsonrpc\\":\\"2.0\\"}",
 ]
 `;
 
 exports[`Bad messages: in 2`] = `
 Array [
-  "{\\"error\\":{\\"code\\":-32700,\\"message\\":\\"Parse error\\",\\"data\\":{\\"stack\\":\\"<mocked stack>\\",\\"type\\":\\"Error\\"}},\\"id\\":null,\\"jsonrpc\\":\\"2.0\\"}",
-  "{\\"error\\":{\\"code\\":-32600,\\"message\\":\\"Invalid Request\\",\\"data\\":{\\"stack\\":\\"\\",\\"type\\":\\"Error\\"}},\\"id\\":\\"id1\\",\\"jsonrpc\\":\\"2.0\\"}",
+  "{\\"error\\":{\\"code\\":-32700,\\"message\\":\\"Parse error\\",\\"data\\":{\\"stack\\":\\"<mocked stack>\\",\\"type\\":\\"SyntaxError\\"}},\\"id\\":null,\\"jsonrpc\\":\\"2.0\\"}",
 ]
 `;
 

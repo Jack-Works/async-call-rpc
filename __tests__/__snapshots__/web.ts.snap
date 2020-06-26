@@ -5,14 +5,13 @@ exports[`DOMException 1`] = `[MyError: Message]`;
 exports[`DOMException 2`] = `
 Object {
   "error": Object {
-    "code": 0,
+    "code": -1,
     "data": Object {
-      "stack": "stack",
       "type": "DOMException:name",
     },
-    "message": "msg",
+    "message": "msg2",
   },
-  "id": "id",
+  "id": 1,
   "jsonrpc": "2.0",
 }
 `;

@@ -35,3 +35,9 @@ See the introduction at [Github](https://github.com/Jack-Works/async-call)
 |  [JSONSerialization](./async-call-rpc.jsonserialization.md) | Create a serialization by JSON.parse/stringify |
 |  [NoSerialization](./async-call-rpc.noserialization.md) | Serialization implementation that do nothing |
 
+## Type Aliases
+
+|  Type Alias | Description |
+|  --- | --- |
+|  [ErrorMapFunction](./async-call-rpc.errormapfunction.md) |  |
+

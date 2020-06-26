@@ -4,7 +4,7 @@
 
 ## AsyncCallStrictJSONRPC.methodNotFound property
 
-Return an error when the requested method is not defined
+Return an error when the requested method is not defined, otherwise, ignore the request.
 
 <b>Signature:</b>
 

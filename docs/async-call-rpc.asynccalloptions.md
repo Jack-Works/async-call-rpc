@@ -19,6 +19,7 @@ export interface AsyncCallOptions
 |  [key](./async-call-rpc.asynccalloptions.key.md) | string | A key to prevent collision with other AsyncCalls. |
 |  [log](./async-call-rpc.asynccalloptions.log.md) | [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) \| boolean | Choose log level. See [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) |
 |  [logger](./async-call-rpc.asynccalloptions.logger.md) | [Console](./async-call-rpc.console.md) | The logger of AsyncCall |
+|  [mapError](./async-call-rpc.asynccalloptions.maperror.md) | [ErrorMapFunction](./async-call-rpc.errormapfunction.md)<!-- -->&lt;unknown&gt; | Control the error response data |
 |  [messageChannel](./async-call-rpc.asynccalloptions.messagechannel.md) | [MessageChannel](./async-call-rpc.messagechannel.md) | The message channel can let you transport messages between server and client |
 |  [parameterStructures](./async-call-rpc.asynccalloptions.parameterstructures.md) | 'by-position' \| 'by-name' | How parameters passed to remote |
 |  [preferLocalImplementation](./async-call-rpc.asynccalloptions.preferlocalimplementation.md) | boolean | Prefer local implementation than remote. |

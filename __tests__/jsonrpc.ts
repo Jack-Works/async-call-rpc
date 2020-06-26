@@ -1,4 +1,12 @@
-import { Request, SuccessResponse, ErrorResponse, hasKey, isJSONRPCObject, isObject } from '../src/utils/jsonrpc'
+import {
+    Request,
+    SuccessResponse,
+    ErrorResponse,
+    hasKey,
+    isJSONRPCObject,
+    isObject,
+    ErrorResponseMapped,
+} from '../src/utils/jsonrpc'
 test('Request', () => {
     expect(Request('id', 'method', ['param1', 'param2'], 'stack')).toMatchSnapshot('req1')
     expect(Request('id2', 'method', { param1: 'abc', param2: 'def' }, 'stack')).toMatchSnapshot('req2')
@@ -10,19 +18,20 @@ test('SuccessResponse', () => {
 })
 
 test('ErrorResponse', () => {
-    const err = new Error()
-    err.stack = 'stack'
-    expect(ErrorResponse('id2', -123, 'message', 'stack', err)).toMatchSnapshot('normal error')
-    expect(ErrorResponse('id', 123, 'message', 'stack', '')).toMatchSnapshot('invalid error object')
-    expect(ErrorResponse('id2', -123.456, 'message', 'stack', { stack: 'item' })).toMatchSnapshot('invalid code')
-    expect(ErrorResponse(undefined, 0, '', '')).toMatchSnapshot()
-    expect(ErrorResponse('', -0, '', '')).toMatchSnapshot()
-    expect(ErrorResponse('', NaN, '', '')).toMatchSnapshot()
-    expect(ErrorResponse.InternalError('id', 'msg')).toMatchSnapshot('internal error')
-    expect(ErrorResponse.InvalidParams('id')).toMatchSnapshot('invalid params')
+    expect(ErrorResponse('id2', -123, 'message', { _data_: 1 })).toMatchSnapshot('normal error')
+    expect(ErrorResponse('id2', -123.456, 'message')).toMatchSnapshot('invalid code')
+    expect(ErrorResponse(undefined, 0, '')).toMatchSnapshot()
+    expect(ErrorResponse('', -0, '')).toMatchSnapshot()
+    expect(ErrorResponse('', NaN, '')).toMatchSnapshot()
     expect(ErrorResponse.InvalidRequest('id')).toMatchSnapshot('invalid req')
     expect(ErrorResponse.MethodNotFound('id')).toMatchSnapshot('method not found')
-    expect(ErrorResponse.ParseError('stack')).toMatchSnapshot('parse error')
+    expect(
+        ErrorResponseMapped.ParseError(new Error(), () => ({
+            code: 2345,
+            message: 'My message',
+            data: { my_data: true },
+        })),
+    ).toMatchSnapshot('parse error')
 })
 
 test('hasKey', () => {

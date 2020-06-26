@@ -1,56 +1,105 @@
 import { DOMException, DOMExceptionHeader } from './error'
+import { ErrorMapFunction } from '../Async-Call'
 
-const jsonrpc = '2.0'
-type ID = string | number | null | undefined
-
-type JSONRPC = Readonly<{
-    jsonrpc: typeof jsonrpc
-    id?: ID
-}>
-export type Request = Readonly<{
-    method: string
-    params: readonly unknown[] | object
-}> & { remoteStack?: string } & JSONRPC
-export function Request(id: ID, method: string, params: readonly unknown[] | object, remoteStack: string): Request {
+export const jsonrpc = '2.0'
+export type ID = string | number | null | undefined
+/**
+ * JSONRPC Request object.
+ * @public
+ */
+export interface Request
+    extends Readonly<{
+        jsonrpc: typeof jsonrpc
+        id?: ID
+        method: string
+        params: readonly unknown[] | object
+        remoteStack?: string
+    }> {}
+type Change<T> = { -readonly [key in keyof T]: T[key] }
+export function Request(id: ID, method: string, params: readonly unknown[] | object, remoteStack = ''): Request {
     const x: Request = { jsonrpc, id, method, params, remoteStack }
-    if (remoteStack.length === 0) delete x.remoteStack
+    if (!remoteStack) delete (x as Change<Request>).remoteStack
     return x
 }
 
-export type SuccessResponse = Readonly<{ result: unknown }> & JSONRPC
-export function SuccessResponse(id: ID, result: any): SuccessResponse {
+/**
+ * JSONRPC SuccessResponse object.
+ * @public
+ */
+export interface SuccessResponse
+    extends Readonly<{
+        jsonrpc: typeof jsonrpc
+        id?: ID
+        result: unknown
+    }> {}
+export function SuccessResponse(id: ID, result: unknown): SuccessResponse {
     const x: SuccessResponse = { jsonrpc, id, result }
     if (id === undefined) delete (x as any).id
     return x
 }
 
-export type ErrorResponse = JSONRPC &
-    Readonly<{
-        error: { code: number; message: string; data?: { stack?: string; type?: string } }
-    }>
+/**
+ * JSONRPC ErrorResponse object.
+ * @public
+ */
+export interface ErrorResponse<E = unknown>
+    extends Readonly<{
+        jsonrpc: typeof jsonrpc
+        id?: ID
+        error: Readonly<{ code: number; message: string; data?: E }>
+    }> {}
 
-export function ErrorResponse(id: ID, code: number, message: string, stack: string, e?: unknown): ErrorResponse {
+export function ErrorResponse<T>(id: ID, code: number, message: string, data?: T): ErrorResponse<T> {
+    if (id === undefined) id = null
+    code = Math.floor(code)
+    if (Number.isNaN(code)) code = -1
+    const x: ErrorResponse<T> = { error: { code, message, data }, id, jsonrpc }
+    if (x.error.data === undefined) delete (x.error as Change<ErrorResponse['error']>).data
+    return x
+}
+
+type AsyncCallErrorDetail = {
+    stack?: string
+    type?: string
+}
+export function ErrorResponseMapped<T>(request: Request, e: unknown, mapper: ErrorMapFunction<T>): ErrorResponse<T> {
+    const { id } = request
+    const { code, message, data } = mapper(e, request)
+    return ErrorResponse(id, code, message, data)
+}
+
+export const defaultErrorMapper = (stack = '', code = -1): ErrorMapFunction<AsyncCallErrorDetail> => (e) => {
+    let message = ''
+    if (isObject(e) && hasKey(e, 'message') && typeof e.message === 'string') message = e.message
     let type = toString('Error', () => (e as any)?.constructor?.name)
     if (DOMException && e instanceof DOMException) type = DOMExceptionHeader + e.name
     if (typeof e === 'string' || typeof e === 'number' || typeof e === 'boolean' || typeof e === 'bigint') {
         type = 'Error'
         message = String(e)
     }
-    if (id === undefined) id = null
-    code = Math.floor(code)
-    if (Number.isNaN(code)) code = -1
-    const error: ErrorResponse['error'] = { code, message, data: { stack, type } }
-    return { error, id, jsonrpc }
+    const data: AsyncCallErrorDetail = stack ? { stack, type } : { type }
+    return { code, message, data }
 }
 
 // Pre defined error in section 5.1
-ErrorResponse.ParseError = (stack = '') => ErrorResponse(null, -32700, 'Parse error', stack)
-ErrorResponse.InvalidRequest = (id: ID) => ErrorResponse(id, -32600, 'Invalid Request', '')
-ErrorResponse.MethodNotFound = (id: ID) => ErrorResponse(id, -32601, 'Method not found', '')
-ErrorResponse.InvalidParams = (id: ID) => ErrorResponse(id, -32602, 'Invalid params', '')
-ErrorResponse.InternalError = (id: ID, message: string = '') =>
-    ErrorResponse(id, -32603, 'Internal error' + message, '')
+ErrorResponseMapped.ParseError = <T>(e: unknown, mapper: ErrorMapFunction<T>): ErrorResponse<T> => {
+    const obj = ErrorResponseMapped({} as any, e, mapper)
+    const o = obj.error as Change<ErrorResponse['error']>
+    o.code = -32700
+    o.message = 'Parse error'
+    return obj
+}
+ErrorResponse.InvalidRequest = (id: ID) => ErrorResponse(id, -32600, 'Invalid Request')
+ErrorResponse.MethodNotFound = (id: ID) => ErrorResponse(id, -32601, 'Method not found')
 
+// Not using.
+// InvalidParams -32602 'Invalid params'
+// InternalError -32603 'Internal error'
+
+/**
+ * A JSONRPC response object
+ * @public
+ */
 export type Response = SuccessResponse | ErrorResponse
 
 export function isJSONRPCObject(data: any): data is Response | Request {
