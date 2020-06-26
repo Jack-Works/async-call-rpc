@@ -9,4 +9,5 @@ export default {
             module: 'ESNext',
         },
     },
+    testPathIgnorePatterns: ['shared.ts'],
 }

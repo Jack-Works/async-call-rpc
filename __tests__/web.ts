@@ -16,6 +16,7 @@ test('DOMException', async () => {
 
 test('preservePauseOnException', async () => {
     const { preservePauseOnException } = await import('../src/utils/preservePauseOnException')
+    const { createServer } = await import('./shared')
 
     const e = () => {}
     await expect(preservePauseOnException(e, async () => 1, [])).resolves.toBe(1)
@@ -24,6 +25,8 @@ test('preservePauseOnException', async () => {
     //     throw new Error('unhandledRejection test')
     // }
     // await expect(preservePauseOnException(e, throws, [])).rejects.toMatchInlineSnapshot()
+    const x = createServer({ preservePauseOnException: true })
+    await expect(x.add(1, 2)).resolves.toBe(3)
 }, 200)
 
 beforeAll(() => {
