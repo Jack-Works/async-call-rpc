@@ -84,7 +84,7 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
     options: AsyncCallOptions,
 ): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions> {
     const iterators = new Map<string | number, Iter>()
-    const strict = normalizeStrictOptions(options.strict || false)
+    const strict = normalizeStrictOptions(options.strict ?? true)
     const { idGenerator = generateRandomID } = options
     function findIterator(
         id: string,
@@ -136,41 +136,45 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
     return new Proxy({}, { get: proxyTrap }) as _AsyncGeneratorVersionOf<OtherSideImplementedFunctions>
 }
 class AsyncGenerator implements AsyncIterableIterator<unknown>, AsyncIterator<unknown, unknown, unknown> {
-    // #remoteImpl
-    private __0: AsyncGeneratorInternalMethods
-    // #id
-    private __1: Promise<string>
-    // #done
-    private __2: boolean
-    // #check
-    private __3 = (val: IterResult) => {
-        isFinished(val, () => (this.__2 = true))
+    /** done? */
+    private d: boolean = false
+    /** check */
+    private c = async (val: IterResult) => {
+        await isFinished(val, () => (this.d = true))
         return val
     }
-    constructor(remoteImpl: AsyncGeneratorInternalMethods, id: Promise<string>) {
-        this.__0 = remoteImpl
-        this.__1 = id
-        this.__2 = false
-    }
+    /**
+     * @param r Remote Implementation
+     * @param i id
+     */
+    constructor(private r: AsyncGeneratorInternalMethods, private i: Promise<string>) {}
     async return(val: unknown) {
-        if (this.__2) return makeIteratorResult(true, val)
-        return this.__3(this.__0[_AsyncIteratorReturn](await this.__1, val))
+        if (!this.d) this.c(this.r[_AsyncIteratorReturn](await this.i, val)).catch(() => {})
+        this.d = true
+        return makeIteratorResult(true, val)
     }
     async next(val?: unknown) {
-        if (this.__2) return makeIteratorResult(true)
-        return this.__3(this.__0[_AsyncIteratorNext](await this.__1, val))
+        if (this.d) return makeIteratorResult(true)
+        return await this.c(this.r[_AsyncIteratorNext](await this.i, val))
     }
     async throw(val?: unknown) {
-        if (this.__2) throw val
-        return this.__3(this.__0[_AsyncIteratorThrow](await this.__1, val))
+        if (!this.d) return await this.c(this.r[_AsyncIteratorThrow](await this.i, val))
+        throw val
     }
-    [Symbol.asyncIterator]() {
-        return this
-    }
+    // Inherited from AsyncGeneratorPrototype
+    declare [Symbol.asyncIterator]: () => this
 }
+const AsyncGeneratorConstructor = async function* () {}.constructor
+const AsyncGeneratorConstructorPrototype = AsyncGeneratorConstructor.prototype
+Object.setPrototypeOf(AsyncGenerator, AsyncGeneratorConstructorPrototype)
+const AsyncGeneratorPrototype = Object.getPrototypeOf((async function* () {})())
+Object.setPrototypeOf(AsyncGenerator.prototype, AsyncGeneratorPrototype)
+
 async function isFinished(result: IterResult | undefined, cb: () => void) {
-    const x = await result
-    !!x?.done && cb
+    try {
+        const x = await result
+        !!x?.done && cb()
+    } catch {}
 }
 
 function makeIteratorResult(done: boolean, value: unknown = undefined): IteratorResult<unknown, unknown> {

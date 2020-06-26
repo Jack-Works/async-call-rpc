@@ -1,5 +1,5 @@
 import { NoSerialization, JSONSerialization } from '../src/Async-Call'
-import { createServer } from './shared'
+import { createServer, timeout, sleep } from './shared'
 
 test('AsyncCall basic test', async () => {
     const snapshot = mockConsoleLog('no logs')
@@ -75,15 +75,4 @@ function mockConsoleLog(key: string) {
         expect(e.mock.calls).toMatchSnapshot(key + ' console.groupEnd')
         expect(f.mock.calls).toMatchSnapshot(key + ' console.debug')
     }
-}
-
-function sleep(x: number) {
-    return new Promise((r, rr) => setTimeout(r, x))
-}
-async function _timeout(x: number): Promise<never> {
-    await sleep(x)
-    throw new Error('Timeout')
-}
-async function timeout<T>(x: Promise<T>): Promise<T> {
-    return Promise.race([x, _timeout(200)])
 }

@@ -32,7 +32,7 @@ export async function preservePauseOnException(stackCallback: (x: string) => voi
             } catch {}
             return resolve(f(...args))
         } finally {
-            iframe?.remove()
+            iframe?.remove?.()
         }
     })
     return promise

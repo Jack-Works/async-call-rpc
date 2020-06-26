@@ -44,4 +44,16 @@ export function createGeneratorServer<T extends object = typeof impl2>(
     AsyncGeneratorCall(_, { messageChannel: server, log: false, ...opt })
     return AsyncGeneratorCall<T>({}, { messageChannel: client, log: false, ...opt })
 }
+
+export function sleep(x: number) {
+    return new Promise((r, rr) => setTimeout(r, x))
+}
+async function _timeout(x: number): Promise<never> {
+    await sleep(x)
+    throw new Error('Timeout')
+}
+export async function timeout<T>(x: Promise<T>): Promise<T> {
+    return Promise.race([x, _timeout(200)])
+}
+
 test('', () => {})
