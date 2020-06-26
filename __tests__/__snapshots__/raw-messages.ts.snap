@@ -1,32 +1,73 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AsyncGeneratorCall 1`] = `
+exports[`AsyncGeneratorCall non strict: in 1`] = `Array []`;
+
+exports[`AsyncGeneratorCall non strict: out 1`] = `
+Array [
+  "{\\"jsonrpc\\":\\"2.0\\",\\"id\\":1,\\"method\\":\\"rpc.async-iterator.next\\",\\"params\\":[\\"non-exist\\"]}",
+]
+`;
+
+exports[`AsyncGeneratorCall: in 1`] = `
 Array [
   "{\\"error\\":{\\"code\\":-1,\\"message\\":\\"Iterator non-exist not found, next() failed.\\",\\"data\\":{\\"type\\":\\"E\\"}},\\"id\\":1,\\"jsonrpc\\":\\"2.0\\"}",
 ]
 `;
 
-exports[`AsyncGeneratorCall non strict 1`] = `Array []`;
-
-exports[`Bad messages: Bad & non strict 1`] = `
+exports[`AsyncGeneratorCall: out 1`] = `
 Array [
-  "{\\"error\\":{\\"code\\":-32600,\\"message\\":\\"Invalid Request\\",\\"data\\":{\\"stack\\":\\"\\",\\"type\\":\\"Error\\"}},\\"id\\":\\"id1\\",\\"jsonrpc\\":\\"2.0\\"}",
-  "{\\"error\\":{\\"code\\":-32700,\\"message\\":\\"Parse error\\",\\"data\\":{\\"stack\\":\\"<mocked stack>\\",\\"type\\":\\"Error\\"}},\\"id\\":null,\\"jsonrpc\\":\\"2.0\\"}",
+  "{\\"jsonrpc\\":\\"2.0\\",\\"id\\":1,\\"method\\":\\"rpc.async-iterator.next\\",\\"params\\":[\\"non-exist\\"]}",
 ]
 `;
 
-exports[`Bad messages: Bad & strict 1`] = `
+exports[`Bad messages: in 1`] = `
 Array [
+  "{\\"error\\":{\\"code\\":-32700,\\"message\\":\\"Parse error\\",\\"data\\":{\\"stack\\":\\"<mocked stack>\\",\\"type\\":\\"Error\\"}},\\"id\\":null,\\"jsonrpc\\":\\"2.0\\"}",
   "{\\"error\\":{\\"code\\":-32600,\\"message\\":\\"Invalid Request\\",\\"data\\":{\\"stack\\":\\"\\",\\"type\\":\\"Error\\"}},\\"id\\":\\"id0\\",\\"jsonrpc\\":\\"2.0\\"}",
-  "{\\"error\\":{\\"code\\":-32600,\\"message\\":\\"Invalid Request\\",\\"data\\":{\\"stack\\":\\"\\",\\"type\\":\\"Error\\"}},\\"id\\":\\"id1\\",\\"jsonrpc\\":\\"2.0\\"}",
   "{\\"error\\":{\\"code\\":-32600,\\"message\\":\\"Invalid Request\\",\\"data\\":{\\"stack\\":\\"\\",\\"type\\":\\"Error\\"}},\\"id\\":null,\\"jsonrpc\\":\\"2.0\\"}",
-  "{\\"error\\":{\\"code\\":-32700,\\"message\\":\\"Parse error\\",\\"data\\":{\\"stack\\":\\"<mocked stack>\\",\\"type\\":\\"Error\\"}},\\"id\\":null,\\"jsonrpc\\":\\"2.0\\"}",
+  "{\\"error\\":{\\"code\\":-32600,\\"message\\":\\"Invalid Request\\",\\"data\\":{\\"stack\\":\\"\\",\\"type\\":\\"Error\\"}},\\"id\\":\\"id1\\",\\"jsonrpc\\":\\"2.0\\"}",
 ]
 `;
 
-exports[`Batch messages 1`] = `
+exports[`Bad messages: in 2`] = `
+Array [
+  "{\\"error\\":{\\"code\\":-32700,\\"message\\":\\"Parse error\\",\\"data\\":{\\"stack\\":\\"<mocked stack>\\",\\"type\\":\\"Error\\"}},\\"id\\":null,\\"jsonrpc\\":\\"2.0\\"}",
+  "{\\"error\\":{\\"code\\":-32600,\\"message\\":\\"Invalid Request\\",\\"data\\":{\\"stack\\":\\"\\",\\"type\\":\\"Error\\"}},\\"id\\":\\"id1\\",\\"jsonrpc\\":\\"2.0\\"}",
+]
+`;
+
+exports[`Bad messages: out 1`] = `
+Array [
+  "{\\"jsonrpc\\":\\"2.0\\",\\"id\\":\\"id0\\",\\"method\\":\\"method\\",\\"params\\":\\"invalid\\"}",
+  "{\\"abc\\":1}",
+  "{\\"jsonrpc\\":\\"2.0\\",\\"id\\":\\"id1\\"}",
+  "Not JSON!",
+]
+`;
+
+exports[`Bad messages: out 2`] = `
+Array [
+  "{\\"jsonrpc\\":\\"2.0\\",\\"id\\":\\"id0\\",\\"method\\":\\"method\\",\\"params\\":\\"invalid\\"}",
+  "{\\"abc\\":1}",
+  "{\\"jsonrpc\\":\\"2.0\\",\\"id\\":\\"id1\\"}",
+  "Not JSON!",
+]
+`;
+
+exports[`Batch messages 1`] = `undefined`;
+
+exports[`Batch messages: in 1`] = `
 Array [
   "[{\\"jsonrpc\\":\\"2.0\\",\\"id\\":0,\\"result\\":1},{\\"jsonrpc\\":\\"2.0\\",\\"id\\":1,\\"result\\":1}]",
   "[{\\"jsonrpc\\":\\"2.0\\",\\"id\\":null,\\"result\\":1},{\\"jsonrpc\\":\\"2.0\\",\\"id\\":null,\\"result\\":1}]",
+]
+`;
+
+exports[`Batch messages: out 1`] = `
+Array [
+  "[{\\"jsonrpc\\":\\"2.0\\",\\"id\\":0,\\"method\\":\\"f1\\",\\"params\\":[]},{\\"jsonrpc\\":\\"2.0\\",\\"id\\":1,\\"method\\":\\"f2\\",\\"params\\":{\\"x\\":1}}]",
+  "[{\\"jsonrpc\\":\\"2.0\\",\\"method\\":\\"f1\\",\\"params\\":{}}]",
+  "[{\\"jsonrpc\\":\\"2.0\\",\\"id\\":null,\\"method\\":\\"f1\\",\\"params\\":{}},{\\"jsonrpc\\":\\"2.0\\",\\"id\\":null,\\"method\\":\\"f1\\",\\"params\\":{}}]",
+  "[{\\"jsonrpc\\":\\"2.0\\",\\"method\\":\\"f1\\",\\"params\\":[]},{\\"jsonrpc\\":\\"2.0\\",\\"method\\":\\"f2\\",\\"params\\":{\\"x\\":1}}]",
 ]
 `;

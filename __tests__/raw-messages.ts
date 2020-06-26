@@ -35,54 +35,48 @@ test('Bad messages', async () => {
     ]
         .map(json.serialization)
         .concat('Not JSON!')
-    await expect(
-        channelPeak(
-            (server) => AsyncCall({}, { messageChannel: server, log: false, key: 'message', serializer: json }),
-            invalidRequests,
-        ),
-    ).resolves.toMatchSnapshot('Bad & strict')
-    await expect(
-        channelPeak(
-            (server) =>
-                AsyncCall({}, { messageChannel: server, log: false, key: 'message', strict: false, serializer: json }),
-            invalidRequests,
-        ),
-    ).resolves.toMatchSnapshot('Bad & non strict')
+    await channelPeak(
+        (server) => AsyncCall({}, { messageChannel: server, log: false, key: 'message', serializer: json }),
+        invalidRequests,
+    )
+    await channelPeak(
+        (server) =>
+            AsyncCall({}, { messageChannel: server, log: false, key: 'message', strict: false, serializer: json }),
+        invalidRequests,
+    )
 })
 
 test('AsyncGeneratorCall', async () => {
     const json = JSONSerialization()
     const requests = [Request(1, 'rpc.async-iterator.next', ['non-exist'], '')].map(json.serialization)
-    await expect(
-        channelPeak(
-            (server) =>
-                AsyncGeneratorCall({}, { messageChannel: server, log: false, key: 'message', serializer: json }),
-            requests,
-        ),
-    ).resolves.toMatchSnapshot()
+    await channelPeak(
+        (server) => AsyncGeneratorCall({}, { messageChannel: server, log: false, key: 'message', serializer: json }),
+        requests,
+    )
 })
 
 test('AsyncGeneratorCall non strict', async () => {
     const json = JSONSerialization()
     const requests = [Request(1, 'rpc.async-iterator.next', ['non-exist'], '')].map(json.serialization)
-    await expect(
-        channelPeak(
-            (server) =>
-                AsyncGeneratorCall(
-                    {},
-                    { messageChannel: server, log: false, key: 'message', serializer: json, strict: false },
-                ),
-            requests,
-        ),
-    ).resolves.toMatchSnapshot()
+    await channelPeak(
+        (server) =>
+            AsyncGeneratorCall(
+                {},
+                { messageChannel: server, log: false, key: 'message', serializer: json, strict: false },
+            ),
+        requests,
+    )
 })
 
 async function channelPeak(buildServer: (channel: JestChannel) => void, out: unknown[]) {
     const { client, server } = createChannelPair()
     buildServer(server)
     const income = []
+    const outcome = []
+    server.addListener('message', (e) => outcome.push(e))
     client.addListener('message', (e) => income.push(e))
     out.forEach((x) => client.emit('message', x))
     await sleep(200)
-    return income.sort()
+    expect(income).toMatchSnapshot('in')
+    expect(outcome).toMatchSnapshot('out')
 }
