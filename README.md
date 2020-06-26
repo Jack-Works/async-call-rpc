@@ -17,6 +17,7 @@ Chapters:
 -   [Example](#example)
 -   [Installation](#installation)
 -   [Entries](#entries)
+-   [Look this if both server and client are created by this library](#look-this-if-both-server-and-client-are-created-by-this-library)
 -   [Implemented JSON RPC internal methods](#implemented-json-rpc-internal-methods)
 -   [Non-standard extension to JSON RPC specification](#non-standard-extension-to-json-rpc-specification)
 
@@ -146,6 +147,13 @@ import * as RPC from 'async-rpc-call/full'
 require('async-rpc-call/base') // or
 import * as RPC from 'async-rpc-call/base'
 ```
+
+## Look this if both server and client are created by this library
+
+AsyncCall has some non-standard extensions to the JSON RPC specification that can help the library easier to use. Those features aren't enabled by default.
+
+-   Send call stack of Error response or send call stack of caller's request. See [remoteStack on Request object](#remotestack-on-request-object)
+-   Try to keep the "undefined" result when using JSONSerialization. See ["undef" on response object](#undef-on-response-object)
 
 ## Implemented JSON RPC internal methods
 
