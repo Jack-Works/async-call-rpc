@@ -5,9 +5,8 @@ test('Request', () => {
 })
 
 test('SuccessResponse', () => {
-    expect(SuccessResponse('id', undefined, false)).toMatchSnapshot('undefined-keeping')
-    expect(SuccessResponse('id2', undefined, true)).toMatchSnapshot('undefined-dropping')
-    expect(SuccessResponse('id3', { data: 'result' }, false)).toMatchSnapshot('success')
+    expect(SuccessResponse('id2', undefined)).toMatchSnapshot('undefined')
+    expect(SuccessResponse('id3', { data: 'result' })).toMatchSnapshot('success')
 })
 
 test('ErrorResponse', () => {
@@ -33,7 +32,7 @@ test('hasKey', () => {
 
 test('isJSONRPCObject', () => {
     expect(isJSONRPCObject(Request('id', '', [], ''))).toBe(true)
-    expect(isJSONRPCObject(SuccessResponse('id', undefined, false))).toBe(true)
+    expect(isJSONRPCObject(SuccessResponse('id', undefined))).toBe(true)
     expect(isJSONRPCObject(ErrorResponse('id', 0, 'msg', 'stack'))).toBe(true)
     expect(isJSONRPCObject({})).toBe(false)
     expect(isJSONRPCObject(undefined)).toBe(false)

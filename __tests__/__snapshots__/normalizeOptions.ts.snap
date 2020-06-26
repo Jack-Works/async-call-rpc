@@ -28,7 +28,6 @@ Object {
 exports[`normalize strict options 1`] = `
 Object {
   "methodNotFound": true,
-  "noUndefined": true,
   "unknownMessage": true,
 }
 `;
@@ -36,7 +35,6 @@ Object {
 exports[`normalize strict options 2`] = `
 Object {
   "methodNotFound": false,
-  "noUndefined": false,
   "unknownMessage": false,
 }
 `;
@@ -44,6 +42,51 @@ Object {
 exports[`normalize strict options 3`] = `
 Object {
   "methodNotFound": false,
-  "noUndefined": true,
+  "unknownMessage": false,
+}
+`;
+
+exports[`normalize strict options 4`] = `
+Object {
+  "methodNotFound": false,
+  "unknownMessage": true,
+}
+`;
+
+exports[`normalize strict options 5`] = `
+Object {
+  "methodNotFound": true,
+  "unknownMessage": false,
+}
+`;
+
+exports[`normalize strict options 6`] = `
+Object {
+  "methodNotFound": true,
+  "unknownMessage": true,
+}
+`;
+
+exports[`normalize strict options 7`] = `
+Object {
+  "methodNotFound": false,
+}
+`;
+
+exports[`normalize strict options 8`] = `
+Object {
+  "methodNotFound": true,
+}
+`;
+
+exports[`normalize strict options 9`] = `
+Object {
+  "unknownMessage": false,
+}
+`;
+
+exports[`normalize strict options 10`] = `
+Object {
+  "unknownMessage": true,
 }
 `;

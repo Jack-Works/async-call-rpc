@@ -17,12 +17,9 @@ export function Request(id: ID, method: string, params: readonly unknown[] | obj
     return x
 }
 
-export type SuccessResponse = Readonly<{ result: unknown }> & { resultIsUndefined?: boolean } & JSONRPC
-export function SuccessResponse(id: ID, result: any, noUndefinedKeeping: boolean): SuccessResponse {
-    const x: SuccessResponse = { jsonrpc, id, result: result === undefined ? null : result }
-    if (!noUndefinedKeeping && result === undefined) {
-        x.resultIsUndefined = true
-    }
+export type SuccessResponse = Readonly<{ result: unknown }> & JSONRPC
+export function SuccessResponse(id: ID, result: any): SuccessResponse {
+    const x: SuccessResponse = { jsonrpc, id, result }
     return x
 }
 

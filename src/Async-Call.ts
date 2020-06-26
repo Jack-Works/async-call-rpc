@@ -52,17 +52,12 @@ export interface AsyncCallLogLevel {
 export interface AsyncCallStrictJSONRPC {
     /**
      * Return an error when the requested method is not defined
-     * @defaultValue false
+     * @defaultValue true
      */
     methodNotFound?: boolean
     /**
-     * don't try to keep `undefined` result (then it will be `null`)
-     * @defaultValue false
-     */
-    noUndefined?: boolean
-    /**
      * send an error when receive invalid JSON RPC payload
-     * @defaultValue false
+     * @defaultValue true
      */
     unknownMessage?: boolean
 }
@@ -193,7 +188,7 @@ export type _AsyncVersionOf<T> = {
 const AsyncCallDefaultOptions = (<T extends Omit<Required<AsyncCallOptions>, 'messageChannel' | 'logger'>>(a: T) => a)({
     serializer: NoSerialization,
     key: 'default-jsonrpc',
-    strict: false,
+    strict: true,
     log: true,
     parameterStructures: 'by-position',
     preferLocalImplementation: false,
@@ -241,7 +236,6 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     const message = options.messageChannel
     const {
         methodNotFound: banMethodNotFound = false,
-        noUndefined: noUndefinedKeeping = false,
         unknownMessage: banUnknownMessage = false,
     } = normalizeStrictOptions(strict)
     const {
@@ -296,7 +290,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                 }
                 const result = await promise
                 if (result === AsyncCallIgnoreResponse) return
-                return SuccessResponse(data.id, await promise, noUndefinedKeeping)
+                return SuccessResponse(data.id, await promise)
             } else {
                 return ErrorResponse.InvalidRequest(data.id)
             }
@@ -309,7 +303,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             return ErrorResponse(data.id, -1, e?.message, sendLocalStack ? e?.stack : undefined, e)
         }
     }
-    async function onResponse(data: Response): Promise<void> {
+    async function onResponse(data: Response): Promise<undefined> {
         let errorMessage = '',
             remoteErrorStack = '',
             errorCode = 0,
@@ -348,6 +342,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         } else {
             resolve(data.result)
         }
+        return undefined
     }
     message.on(key, async (_: unknown) => {
         let data: unknown
@@ -429,18 +424,14 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         },
     ) as _AsyncVersionOf<OtherSideImplementedFunctions>
 
-    async function handleSingleMessage(data: SuccessResponse | ErrorResponse | Request) {
+    async function handleSingleMessage(
+        data: SuccessResponse | ErrorResponse | Request,
+    ): Promise<SuccessResponse | ErrorResponse | undefined> {
         if (hasKey(data, 'method')) {
             return onRequest(data)
         } else if ('error' in data || 'result' in data) {
-            if (hasKey(data, 'resultIsUndefined')) (data as any).result = undefined
-            onResponse(data)
-        } else {
-            if (hasKey(data, 'resultIsUndefined')) {
-                ;(data as any).result = undefined
-                onResponse(data)
-            } else return ErrorResponse.InvalidRequest((data as any).id)
+            return onResponse(data)
         }
-        return undefined
+        return ErrorResponse.InvalidRequest(data.id)
     }
 }

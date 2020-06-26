@@ -35,7 +35,6 @@ export interface AsyncCallOptions {
 // @public
 export interface AsyncCallStrictJSONRPC {
     methodNotFound?: boolean;
-    noUndefined?: boolean;
     unknownMessage?: boolean;
 }
 
@@ -71,7 +70,7 @@ export interface Console {
 }
 
 // @public
-export const JSONSerialization: (replacerAndReceiver?: [(((key: string, value: any) => any) | undefined)?, (((key: string, value: any) => any) | undefined)?], space?: string | number | undefined) => Serialization;
+export const JSONSerialization: (replacerAndReceiver?: [(((key: string, value: any) => any) | undefined)?, (((key: string, value: any) => any) | undefined)?], space?: string | number | undefined, undefinedKeepingBehavior?: 'keep' | 'null' | false) => Serialization;
 
 // @public
 export interface MessageChannel {

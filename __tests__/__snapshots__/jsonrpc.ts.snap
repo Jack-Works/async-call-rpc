@@ -201,19 +201,10 @@ Object {
 }
 `;
 
-exports[`SuccessResponse: undefined-dropping 1`] = `
+exports[`SuccessResponse: undefined 1`] = `
 Object {
   "id": "id2",
   "jsonrpc": "2.0",
-  "result": null,
-}
-`;
-
-exports[`SuccessResponse: undefined-keeping 1`] = `
-Object {
-  "id": "id",
-  "jsonrpc": "2.0",
-  "result": null,
-  "resultIsUndefined": true,
+  "result": undefined,
 }
 `;

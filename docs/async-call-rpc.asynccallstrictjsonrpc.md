@@ -17,6 +17,5 @@ export interface AsyncCallStrictJSONRPC
 |  Property | Type | Description |
 |  --- | --- | --- |
 |  [methodNotFound](./async-call-rpc.asynccallstrictjsonrpc.methodnotfound.md) | boolean | Return an error when the requested method is not defined |
-|  [noUndefined](./async-call-rpc.asynccallstrictjsonrpc.noundefined.md) | boolean | don't try to keep <code>undefined</code> result (then it will be <code>null</code>) |
 |  [unknownMessage](./async-call-rpc.asynccallstrictjsonrpc.unknownmessage.md) | boolean | send an error when receive invalid JSON RPC payload |
 

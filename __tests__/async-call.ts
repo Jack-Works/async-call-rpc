@@ -4,24 +4,24 @@ import { createServer } from './shared'
 test('AsyncCall basic test', async () => {
     const snapshot = mockConsoleLog('no logs')
     const c = createServer()
-    expect(await c.add(1, 3)).toBe(4)
-    expect(await c.undef()).toBe(undefined)
-    expect(c.throws()).rejects.toMatchInlineSnapshot(`[Error: impl error]`)
+    expect(await timeout(c.add(1, 3))).toBe(4)
+    expect(await timeout(c.undef())).toBe(undefined)
+    expect(timeout(c.throws())).rejects.toMatchInlineSnapshot(`[Error: impl error]`)
     snapshot()
 }, 200)
 
 test('AsyncCall Serialization', async () => {
     const c = createServer({ serializer: NoSerialization })
-    await expect(c.undef()).resolves.toBe(undefined)
+    await expect(timeout(c.undef())).resolves.toBe(undefined)
     const c2 = createServer({ serializer: JSONSerialization() })
-    await expect(c2.undef()).resolves.toBe(undefined)
+    await expect(timeout(c2.undef())).resolves.toBe(null)
 }, 200)
 
 test('AsyncCall strict JSON RPC', async () => {
     const c = createServer({ strict: true })
     // @ts-expect-error
     await expect(c.add2()).rejects.toMatchInlineSnapshot(`[Error: Method not found]`)
-    await expect(c.undef()).resolves.toBe(null)
+    // TODO: test unknown message
 })
 
 test('AsyncCall logs', async () => {
@@ -79,4 +79,11 @@ function mockConsoleLog(key: string) {
 
 function sleep(x: number) {
     return new Promise((r, rr) => setTimeout(r, x))
+}
+async function _timeout(x: number): Promise<never> {
+    await sleep(x)
+    throw new Error('Timeout')
+}
+async function timeout<T>(x: Promise<T>): Promise<T> {
+    return Promise.race([x, _timeout(200)])
 }

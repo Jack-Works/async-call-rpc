@@ -9,7 +9,7 @@
 
 ## Links
 
-[CHANGELOG.md](./CHANGELOG.md) | [Document of AsyncCall](https://jack-works.github.io/async-call/async-call-rpc.asynccall.html) | [Document of AsyncGeneratorCall](https://jack-works.github.io/async-call/async-call-rpc.asyncgeneratorcall.html) | [Playground](https://jack-works.github.io/async-call/)
+[CHANGELOG.md](./CHANGELOG.md) | [Document of AsyncCall](https://jack-works.github.io/async-call-rpc/async-call-rpc.asynccall.html) | [Document of AsyncGeneratorCall](https://jack-works.github.io/async-call-rpc/async-call-rpc.asyncgeneratorcall.html) | [Playground](https://jack-works.github.io/async-call-rpc/)
 
 Chapters:
 
@@ -171,7 +171,7 @@ interface JSONRPC_Internal_Methods {
 
 This library can send the client the call stack to the server to make the logger better.
 
-Controlled by [`option.log.sendLocalStack`](https://jack-works.github.io/async-call/async-call-rpc.asynccallloglevel.sendlocalstack.html). Default to `false`.
+Controlled by [`option.log.sendLocalStack`](https://jack-works.github.io/async-call-rpc/async-call-rpc.asynccallloglevel.sendlocalstack.html). Default to `false`.
 
 ```ts
 interface JSONRPC_Request_object {
@@ -180,17 +180,17 @@ interface JSONRPC_Request_object {
 }
 ```
 
-### resultIsUndefined on Response object
+### "undef" on Response object
 
-This is a non-standard property. It's a hint to the client, that the result is `undefined` (because in JSON there is no `undefined`, only `null`). If this is option is off, the `undefined` result will become `null`.
+This is a non-standard property appears when using JSONSerialization due to JSON doesn't support `undefined`. It's a hint to the client, that the result is `undefined`.
 
-Controlled by [`strict.noUndefined`](https://jack-works.github.io/async-call/async-call-rpc.asynccallstrictjsonrpc.noundefined.html). Default to `false`.
+This behavior is controlled by the 3rd parameter of [JSONSerialization(replacerAndReceiver?, space?, undefinedKeepingBehavior?: false | "keep" | "null" = "null")](https://jack-works.github.io/async-call-rpc/async-call-rpc.jsonserialization.html). Default to `"null"`. To turn on this feature to "keep" undefined values, change the 3rd option to "keep".
 
 ```ts
 interface JSONRPC_Response_object {
     // This property is a hint.
     // If the client is run in JavaScript, it should treat "result: null" as "result: undefined"
-    resultIsUndefined?: boolean
+    undef?: boolean
 }
 ```
 

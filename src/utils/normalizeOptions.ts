@@ -13,6 +13,5 @@ export function normalizeStrictOptions(strict: NonNullable<AsyncCallOptions['str
     return {
         methodNotFound: strict,
         unknownMessage: strict,
-        noUndefined: strict,
     }
 }
