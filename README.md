@@ -32,8 +32,7 @@ Chapters:
 ## Cautions
 
 -   NOT support ECMAScript 5 (ES6 `Proxy` is the core of this library)
--   This package is shipping ECMAScript 2018 syntax (including `async function`). You need to use a transformer to transpile to ES6.
--   The default configuration is not standard JSON RPC (with a small extension to help easy using in JavaScript). But you can [switch on the "strict" mode](https://jack-works.github.io/async-call/async-call-rpc.asynccallstrictjsonrpc.html)
+-   This package is shipping ECMAScript 2018 syntax (including `async function`).
 -   The async generator mode might leak memory on the server. Use it by your caution.
 -   NOT support JSON RPC 1.0
 
@@ -130,9 +129,7 @@ Load the `out/base.mjs` (ES Module) or `out/base.js` (UMD, CommonJS or AMD) to y
 
 ## Entries
 
-> Currently the default entry is `full` but in the next major version, it will be `base`.
-
-This library has 2 entry. `base` and `full`. The difference is the `full` version includes the `AsyncGeneratorCall` but the base version doesn't.
+This library has 2 entry. `base` and `full`. `base` is the default entry point. The `full` version includes the `AsyncGeneratorCall` but the base version doesn't.
 
 ### Browser / Deno
 
@@ -202,8 +199,6 @@ interface JSONRPC_Response_object {
 In the JSON RPC specification, this is implementation-defined. (Plan to [add API for custom Error data](https://github.com/Jack-Works/async-call/issues/8)).
 
 This library will try to "Recover" the Error object if there is enough information from another side.
-
-Todo: [Disable this behavior](https://github.com/Jack-Works/async-call/issues/18)
 
 ```ts
 interface JSONRPC_Error_object {
