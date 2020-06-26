@@ -56,4 +56,22 @@ export async function timeout<T>(x: Promise<T>): Promise<T> {
     return Promise.race([x, _timeout(200)])
 }
 
+export function mockError() {
+    globalThis.Error = class E extends Error {
+        constructor(msg: string) {
+            super(msg)
+            this.stack = '<mocked stack>'
+        }
+    } as any
+    const old = JSON.parse
+    JSON.parse = (...args) => {
+        try {
+            return old(...args)
+        } catch (e) {
+            e.stack = '<mocked stack>'
+            throw e
+        }
+    }
+}
+
 test('', () => {})

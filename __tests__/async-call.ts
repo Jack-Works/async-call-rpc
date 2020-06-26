@@ -1,5 +1,5 @@
 import { NoSerialization, JSONSerialization } from '../src/Async-Call'
-import { createServer, timeout, sleep } from './shared'
+import { createServer, timeout, sleep, mockError } from './shared'
 
 test('AsyncCall basic test', async () => {
     const snapshot = mockConsoleLog('no logs')
@@ -27,12 +27,7 @@ test('AsyncCall strict JSON RPC', async () => {
 test('AsyncCall logs', async () => {
     let i = 2
     const idGen = () => Math.cos(i++)
-    globalThis.Error = class E extends Error {
-        constructor(msg: string) {
-            super(msg)
-            this.stack = '<mocked stack>'
-        }
-    } as any
+    mockError()
     const snapshot = mockConsoleLog('normal log')
     const s = createServer({
         log: { beCalled: true, localError: true, remoteError: true, sendLocalStack: true, type: 'pretty' },
@@ -58,6 +53,10 @@ test('AsyncCall logs', async () => {
 
 test('AsyncCall internal JSON RPC methods', async () => {
     // TODO
+    const s = createServer()
+    expect(s['rpc.internal']()).rejects.toMatchInlineSnapshot(
+        `[TypeError: [AsyncCall] You cannot call JSON RPC internal methods directly]`,
+    )
 })
 
 function mockConsoleLog(key: string) {

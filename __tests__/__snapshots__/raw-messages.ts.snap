@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Bad messages: Bad & non strict 1`] = `
+Array [
+  "{\\"error\\":{\\"code\\":-32600,\\"message\\":\\"Invalid Request\\",\\"data\\":{\\"stack\\":\\"\\",\\"type\\":\\"Error\\"}},\\"id\\":\\"id1\\",\\"jsonrpc\\":\\"2.0\\"}",
+  "{\\"error\\":{\\"code\\":-32700,\\"message\\":\\"Parse error\\",\\"data\\":{\\"stack\\":\\"<mocked stack>\\",\\"type\\":\\"Error\\"}},\\"id\\":null,\\"jsonrpc\\":\\"2.0\\"}",
+]
+`;
+
+exports[`Bad messages: Bad & strict 1`] = `
+Array [
+  "{\\"error\\":{\\"code\\":-32600,\\"message\\":\\"Invalid Request\\",\\"data\\":{\\"stack\\":\\"\\",\\"type\\":\\"Error\\"}},\\"id\\":\\"id0\\",\\"jsonrpc\\":\\"2.0\\"}",
+  "{\\"error\\":{\\"code\\":-32600,\\"message\\":\\"Invalid Request\\",\\"data\\":{\\"stack\\":\\"\\",\\"type\\":\\"Error\\"}},\\"id\\":\\"id1\\",\\"jsonrpc\\":\\"2.0\\"}",
+  "{\\"error\\":{\\"code\\":-32600,\\"message\\":\\"Invalid Request\\",\\"data\\":{\\"stack\\":\\"\\",\\"type\\":\\"Error\\"}},\\"id\\":null,\\"jsonrpc\\":\\"2.0\\"}",
+  "{\\"error\\":{\\"code\\":-32700,\\"message\\":\\"Parse error\\",\\"data\\":{\\"stack\\":\\"<mocked stack>\\",\\"type\\":\\"Error\\"}},\\"id\\":null,\\"jsonrpc\\":\\"2.0\\"}",
+]
+`;
+
+exports[`Batch messages 1`] = `
+Array [
+  "[{\\"jsonrpc\\":\\"2.0\\",\\"id\\":0,\\"result\\":1},{\\"jsonrpc\\":\\"2.0\\",\\"id\\":1,\\"result\\":1}]",
+]
+`;

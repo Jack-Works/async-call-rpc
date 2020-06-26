@@ -261,39 +261,35 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                     return
                 } else return ErrorResponse.MethodNotFound(data.id)
             }
-            const params: unknown = data.params
-            if (Array.isArray(params) || (typeof params === 'object' && params !== null)) {
-                const args = Array.isArray(params) ? params : [params]
-                frameworkStack = removeStackHeader(new Error().stack)
-                const promise = preservePauseOnException
-                    ? preservePauseOnExceptionCaller((x) => (frameworkStack = x), executor, args)
-                    : new Promise((resolve) => resolve(executor(...args)))
-                if (logBeCalled) {
-                    if (logType === 'basic')
-                        console.log(`${options.key}.${data.method}(${[...args].toString()}) @${data.id}`)
-                    else {
-                        const logArgs = [
-                            `${options.key}.%c${data.method}%c(${args.map(() => '%o').join(', ')}%c)\n%o %c@${data.id}`,
-                            'color: #d2c057',
-                            '',
-                            ...args,
-                            '',
-                            promise,
-                            'color: gray; font-style: italic;',
-                        ]
-                        if (data.remoteStack) {
-                            console.groupCollapsed(...logArgs)
-                            console.log(data.remoteStack)
-                            console.groupEnd()
-                        } else console.log(...logArgs)
-                    }
+            const { params } = data
+            const args = Array.isArray(params) ? params : [params]
+            frameworkStack = removeStackHeader(new Error().stack)
+            const promise = preservePauseOnException
+                ? preservePauseOnExceptionCaller((x) => (frameworkStack = x), executor, args)
+                : new Promise((resolve) => resolve(executor(...args)))
+            if (logBeCalled) {
+                if (logType === 'basic')
+                    console.log(`${options.key}.${data.method}(${[...args].toString()}) @${data.id}`)
+                else {
+                    const logArgs = [
+                        `${options.key}.%c${data.method}%c(${args.map(() => '%o').join(', ')}%c)\n%o %c@${data.id}`,
+                        'color: #d2c057',
+                        '',
+                        ...args,
+                        '',
+                        promise,
+                        'color: gray; font-style: italic;',
+                    ]
+                    if (data.remoteStack) {
+                        console.groupCollapsed(...logArgs)
+                        console.log(data.remoteStack)
+                        console.groupEnd()
+                    } else console.log(...logArgs)
                 }
-                const result = await promise
-                if (result === AsyncCallIgnoreResponse) return
-                return SuccessResponse(data.id, await promise)
-            } else {
-                return ErrorResponse.InvalidRequest(data.id)
             }
+            const result = await promise
+            if (result === AsyncCallIgnoreResponse) return
+            return SuccessResponse(data.id, await promise)
         } catch (e) {
             if (typeof e === 'object' && 'stack' in e)
                 e.stack = frameworkStack
@@ -365,7 +361,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                 }
             }
         } catch (e) {
-            console.error(e, data, result)
+            if (logLocalError) console.error(e, data, result)
             send(ErrorResponse.ParseError(e?.stack))
         }
         async function send(res?: Response | (Response | undefined)[]) {
