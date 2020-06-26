@@ -1,5 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`AsyncGeneratorCall 1`] = `
+Array [
+  "{\\"error\\":{\\"code\\":-1,\\"message\\":\\"Iterator non-exist not found, next() failed.\\",\\"data\\":{\\"type\\":\\"E\\"}},\\"id\\":1,\\"jsonrpc\\":\\"2.0\\"}",
+]
+`;
+
+exports[`AsyncGeneratorCall non strict 1`] = `Array []`;
+
 exports[`Bad messages: Bad & non strict 1`] = `
 Array [
   "{\\"error\\":{\\"code\\":-32600,\\"message\\":\\"Invalid Request\\",\\"data\\":{\\"stack\\":\\"\\",\\"type\\":\\"Error\\"}},\\"id\\":\\"id1\\",\\"jsonrpc\\":\\"2.0\\"}",

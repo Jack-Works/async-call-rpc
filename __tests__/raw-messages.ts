@@ -1,6 +1,7 @@
 import { createChannelPair, sleep, JestChannel, mockError } from './shared'
 import { AsyncCall, JSONSerialization } from '../src/Async-Call'
 import { Request } from '../src/utils/jsonrpc'
+import { AsyncGeneratorCall } from '../src/Async-Call-Generator'
 
 test('Batch messages', async () => {
     const json = JSONSerialization()
@@ -47,6 +48,33 @@ test('Bad messages', async () => {
             invalidRequests,
         ),
     ).resolves.toMatchSnapshot('Bad & non strict')
+})
+
+test('AsyncGeneratorCall', async () => {
+    const json = JSONSerialization()
+    const requests = [Request(1, 'rpc.async-iterator.next', ['non-exist'], '')].map(json.serialization)
+    await expect(
+        channelPeak(
+            (server) =>
+                AsyncGeneratorCall({}, { messageChannel: server, log: false, key: 'message', serializer: json }),
+            requests,
+        ),
+    ).resolves.toMatchSnapshot()
+})
+
+test('AsyncGeneratorCall non strict', async () => {
+    const json = JSONSerialization()
+    const requests = [Request(1, 'rpc.async-iterator.next', ['non-exist'], '')].map(json.serialization)
+    await expect(
+        channelPeak(
+            (server) =>
+                AsyncGeneratorCall(
+                    {},
+                    { messageChannel: server, log: false, key: 'message', serializer: json, strict: false },
+                ),
+            requests,
+        ),
+    ).resolves.toMatchSnapshot()
 })
 
 async function channelPeak(buildServer: (channel: JestChannel) => void, out: unknown[]) {
