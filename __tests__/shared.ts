@@ -4,6 +4,7 @@ import { AsyncGeneratorCall } from '../src/Async-Call-Generator'
 
 const impl = {
     add: (x: number, y: number) => x + y,
+    args: ({ x, y }: { x: number; y: number }) => x + y,
     undef: () => {},
     throws: async () => {
         throw new Error('impl error')
@@ -28,7 +29,7 @@ export function createServer<T extends object = typeof impl>(
     _: T = impl as any,
 ) {
     const { client, server } = createChannelPair()
-    AsyncCall(_, { messageChannel: server, log: false, ...opt })
+    AsyncCall(Math.random() > 0.5 ? _ : sleep(100).then(() => _), { messageChannel: server, log: false, ...opt })
     return AsyncCall<T>({}, { messageChannel: client, log: false, ...opt })
 }
 const impl2 = {
@@ -53,7 +54,7 @@ async function _timeout(x: number): Promise<never> {
     throw new Error('Timeout')
 }
 export async function timeout<T>(x: Promise<T>): Promise<T> {
-    return Promise.race([x, _timeout(200)])
+    return Promise.race([x, _timeout(400)])
 }
 
 export function mockError() {

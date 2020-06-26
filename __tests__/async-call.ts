@@ -1,28 +1,34 @@
 import { NoSerialization, JSONSerialization, AsyncCall } from '../src/Async-Call'
-import { createServer, timeout, sleep, mockError } from './shared'
+import { createServer, sleep, mockError } from './shared'
 
 test('AsyncCall basic test', async () => {
     const snapshot = mockConsoleLog('no logs')
     const c = createServer()
-    expect(await timeout(c.add(1, 3))).toBe(4)
-    expect(await timeout(c.undef())).toBe(undefined)
-    expect(timeout(c.throws())).rejects.toMatchInlineSnapshot(`[Error: impl error]`)
+    expect(await c.add(1, 3)).toBe(4)
+    expect(await c.undef()).toBe(undefined)
+    expect(c.throws()).rejects.toMatchInlineSnapshot(`[Error: impl error]`)
+    expect(c[0]()).rejects.toMatchInlineSnapshot(`[Error: Method not found]`)
     snapshot()
-}, 200)
+}, 2000)
 
 test('AsyncCall Serialization', async () => {
     const c = createServer({ serializer: NoSerialization })
-    await expect(timeout(c.undef())).resolves.toBe(undefined)
+    await expect(c.undef()).resolves.toBe(undefined)
     const c2 = createServer({ serializer: JSONSerialization() })
-    await expect(timeout(c2.undef())).resolves.toBe(null)
-}, 200)
+    await expect(c2.undef()).resolves.toBe(null)
+}, 2000)
+
+test('AsyncCall Call by structure', async () => {
+    const c = createServer({ serializer: NoSerialization, parameterStructures: 'by-name' })
+    await expect(c.args({ x: 1, y: 2 })).resolves.toBe(3)
+}, 2000)
 
 test('AsyncCall strict JSON RPC', async () => {
     const c = createServer({ strict: true })
     // @ts-expect-error
     await expect(c.add2()).rejects.toMatchInlineSnapshot(`[Error: Method not found]`)
     // TODO: test unknown message
-})
+}, 2000)
 
 test('AsyncCall preferLocal', async () => {
     const x = AsyncCall<any>(
@@ -38,7 +44,7 @@ test('AsyncCall preferLocal', async () => {
         },
     )
     expect(x.f()).resolves.toBe(1)
-})
+}, 2000)
 
 test('AsyncCall logs', async () => {
     let i = 2
@@ -62,18 +68,25 @@ test('AsyncCall logs', async () => {
     const s3 = createServer({ log: true, strict: { methodNotFound: false }, idGenerator: idGen })
     // @ts-expect-error
     s3.add2(1, 2)
-    await sleep(200)
+    await sleep(2000)
+
+    const s4 = createServer({
+        log: { beCalled: true, localError: true, remoteError: true, sendLocalStack: false },
+        idGenerator: idGen,
+    })
+    await s4.add(1, 2)
+    await s4.throws().catch((e) => e)
 
     snapshot()
-})
+}, 5000)
 
 test('AsyncCall internal JSON RPC methods', async () => {
     // TODO
     const s = createServer()
     expect(s['rpc.internal']()).rejects.toMatchInlineSnapshot(
-        `[TypeError: [AsyncCall] You cannot call JSON RPC internal methods directly]`,
+        `[TypeError: [AsyncCall] Can't call JSON RPC internal methods directly]`,
     )
-})
+}, 2000)
 
 function mockConsoleLog(key: string) {
     const a = (console.log = jest.fn())

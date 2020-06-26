@@ -4,12 +4,17 @@ import { Request } from '../src/utils/jsonrpc'
 
 test('Batch messages', async () => {
     const json = JSONSerialization()
-    const requests = [[Request(0, 'f1', [], ''), Request(1, 'f2', [], '')]].map(json.serialization)
+    const requests = [
+        [Request(0, 'f1', [], ''), Request(1, 'f2', { x: 1 }, '')],
+        [Request(undefined, 'f1', {}, '')],
+        [Request(null, 'f1', {}, ''), Request(null, 'f1', {}, '')],
+        [Request(undefined, 'f1', [], ''), Request(undefined, 'f2', { x: 1 }, '')],
+    ].map(json.serialization)
     await expect(
         channelPeak(
             (server) =>
                 AsyncCall(
-                    { f1: () => 1, f2: () => 1 },
+                    { f1: () => 1, f2: (args: { x: number }) => args.x },
                     { messageChannel: server, log: false, key: 'message', serializer: json },
                 ),
             requests,

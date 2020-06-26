@@ -19,5 +19,6 @@ Array [
 exports[`Batch messages 1`] = `
 Array [
   "[{\\"jsonrpc\\":\\"2.0\\",\\"id\\":0,\\"result\\":1},{\\"jsonrpc\\":\\"2.0\\",\\"id\\":1,\\"result\\":1}]",
+  "[{\\"jsonrpc\\":\\"2.0\\",\\"id\\":null,\\"result\\":1},{\\"jsonrpc\\":\\"2.0\\",\\"id\\":null,\\"result\\":1}]",
 ]
 `;

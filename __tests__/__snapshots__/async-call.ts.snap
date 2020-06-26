@@ -48,6 +48,15 @@ Array [
     "E: impl error(-1) @0.28366218546322625
 <mocked stack>",
   ],
+  Array [
+    [Error: impl error],
+  ],
+  Array [
+    "E: impl error(-1) %c@-0.14550003380861354
+%c<remote stack not available>",
+    "color: gray",
+    "",
+  ],
 ]
 `;
 
@@ -96,6 +105,26 @@ Array [
   ],
   Array [
     "undefined.throws() @0.28366218546322625",
+  ],
+  Array [
+    "undefined.%cadd%c(%o, %o%c)
+%o %c@0.7539022543433046",
+    "color: #d2c057",
+    "",
+    1,
+    2,
+    "",
+    Promise {},
+    "color: gray; font-style: italic;",
+  ],
+  Array [
+    "undefined.%cthrows%c(%c)
+%o %c@-0.14550003380861354",
+    "color: #d2c057",
+    "",
+    "",
+    Promise {},
+    "color: gray; font-style: italic;",
   ],
 ]
 `;

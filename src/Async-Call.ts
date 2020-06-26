@@ -356,7 +356,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                 await send(result.filter((x) => x))
             } else {
                 if (banUnknownMessage) {
-                    await send(ErrorResponse.InvalidRequest((data as any).id || null))
+                    await send(ErrorResponse.InvalidRequest((data as any).id ?? null))
                 } else {
                     // ? Ignore this message. The message channel maybe also used to transfer other message too.
                 }
@@ -367,13 +367,13 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         }
         async function send(res?: Response | (Response | undefined)[]) {
             if (Array.isArray(res)) {
-                const reply = res.map((x) => x).filter((x) => x!.id !== undefined)
+                const reply = res.filter((x) => hasKey(x, 'id'))
                 if (reply.length === 0) return
                 message.emit(key, await serializer.serialization(reply))
             } else {
                 if (!res) return
                 // ? This is a Notification, we MUST not return it.
-                if (res.id === undefined) return
+                if (!hasKey(res, 'id')) return
                 message.emit(key, await serializer.serialization(res))
             }
         }
@@ -381,17 +381,15 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     return new Proxy(
         {},
         {
-            get(_target, method) {
+            get(_target, method: string | symbol) {
                 let stack = removeStackHeader(new Error().stack)
                 return (...params: unknown[]) => {
-                    if (typeof method !== 'string') {
-                        if (typeof method === 'symbol') {
-                            const internalMethod = Symbol.keyFor(method)
-                            if (internalMethod) method = internalMethod
-                        } else return Promise.reject(new TypeError('[AsyncCall] Only string can be the method name'))
+                    if (typeof method === 'symbol') {
+                        const internalMethod = Symbol.keyFor(method)
+                        if (internalMethod) method = internalMethod
                     } else if (method.startsWith('rpc.'))
                         return Promise.reject(
-                            new TypeError('[AsyncCall] You cannot call JSON RPC internal methods directly'),
+                            new TypeError("[AsyncCall] Can't call JSON RPC internal methods directly"),
                         )
                     if (preferLocalImplementation && resolvedThisSideImplementation && typeof method === 'string') {
                         const localImpl: unknown = resolvedThisSideImplementation[method as keyof object]

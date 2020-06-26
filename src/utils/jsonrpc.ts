@@ -5,7 +5,7 @@ type ID = string | number | null | undefined
 
 type JSONRPC = Readonly<{
     jsonrpc: typeof jsonrpc
-    id: ID
+    id?: ID
 }>
 export type Request = Readonly<{
     method: string
@@ -20,6 +20,7 @@ export function Request(id: ID, method: string, params: readonly unknown[] | obj
 export type SuccessResponse = Readonly<{ result: unknown }> & JSONRPC
 export function SuccessResponse(id: ID, result: any): SuccessResponse {
     const x: SuccessResponse = { jsonrpc, id, result }
+    if (id === undefined) delete (x as any).id
     return x
 }
 
