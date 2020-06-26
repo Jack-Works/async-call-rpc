@@ -1,13 +1,18 @@
 import { removeStackHeader } from './error'
 
 declare const document: any
-export async function preservePauseOnException(stackCallback: (x: string) => void, f: Function, args: any[]) {
+export async function preservePauseOnException(
+    stackCallback: (x: string) => void,
+    f: Function,
+    thisBinding: any,
+    args: any[],
+) {
     const promise = new Promise((resolve, reject) => {
         let iframe: any = {}
         async function executor() {
             stackCallback(removeStackHeader(new Error().stack))
             // receive the return value
-            resolve(await f(...args))
+            resolve(await f.apply(thisBinding, args))
         }
         try {
             iframe = document.createElement('iframe')

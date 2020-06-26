@@ -7,6 +7,7 @@ test('preservePauseOnException', async () => {
         preservePauseOnException(
             () => {},
             async () => 1,
+            undefined,
             [],
         ),
     ).resolves.toBe(1)

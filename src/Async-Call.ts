@@ -256,7 +256,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             // ? We're mapping any method starts with 'rpc.' to a Symbol.for
             const key = (data.method.startsWith('rpc.') ? Symbol.for(data.method) : data.method) as keyof object
             const executor: unknown = resolvedThisSideImplementation![key]
-            if (!executor || typeof executor !== 'function') {
+            if (typeof executor !== 'function') {
                 if (!banMethodNotFound) {
                     if (logLocalError) console.debug('Receive remote call, but not implemented.', key, data)
                     return
@@ -266,8 +266,13 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             const args = Array.isArray(params) ? params : [params]
             frameworkStack = removeStackHeader(new Error().stack)
             const promise = preservePauseOnException
-                ? preservePauseOnExceptionCaller((x) => (frameworkStack = x), executor, args)
-                : new Promise((resolve) => resolve(executor(...args)))
+                ? preservePauseOnExceptionCaller(
+                      (x) => (frameworkStack = x),
+                      executor,
+                      resolvedThisSideImplementation,
+                      args,
+                  )
+                : new Promise((resolve) => resolve(executor.apply(resolvedThisSideImplementation, args)))
             if (logBeCalled) {
                 if (logType === 'basic')
                     console.log(`${options.key}.${data.method}(${[...args].toString()}) @${data.id}`)

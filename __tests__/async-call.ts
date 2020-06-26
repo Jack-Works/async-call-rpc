@@ -11,6 +11,17 @@ test('AsyncCall basic test', async () => {
     snapshot()
 }, 2000)
 
+test('Should preserve this binding', async () => {
+    class X {
+        f = 1
+        n() {
+            return this.f
+        }
+    }
+    const c = createServer({}, new X())
+    expect(c.n()).resolves.toBe(1)
+}, 2000)
+
 test('AsyncCall Serialization', async () => {
     const c = createServer({ serializer: NoSerialization })
     await expect(c.undef()).resolves.toBe(undefined)
