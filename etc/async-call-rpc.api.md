@@ -82,6 +82,11 @@ export type ErrorMapFunction<T = unknown> = (error: unknown, request: Readonly<{
     data?: T;
 };
 
+// @internal (undocumented)
+export type _IgnoreResponse<T> = T extends (...args: infer Args) => unknown ? (...args: Args) => Promise<void> : {
+    [key in keyof T]: T[key] extends (...args: infer Args) => unknown ? (...args: Args) => Promise<void> : never;
+};
+
 // @public
 export const JSONSerialization: (replacerAndReceiver?: [(((key: string, value: any) => any) | undefined)?, (((key: string, value: any) => any) | undefined)?], space?: string | number | undefined, undefinedKeepingBehavior?: 'keep' | 'null' | false) => Serialization;
 
@@ -95,6 +100,11 @@ export interface MessageChannel {
 
 // @public
 export const NoSerialization: Serialization;
+
+// Warning: (ae-incompatible-release-tags) The symbol "notify" is marked as @public, but its signature references "_IgnoreResponse" which is marked as @internal
+//
+// @public
+export function notify<T extends object>(instanceOrFnOnInstance: T): _IgnoreResponse<T>;
 
 // @public
 export interface Serialization {

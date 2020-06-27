@@ -1,4 +1,4 @@
-import { NoSerialization, JSONSerialization, AsyncCall } from '../src/Async-Call'
+import { NoSerialization, JSONSerialization, AsyncCall, notify } from '../src/Async-Call'
 import { createServer, sleep, mockError } from './shared'
 
 test('AsyncCall basic test', async () => {
@@ -95,8 +95,23 @@ test('AsyncCall internal JSON RPC methods', async () => {
     // TODO
     const s = createServer()
     expect(s['rpc.internal']()).rejects.toMatchInlineSnapshot(
-        `[TypeError: [AsyncCall] Can't call JSON RPC internal methods directly]`,
+        `[TypeError: [AsyncCall] Can't call internal methods directly]`,
     )
+}, 2000)
+
+test('AsyncCall notify test', async () => {
+    const f = jest.fn()
+    const server = createServer({}, { add: f })
+    const c = notify(server)
+    const add = notify(c.add)
+    const add2 = notify(server.add)
+    await expect(add()).resolves.toBeUndefined()
+    await expect(add2()).resolves.toBeUndefined()
+    await expect(c.add()).resolves.toBeUndefined()
+    // @ts-ignore
+    await expect(c.undef2()).resolves.toBeUndefined()
+    await sleep(200)
+    expect(f).toBeCalled()
 }, 2000)
 
 function mockConsoleLog(key: string) {

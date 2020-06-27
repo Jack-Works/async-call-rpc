@@ -20,7 +20,7 @@ import {
 import { removeStackHeader, RecoverError } from './utils/error'
 import { generateRandomID } from './utils/generateRandomID'
 import { normalizeStrictOptions, normalizeLogOptions } from './utils/normalizeOptions'
-import { AsyncCallIgnoreResponse } from './utils/internalSymbol'
+import { AsyncCallIgnoreResponse, AsyncCallNotify } from './utils/internalSymbol'
 import { preservePauseOnException as preservePauseOnExceptionCaller } from './utils/preservePauseOnException'
 
 /**
@@ -217,6 +217,14 @@ export type _AsyncVersionOf<T> = {
             : (...args: Args) => Promise<Return>
         : never
 }
+/**
+ * @internal
+ */
+export type _IgnoreResponse<T> = T extends (...args: infer Args) => unknown
+    ? (...args: Args) => Promise<void>
+    : {
+          [key in keyof T]: T[key] extends (...args: infer Args) => unknown ? (...args: Args) => Promise<void> : never
+      }
 
 const AsyncCallDefaultOptions = (<T extends Omit<Required<AsyncCallOptions>, 'messageChannel' | 'logger' | 'mapError'>>(
     a: T,
@@ -432,14 +440,15 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         {
             get(_target, method: string | symbol) {
                 let stack = removeStackHeader(new Error().stack)
-                return (...params: unknown[]) => {
+                const factory = (notify = false) => (...params: unknown[]) => {
                     if (typeof method === 'symbol') {
-                        const internalMethod = Symbol.keyFor(method)
-                        if (internalMethod) method = internalMethod
+                        const RPCInternalMethod = Symbol.keyFor(method) || (method as any).description
+                        if (RPCInternalMethod) {
+                            if (RPCInternalMethod.startsWith('rpc.')) method = RPCInternalMethod
+                            else return Promise.reject('[AsyncCall] An internal method must start with "rpc."')
+                        }
                     } else if (method.startsWith('rpc.'))
-                        return Promise.reject(
-                            new TypeError("[AsyncCall] Can't call JSON RPC internal methods directly"),
-                        )
+                        return Promise.reject(new TypeError("[AsyncCall] Can't call internal methods directly"))
                     if (preferLocalImplementation && resolvedThisSideImplementation && typeof method === 'string') {
                         const localImpl: unknown = resolvedThisSideImplementation[method as keyof object]
                         if (localImpl && typeof localImpl === 'function') {
@@ -454,9 +463,10 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                             parameterStructures === 'by-name' && params.length === 1 && isObject(param0)
                                 ? param0
                                 : params
-                        const request = Request(id, method as string, param, sendingStack)
+                        const request = Request(notify ? void 0 : id, method as string, param, sendingStack)
                         Promise.resolve(serializer.serialization(request)).then((data) => {
                             message.emit(key, data)
+                            if (notify) return resolve()
                             requestContext.set(id, {
                                 f: [resolve, reject],
                                 stack,
@@ -464,6 +474,12 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                         }, reject)
                     })
                 }
+                const f = factory()
+                // @ts-ignore
+                f[AsyncCallNotify] = factory(true)
+                // @ts-ignore
+                f[AsyncCallNotify][AsyncCallNotify] = f[AsyncCallNotify]
+                return f
             },
         },
     ) as _AsyncVersionOf<OtherSideImplementedFunctions>
@@ -475,3 +491,29 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         return onResponse(data)
     }
 }
+
+/**
+ * Wrap the AsyncCall instance to send notification.
+ * @param instanceOrFnOnInstance The AsyncCall instance or function on the AsyncCall instance
+ * @example
+ * const notifyOnly = notify(AsyncCall(...))
+ */
+export function notify<T extends object>(instanceOrFnOnInstance: T): _IgnoreResponse<T> {
+    return new Proxy(instanceOrFnOnInstance, { get: notifyTrap }) as any
+}
+
+function notifyTrap(target: object, p: string | number | symbol) {
+    // @ts-ignore
+    const orig = target[p]
+    return (...args: any) => orig[AsyncCallNotify](...args)
+}
+
+/**
+ * Wrap the AsyncCall instance to use batch call.
+ * @param asyncCallInstance
+ * @example
+ * const [batched, send, drop] = batch(AsyncCall(...))
+ */
+// export function batch<T>(asyncCallInstance: T): [T, () => void, () => void] {
+//     return [asyncCallInstance, () => {}, () => {}]
+// }

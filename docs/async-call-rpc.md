@@ -16,6 +16,7 @@ See the introduction at [Github](https://github.com/Jack-Works/async-call)
 |  --- | --- |
 |  [AsyncCall(thisSideImplementation, options)](./async-call-rpc.asynccall.md) | Create a RPC server &amp; client. |
 |  [AsyncGeneratorCall(thisSideImplementation, options)](./async-call-rpc.asyncgeneratorcall.md) | The async generator version of the AsyncCall |
+|  [notify(instanceOrFnOnInstance)](./async-call-rpc.notify.md) | Wrap the AsyncCall instance to send notification. |
 
 ## Interfaces
 

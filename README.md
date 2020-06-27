@@ -15,6 +15,7 @@ Chapters:
 
 -   [The first concept: `messageChannel`](#the-first-concept-messagechannel)
 -   [Example](#example)
+-   [Notifications and Batch requests](#notifications-and-batch-requests)
 -   [Installation](#installation)
 -   [Entries](#entries)
 -   [Look this if both server and client are created by this library](#look-this-if-both-server-and-client-are-created-by-this-library)
@@ -96,6 +97,18 @@ You can notice from the above example,
 define a server is using `AsyncCall(serverImplementation, opt)`,
 define a client is using `AsyncCall<typeof serverImplementation>({}, opt)`.
 So it is possible to define a server and a client at the same time.
+
+## Notifications and Batch requests
+
+AsyncCall can send [Notifications](https://www.jsonrpc.org/specification#notification).
+
+Using notifications means results or remote errors will be dropped. Local errors won't be omitted, e.g. serializer error or network error.
+
+```ts
+import { AsyncCall, notify } from 'async-call-rpc'
+const server = notify(AsyncCall<typeof server>({}, { messageChannel }))
+server.online().then(console.log) // undefined
+```
 
 ## Installation
 
