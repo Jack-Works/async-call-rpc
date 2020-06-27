@@ -94,8 +94,11 @@ test('AsyncCall logs', async () => {
 test('AsyncCall internal JSON RPC methods', async () => {
     // TODO
     const s = createServer()
-    expect(s['rpc.internal']()).rejects.toMatchInlineSnapshot(
+    await expect(s['rpc.internal']()).rejects.toMatchInlineSnapshot(
         `[TypeError: [AsyncCall] Can't call internal methods directly]`,
+    )
+    await expect(s[Symbol.asyncIterator]()).rejects.toMatchInlineSnapshot(
+        `"[AsyncCall] An internal method must start with \\"rpc.\\""`,
     )
 }, 2000)
 
