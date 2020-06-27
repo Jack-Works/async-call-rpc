@@ -7,8 +7,9 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### ⚠ BREAKING CHANGES
 
-* change to strict by default, move undefined keeping to JSONSerialization
-* export base version by default
+-   Enable strict mode by default, if you need the non-strict behavior, switch "strict" to false.
+-   Move `strict.noUndefined` to 3rd parameter of JSONSerialization since only JSON needs it.
+-   The export version changed from `full` to `base`. If you need full version, please import from `async-call-rpc/full`.
 
 ### Features
 
