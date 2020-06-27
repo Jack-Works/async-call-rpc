@@ -17,7 +17,8 @@
     "./base": {
       "require": "./out/base.js",
       "import": "./out/base.mjs"
-    }
+    },
+    "./utils/": "./utils/"
   },
   "scripts": {
     "start": "node ./watch.js",

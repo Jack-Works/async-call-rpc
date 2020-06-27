@@ -18,7 +18,8 @@ Chapters:
 -   [Notifications and Batch requests](#notifications-and-batch-requests)
 -   [Installation](#installation)
 -   [Entries](#entries)
--   [Look this if both server and client are created by this library](#look-this-if-both-server-and-client-are-created-by-this-library)
+-   [Utils available if both server and client are created by this library](#utils-available-if-both-server-and-client-are-created-by-this-library)
+-   [Builtin `messageChannels` (including WebSocket)](#builtin-messageChannels)
 -   [Implemented JSON RPC internal methods](#implemented-json-rpc-internal-methods)
 -   [Non-standard extension to JSON RPC specification](#non-standard-extension-to-json-rpc-specification)
 
@@ -177,7 +178,35 @@ require('async-rpc-call/base') // or
 import * as RPC from 'async-rpc-call/base'
 ```
 
-## Look this if both server and client are created by this library
+## Builtin messageChannels
+
+They're not part of the core library but provided as utils to increase usability.
+
+### WebSocket Server: Node
+
+Entry point: [`async-call-rpc/utils/node/websocket.server.js`](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/node/websocket.server.ts).
+
+Dependencies: [ws](https://npmjs.com/ws)
+
+Example: [./examples/node.websocket.server.js](https://github.com/Jack-Works/async-call-rpc/blob/master/examples/node.websocket.server.js)
+
+### WebSocket Server: Node
+
+Entry point: [`https://cdn.jsdelivr.net/npm/async-call-rpc@3.1.0/utils/deno/websocket.server.ts`](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/deno/websocket.server.ts)
+
+Example: [./examples/deno.websocket.server.js](https://github.com/Jack-Works/async-call-rpc/blob/master/examples/deno.websocket.server.ts)
+
+### WebSocket Client: Web
+
+Entry point: [`https://cdn.jsdelivr.net/npm/async-call-rpc@3.1.0/utils/web/websocket.client.js`](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/websocket.client.ts)
+
+Example: [./examples/browser.websocket.client.js](https://github.com/Jack-Works/async-call-rpc/blob/master/examples/browser.websocket.client.js)
+
+### [BroadcastChannel](https://mdn.io/BroadcastChannel) Server & Client: Web
+
+Entry point: [`https://cdn.jsdelivr.net/npm/async-call-rpc@3.1.0/utils/web/broadcast.channel.js`](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/broadcast.channel.ts)
+
+## Utils available if both server and client are created by this library
 
 AsyncCall has some non-standard extensions to the JSON RPC specification that can help the library easier to use. Those features aren't enabled by default.
 
