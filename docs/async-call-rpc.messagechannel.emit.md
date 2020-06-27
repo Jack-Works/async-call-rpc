@@ -4,18 +4,21 @@
 
 ## MessageChannel.emit() method
 
+AsyncCall will send message by this method.
+
 <b>Signature:</b>
 
 ```typescript
-emit(event: string, data: unknown): void;
+emit(event: string, data: unknown, context?: Context): void;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  event | string |  |
-|  data | unknown |  |
+|  event | string | The emitting event name (if supported). |
+|  data | unknown | The sending data. |
+|  context | Context | The same context provided to the second parameter of on.eventListener. |
 
 <b>Returns:</b>
 

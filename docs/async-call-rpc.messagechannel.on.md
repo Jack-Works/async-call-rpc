@@ -4,18 +4,20 @@
 
 ## MessageChannel.on() method
 
+AsyncCall will attach a listener to receive messages.
+
 <b>Signature:</b>
 
 ```typescript
-on(event: string, eventListener: (data: unknown) => void): void;
+on(event: string, eventListener: (data: unknown, context?: Context) => void): void;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  event | string |  |
-|  eventListener | (data: unknown) =&gt; void |  |
+|  event | string | The emitting event name (if supported). |
+|  eventListener | (data: unknown, context?: Context) =&gt; void | The listener have two parameters. The first one is the received data. The second one is an identifier to identify who send this request. When responding, AsyncCall will call the emit with the same context. |
 
 <b>Returns:</b>
 

@@ -94,11 +94,9 @@ export type _IgnoreResponse<T> = T extends (...args: infer Args) => unknown ? (.
 export const JSONSerialization: (replacerAndReceiver?: [(((key: string, value: any) => any) | undefined)?, (((key: string, value: any) => any) | undefined)?], space?: string | number | undefined, undefinedKeepingBehavior?: 'keep' | 'null' | false) => Serialization;
 
 // @public
-export interface MessageChannel {
-    // (undocumented)
-    emit(event: string, data: unknown): void;
-    // (undocumented)
-    on(event: string, eventListener: (data: unknown) => void): void;
+export interface MessageChannel<Context = unknown> {
+    emit(event: string, data: unknown, context?: Context): void;
+    on(event: string, eventListener: (data: unknown, context?: Context) => void): void;
 }
 
 // @public

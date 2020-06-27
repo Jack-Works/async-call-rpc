@@ -79,9 +79,20 @@ export interface AsyncCallStrictJSONRPC {
  * The message channel interface that allows
  * @public
  */
-export interface MessageChannel {
-    on(event: string, eventListener: (data: unknown) => void): void
-    emit(event: string, data: unknown): void
+export interface MessageChannel<Context = unknown> {
+    /**
+     * AsyncCall will attach a listener to receive messages.
+     * @param event The emitting event name (if supported).
+     * @param eventListener The listener have two parameters. The first one is the received data. The second one is an identifier to identify who send this request. When responding, AsyncCall will call the emit with the same context.
+     */
+    on(event: string, eventListener: (data: unknown, context?: Context) => void): void
+    /**
+     * AsyncCall will send message by this method.
+     * @param event The emitting event name (if supported).
+     * @param data The sending data.
+     * @param context The same context provided to the second parameter of on.eventListener.
+     */
+    emit(event: string, data: unknown, context?: Context): void
 }
 
 /**
@@ -401,7 +412,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         }
         return undefined
     }
-    message.on(key, async (_: unknown) => {
+    message.on(key, async (_, source) => {
         let data: unknown
         let result: Response | undefined = undefined
         try {
@@ -429,12 +440,12 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             if (Array.isArray(res)) {
                 const reply = res.filter((x) => hasKey(x, 'id'))
                 if (reply.length === 0) return
-                message.emit(key, await serializer.serialization(reply))
+                message.emit(key, await serializer.serialization(reply), source)
             } else {
                 if (!res) return
                 // ? This is a Notification, we MUST not return it.
                 if (!hasKey(res, 'id')) return
-                message.emit(key, await serializer.serialization(res))
+                message.emit(key, await serializer.serialization(res), source)
             }
         }
     })

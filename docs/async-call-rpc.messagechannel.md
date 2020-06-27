@@ -9,13 +9,13 @@ The message channel interface that allows
 <b>Signature:</b>
 
 ```typescript
-export interface MessageChannel 
+export interface MessageChannel<Context = unknown> 
 ```
 
 ## Methods
 
 |  Method | Description |
 |  --- | --- |
-|  [emit(event, data)](./async-call-rpc.messagechannel.emit.md) |  |
-|  [on(event, eventListener)](./async-call-rpc.messagechannel.on.md) |  |
+|  [emit(event, data, context)](./async-call-rpc.messagechannel.emit.md) | AsyncCall will send message by this method. |
+|  [on(event, eventListener)](./async-call-rpc.messagechannel.on.md) | AsyncCall will attach a listener to receive messages. |
 

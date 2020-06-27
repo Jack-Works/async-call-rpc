@@ -22,10 +22,11 @@
   "scripts": {
     "start": "node ./watch.js",
     "prepublishOnly": "npm run build",
-    "release": "rimraf ./out && standard-version",
+    "release": "rimraf ./out && rimraf ./utils/ && standard-version",
+    "build:utils": "tsc -p ./utils-src/tsconfig.es.json && tsc -p ./utils-src/tsconfig.node.json",
     "build:tsc": "tsc --declaration --outDir ./es/",
     "build:roll": "rollup -c",
-    "build": "npm run build:tsc && npm run build:roll && npm run doc",
+    "build": "npm run build:tsc && npm run build:roll && npm run build:utils && npm run doc",
     "doc:api": "api-extractor run --local --verbose",
     "doc:md": "api-documenter markdown -o docs -i temp",
     "doc:preview": "docsify serve .",
@@ -51,6 +52,7 @@
     "@rollup/plugin-typescript": "^4.1.2",
     "@types/jest": "^26.0.0",
     "@types/node": "^14.0.13",
+    "@types/ws": "^7.2.5",
     "docsify-cli": "^4.4.1",
     "jest": "^26.0.1",
     "prettier": "^2.0.5",
@@ -61,11 +63,13 @@
     "standard-version": "^8.0.0",
     "ts-jest": "^26.1.0",
     "tslib": "^2.0.0",
-    "typescript": "^3.9.5"
+    "typescript": "^3.9.5",
+    "ws": "^7.3.0"
   },
   "files": [
     "src",
     "out",
-    "tsconfig.json"
+    "tsconfig.json",
+    "utils"
   ]
 }

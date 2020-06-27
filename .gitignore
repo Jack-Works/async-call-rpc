@@ -1,6 +1,8 @@
 es/
 out/
 temp/
+utils/
+!utils/deno/
 docs/_config.yml
 docs/index.html
 # Logs
