@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/Jack-Works/async-call/compare/v3.0.0...v3.1.0) (2020-06-27)
+
+
+### Features
+
+* add deno ws server ([c07d297](https://github.com/Jack-Works/async-call/commit/c07d297351b632ee32b1a382bdab5353788fd34d))
+* add node websocket server ([6c0af32](https://github.com/Jack-Works/async-call/commit/6c0af327592e43df8cbd162278f435caaa4368f6))
+* Support patch req/res in JSON RPC spec close [#9](https://github.com/Jack-Works/async-call/issues/9) ([9f91c51](https://github.com/Jack-Works/async-call/commit/9f91c51849617bd2b677e7b048b3e4e4c7112b67))
+* support sending notifications close [#7](https://github.com/Jack-Works/async-call/issues/7) ([e9abca6](https://github.com/Jack-Works/async-call/commit/e9abca613e73b39cca06f2c5ebe9f1e3d858d7f3))
+
 ## [3.0.0](https://github.com/Jack-Works/async-call/compare/v2.0.2...v3.0.0) (2020-06-27)
 
 
