@@ -26,7 +26,7 @@ test('ErrorResponse', () => {
     expect(ErrorResponse.InvalidRequest('id')).toMatchSnapshot('invalid req')
     expect(ErrorResponse.MethodNotFound('id')).toMatchSnapshot('method not found')
     expect(
-        ErrorResponseMapped.ParseError(new Error(), () => ({
+        ErrorResponse.ParseError(new Error(), () => ({
             code: 2345,
             message: 'My message',
             data: { my_data: true },

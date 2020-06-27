@@ -6,10 +6,10 @@ import { AsyncGeneratorCall } from '../src/Async-Call-Generator'
 test('Batch messages', async () => {
     const json = JSONSerialization()
     const requests = [
-        [Request(0, 'f1', [], ''), Request(1, 'f2', { x: 1 }, '')],
-        [Request(undefined, 'f1', {}, '')],
-        [Request(null, 'f1', {}, ''), Request(null, 'f1', {}, '')],
-        [Request(undefined, 'f1', [], ''), Request(undefined, 'f2', { x: 1 }, '')],
+        [Request(0, 'f1', []), Request(1, 'f2', { x: 1 })],
+        [Request(undefined, 'f1', {})],
+        [Request(null, 'f1', {}), Request(null, 'f1', {})],
+        [Request(undefined, 'f1', []), Request(undefined, 'f2', { x: 1 })],
     ].map(json.serialization)
     await expect(
         channelPeak(
@@ -28,7 +28,7 @@ test('Bad messages', async () => {
     const json = JSONSerialization()
     const invalidRequests = [
         // invalid request
-        Request('id0', 'method', 'invalid' as any, ''),
+        Request('id0', 'method', 'invalid' as any),
         // unknown message
         { abc: 1 },
         { jsonrpc: '2.0', id: 'id1' },
@@ -48,7 +48,7 @@ test('Bad messages', async () => {
 
 test('AsyncGeneratorCall', async () => {
     const json = JSONSerialization()
-    const requests = [Request(1, 'rpc.async-iterator.next', ['non-exist'], '')].map(json.serialization)
+    const requests = [Request(1, 'rpc.async-iterator.next', ['non-exist'])].map(json.serialization)
     await channelPeak(
         (server) => AsyncGeneratorCall({}, { messageChannel: server, log: false, key: 'message', serializer: json }),
         requests,
@@ -57,7 +57,7 @@ test('AsyncGeneratorCall', async () => {
 
 test('AsyncGeneratorCall non strict', async () => {
     const json = JSONSerialization()
-    const requests = [Request(1, 'rpc.async-iterator.next', ['non-exist'], '')].map(json.serialization)
+    const requests = [Request(1, 'rpc.async-iterator.next', ['non-exist'])].map(json.serialization)
     await channelPeak(
         (server) =>
             AsyncGeneratorCall(

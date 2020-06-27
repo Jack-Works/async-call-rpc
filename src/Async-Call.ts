@@ -412,7 +412,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             }
         } catch (e) {
             if (logLocalError) console.error(e, data, result)
-            send(ErrorResponseMapped.ParseError(e, mapError || defaultErrorMapper(e?.stack)))
+            send(ErrorResponse.ParseError(e, mapError || defaultErrorMapper(e?.stack)))
         }
         async function send(res?: Response | (Response | undefined)[]) {
             if (Array.isArray(res)) {

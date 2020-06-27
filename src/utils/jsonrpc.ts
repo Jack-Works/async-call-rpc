@@ -5,7 +5,6 @@ export const jsonrpc = '2.0'
 export type ID = string | number | null | undefined
 /**
  * JSONRPC Request object.
- * @public
  */
 export interface Request
     extends Readonly<{
@@ -15,16 +14,16 @@ export interface Request
         params: readonly unknown[] | object
         remoteStack?: string
     }> {}
-type Change<T> = { -readonly [key in keyof T]: T[key] }
-export function Request(id: ID, method: string, params: readonly unknown[] | object, remoteStack = ''): Request {
+
+export function Request(id: ID, method: string, params: readonly unknown[] | object, remoteStack?: string): Request {
     const x: Request = { jsonrpc, id, method, params, remoteStack }
-    if (!remoteStack) delete (x as Change<Request>).remoteStack
+    deleteUndefined(x, 'id')
+    deleteFalsy(x, 'remoteStack')
     return x
 }
 
 /**
  * JSONRPC SuccessResponse object.
- * @public
  */
 export interface SuccessResponse
     extends Readonly<{
@@ -34,7 +33,7 @@ export interface SuccessResponse
     }> {}
 export function SuccessResponse(id: ID, result: unknown): SuccessResponse {
     const x: SuccessResponse = { jsonrpc, id, result }
-    if (id === undefined) delete (x as any).id
+    deleteUndefined(x, 'id')
     return x
 }
 
@@ -53,10 +52,24 @@ export function ErrorResponse<T>(id: ID, code: number, message: string, data?: T
     if (id === undefined) id = null
     code = Math.floor(code)
     if (Number.isNaN(code)) code = -1
-    const x: ErrorResponse<T> = { error: { code, message, data }, id, jsonrpc }
-    if (x.error.data === undefined) delete (x.error as Change<ErrorResponse['error']>).data
+    const x: ErrorResponse<T> = { jsonrpc, id, error: { code, message, data } }
+    deleteUndefined(x.error, 'data')
     return x
 }
+// Pre defined error in section 5.1
+ErrorResponse.ParseError = <T>(e: unknown, mapper: ErrorMapFunction<T>): ErrorResponse<T> => {
+    const obj = ErrorResponseMapped({} as any, e, mapper)
+    const o = obj.error as Mutable<ErrorResponse['error']>
+    o.code = -32700
+    o.message = 'Parse error'
+    return obj
+}
+
+// Not using.
+// InvalidParams -32602 'Invalid params'
+// InternalError -32603 'Internal error'
+ErrorResponse.InvalidRequest = (id: ID) => ErrorResponse(id, -32600, 'Invalid Request')
+ErrorResponse.MethodNotFound = (id: ID) => ErrorResponse(id, -32601, 'Method not found')
 
 type AsyncCallErrorDetail = {
     stack?: string
@@ -81,24 +94,8 @@ export const defaultErrorMapper = (stack = '', code = -1): ErrorMapFunction<Asyn
     return { code, message, data }
 }
 
-// Pre defined error in section 5.1
-ErrorResponseMapped.ParseError = <T>(e: unknown, mapper: ErrorMapFunction<T>): ErrorResponse<T> => {
-    const obj = ErrorResponseMapped({} as any, e, mapper)
-    const o = obj.error as Change<ErrorResponse['error']>
-    o.code = -32700
-    o.message = 'Parse error'
-    return obj
-}
-ErrorResponse.InvalidRequest = (id: ID) => ErrorResponse(id, -32600, 'Invalid Request')
-ErrorResponse.MethodNotFound = (id: ID) => ErrorResponse(id, -32601, 'Method not found')
-
-// Not using.
-// InvalidParams -32602 'Invalid params'
-// InternalError -32603 'Internal error'
-
 /**
  * A JSONRPC response object
- * @public
  */
 export type Response = SuccessResponse | ErrorResponse
 
@@ -135,3 +132,10 @@ function toString(def: string, val: () => any) {
     if (typeof str !== 'string') return def
     return str
 }
+function deleteUndefined<O>(x: O, key: keyof O) {
+    if (x[key] === undefined) delete x[key]
+}
+function deleteFalsy<T>(x: T, key: keyof T) {
+    if (!x[key]) delete x[key]
+}
+type Mutable<T> = { -readonly [key in keyof T]: T[key] }
