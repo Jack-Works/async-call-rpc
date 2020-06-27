@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/Jack-Works/async-call/compare/v2.0.2...v3.0.0) (2020-06-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* change to strict by default, move undefined keeping to JSONSerialization
+* export base version by default
+
+### Features
+
+* Add hook for custom Error data close [#8](https://github.com/Jack-Works/async-call/issues/8) ([2ab36bb](https://github.com/Jack-Works/async-call/commit/2ab36bb06c259ca7161a79f4ea649e15939f0966))
+* change to strict by default, move undefined keeping to JSONSerialization ([d860da5](https://github.com/Jack-Works/async-call/commit/d860da52a88279fbadbb44982009ffc947426437))
+* export base version by default ([6a11550](https://github.com/Jack-Works/async-call/commit/6a115507197a79694cd94a3dab6a517f913ff8ab))
+* id generator, close [#13](https://github.com/Jack-Works/async-call/issues/13) ([d3c51b5](https://github.com/Jack-Works/async-call/commit/d3c51b59a7876bd0f14a76d8ee40a8dade5c65f2))
+* preserve this binding, close [#16](https://github.com/Jack-Works/async-call/issues/16) ([69f1077](https://github.com/Jack-Works/async-call/commit/69f1077b6308e36aa99870c0257f2ed33897aef8))
+
+
+### Bug Fixes
+
+* server ignore sendLocalStack. close [#18](https://github.com/Jack-Works/async-call/issues/18) ([25629d3](https://github.com/Jack-Works/async-call/commit/25629d3f8ad74d23fb8a23184927117abf1ff725))
+
 ### [2.0.2](https://github.com/Jack-Works/async-call/compare/v2.0.1...v2.0.2) (2020-06-10)
 
 
