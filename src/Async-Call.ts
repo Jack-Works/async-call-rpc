@@ -7,6 +7,7 @@ export { JSONSerialization, NoSerialization, Serialization } from './utils/seria
 import { Console, getConsole } from './utils/console'
 export { Console } from './utils/console'
 export { notify } from './core/notify'
+export { batch } from './core/batch'
 import {
     Request,
     Response,
@@ -21,8 +22,9 @@ import {
 import { removeStackHeader, RecoverError } from './utils/error'
 import { generateRandomID } from './utils/generateRandomID'
 import { normalizeStrictOptions, normalizeLogOptions } from './utils/normalizeOptions'
-import { AsyncCallIgnoreResponse, AsyncCallNotify } from './utils/internalSymbol'
+import { AsyncCallIgnoreResponse, AsyncCallNotify, AsyncCallBatch } from './utils/internalSymbol'
 import { preservePauseOnException as preservePauseOnExceptionCaller } from './utils/preservePauseOnException'
+import { BatchQueue } from './core/batch'
 
 /**
  * What should AsyncCall log to console.
@@ -441,7 +443,12 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         {
             get(_target, method: string | symbol) {
                 let stack = removeStackHeader(new Error().stack)
-                const factory = (notify = false) => (...params: unknown[]) => {
+                const factory = (notify: boolean) => (...params: unknown[]) => {
+                    let queue: BatchQueue | undefined = undefined
+                    if (method === AsyncCallBatch) {
+                        queue = params.shift() as any
+                        method = params.shift() as any
+                    }
                     if (typeof method === 'symbol') {
                         const RPCInternalMethod = Symbol.keyFor(method) || (method as any).description
                         if (RPCInternalMethod) {
@@ -465,17 +472,18 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                                 ? param0
                                 : params
                         const request = Request(notify ? void 0 : id, method as string, param, sendingStack)
-                        Promise.resolve(serializer.serialization(request)).then((data) => {
-                            message.emit(key, data)
-                            if (notify) return resolve()
-                            requestContext.set(id, {
-                                f: [resolve, reject],
-                                stack,
-                            })
-                        }, reject)
+                        if (queue) {
+                            queue.push(request)
+                            if (!queue.r) queue.r = [() => sendPayload(queue), rejectsQueue.bind(queue)]
+                        } else sendPayload(request).catch(reject)
+                        if (notify) return resolve()
+                        requestContext.set(id, {
+                            f: [resolve, reject],
+                            stack,
+                        })
                     })
                 }
-                const f = factory()
+                const f = factory(false)
                 // @ts-ignore
                 f[AsyncCallNotify] = factory(true)
                 // @ts-ignore
@@ -484,7 +492,15 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             },
         },
     ) as _AsyncVersionOf<OtherSideImplementedFunctions>
-
+    async function sendPayload(payload: unknown) {
+        const data = await serializer.serialization(payload)
+        message.emit(key, data)
+    }
+    function rejectsQueue(this: BatchQueue, error: unknown) {
+        for (const x of this) {
+            if (hasKey(x, 'id')) requestContext.get(x.id!)?.f[1](error)
+        }
+    }
     async function handleSingleMessage(
         data: SuccessResponse | ErrorResponse | Request,
     ): Promise<SuccessResponse | ErrorResponse | undefined> {

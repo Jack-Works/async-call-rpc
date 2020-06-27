@@ -57,6 +57,9 @@ export type _AsyncVersionOf<T> = {
 };
 
 // @public
+export function batch<T extends object>(asyncCallInstance: T): [T, () => void, (error?: unknown) => void];
+
+// @public
 export interface Console {
     // (undocumented)
     debug?(...args: unknown[]): void;

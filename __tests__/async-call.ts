@@ -1,4 +1,4 @@
-import { NoSerialization, JSONSerialization, AsyncCall, notify } from '../src/Async-Call'
+import { NoSerialization, JSONSerialization, AsyncCall, notify, batch } from '../src/Async-Call'
 import { createServer, sleep, mockError } from './shared'
 
 test('AsyncCall basic test', async () => {
@@ -100,18 +100,56 @@ test('AsyncCall internal JSON RPC methods', async () => {
 }, 2000)
 
 test('AsyncCall notify test', async () => {
-    const f = jest.fn()
+    const f = jest.fn(() => 234)
     const server = createServer({}, { add: f })
     const c = notify(server)
     const add = notify(c.add)
     const add2 = notify(server.add)
     await expect(add()).resolves.toBeUndefined()
+    await expect(notify(notify(add))()).resolves.toBeUndefined()
     await expect(add2()).resolves.toBeUndefined()
+    await expect(notify(notify(add2))()).resolves.toBeUndefined()
     await expect(c.add()).resolves.toBeUndefined()
     // @ts-ignore
     await expect(c.undef2()).resolves.toBeUndefined()
     await sleep(200)
     expect(f).toBeCalled()
+}, 2000)
+
+test('AsyncCall batch test', async () => {
+    const f = jest.fn((x: any) => x)
+    const [server, emit, drop] = batch(createServer({}, { add: f }))
+    {
+        const list = [server.add(1), server.add(2), notify(server.add)(3), notify(notify(notify(server.add)))(4)]
+        await sleep(200)
+        expect(f).not.toBeCalled()
+        emit()
+        await expect(list[0]).resolves.toBe(1)
+        await expect(list[1]).resolves.toBe(2)
+        await expect(list[2]).resolves.toBeUndefined()
+        await expect(list[3]).resolves.toBeUndefined()
+    }
+    f.mockClear()
+    {
+        const list = [server.add(11), server.add(12), notify(server.add)(13), notify(notify(notify(server.add)))(4)]
+        await sleep(200)
+        expect(f).not.toBeCalled()
+        drop(new Error('I prefer multiply than add'))
+        await expect(list[0]).rejects.toMatchInlineSnapshot(`[Error: I prefer multiply than add]`)
+        await expect(list[1]).rejects.toMatchInlineSnapshot(`[Error: I prefer multiply than add]`)
+        await expect(list[2]).resolves.toBeUndefined()
+        await expect(list[3]).resolves.toBeUndefined()
+    }
+    {
+        const [server, emit, drop] = batch(notify(createServer({}, { add: f })))
+        const list = [server.add(1), notify(server.add)(2), notify(notify(notify(server.add)))(3)]
+        await sleep(200)
+        expect(f).not.toBeCalled()
+        emit()
+        await expect(list[0]).resolves.toBeUndefined()
+        await expect(list[1]).resolves.toBeUndefined()
+        await expect(list[2]).resolves.toBeUndefined()
+    }
 }, 2000)
 
 function mockConsoleLog(key: string) {

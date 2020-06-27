@@ -8,10 +8,9 @@ import { _IgnoreResponse } from '../Async-Call'
  */
 
 export function notify<T extends object>(instanceOrFnOnInstance: T): _IgnoreResponse<T> {
+    if (typeof instanceOrFnOnInstance === 'function') return (instanceOrFnOnInstance as any)[AsyncCallNotify]
     return new Proxy(instanceOrFnOnInstance, { get: notifyTrap }) as any
 }
-function notifyTrap(target: object, p: string | number | symbol) {
-    // @ts-ignore
-    const orig = target[p]
-    return (...args: any) => orig[AsyncCallNotify](...args)
+function notifyTrap(target: any, p: string | number | symbol) {
+    return target[p][AsyncCallNotify]
 }

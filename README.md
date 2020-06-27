@@ -110,6 +110,22 @@ const server = notify(AsyncCall<typeof server>({}, { messageChannel }))
 server.online().then(console.log) // undefined
 ```
 
+AsyncCall can send [batch request](https://www.jsonrpc.org/specification#batch) too.
+
+```ts
+import { AsyncCall, batch } from 'async-call-rpc'
+const [server, emit, drop] = batch(AsyncCall<typeof server>({}, { messageChannel }))
+const a = server.req1() // pending
+const b = server.req2() // pending
+const c = server.req3() // pending
+emit() // to send all pending requests
+// request a, b, c sent
+
+const d = server.req1() // pending
+drop() // to drop all pending requests (and corresponding Promises)
+// d rejected
+```
+
 ## Installation
 
 ### Install through npm

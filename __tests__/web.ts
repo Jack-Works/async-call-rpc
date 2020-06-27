@@ -29,7 +29,7 @@ test('preservePauseOnException', async () => {
     // await expect(preservePauseOnException(e, throws, [])).rejects.toMatchInlineSnapshot()
     const x = createServer({ preservePauseOnException: true })
     await expect(x.add(1, 2)).resolves.toBe(3)
-}, 200)
+}, 2000)
 
 beforeAll(() => {
     globalThis.DOMException = Exception as any
