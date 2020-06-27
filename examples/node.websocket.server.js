@@ -1,9 +1,9 @@
-const { WebsocketChannel } = require('../utils/node/websocket.server')
+const { WebSocketChannel } = require('../utils/node/websocket.server')
 const { AsyncCall, JSONSerialization } = require('../out/base')
 const { Server } = require('ws')
 
 const ws = new Server({ port: 3456 })
-const channel = new WebsocketChannel(ws)
+const channel = new WebSocketChannel(ws)
 const server = (module.exports.server = {
     now: Date.now,
 })

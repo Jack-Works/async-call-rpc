@@ -2,7 +2,7 @@ import type { Server } from 'ws'
 import type WebSocket from 'ws'
 import type { AsyncCallMessageChannel } from '../shared'
 import { EventEmitter } from 'events'
-export class WebsocketChannel implements AsyncCallMessageChannel {
+export class WebSocketChannel implements AsyncCallMessageChannel {
     private emitter = new EventEmitter()
     constructor(public server: Server, private key = '') {
         server.on('connection', (ws) => ws.on('message', (data) => this.emitter.emit(this.key, data, ws)))

@@ -22,7 +22,7 @@
   "scripts": {
     "start": "node ./watch.js",
     "prepublishOnly": "npm run build",
-    "release": "rimraf ./out && rimraf ./utils/ && standard-version",
+    "release": "rimraf ./out && rimraf ./utils/web && rimraf ./utils/node && standard-version",
     "build:utils": "tsc -p ./utils-src/tsconfig.es.json && tsc -p ./utils-src/tsconfig.node.json",
     "build:tsc": "tsc --declaration --outDir ./es/",
     "build:roll": "rollup -c",

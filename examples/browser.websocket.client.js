@@ -1,7 +1,8 @@
-import { AsyncCall, JSONSerialization } from '../out/base.mjs'
+import * as rpc from '../out/base.mjs'
 // Need to have a complied version
 import { WebSocketMessageChannel } from '../utils/web/websocket.client.js'
 
+const { AsyncCall, JSONSerialization } = rpc
 /**
  * @type {typeof import('./node.websocket.server').server}
  */
