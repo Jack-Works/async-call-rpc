@@ -72,7 +72,9 @@
     "out",
     "tsconfig.json",
     "utils",
+    "base.js",
     "base.d.ts",
+    "full.js",
     "full.d.ts"
   ]
 }
