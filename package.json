@@ -71,6 +71,8 @@
     "src",
     "out",
     "tsconfig.json",
-    "utils"
+    "utils",
+    "base.d.ts",
+    "full.d.ts"
   ]
 }
