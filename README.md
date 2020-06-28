@@ -190,21 +190,21 @@ Dependencies: [ws](https://npmjs.com/ws)
 
 Example: [./examples/node.websocket.server.js](https://github.com/Jack-Works/async-call-rpc/blob/master/examples/node.websocket.server.js)
 
-### WebSocket Server: Node
+### WebSocket Server: Deno
 
-Entry point: [`https://cdn.jsdelivr.net/npm/async-call-rpc@3.1.0/utils/deno/websocket.server.ts`](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/deno/websocket.server.ts)
+Entry point: [`https://cdn.jsdelivr.net/npm/async-call-rpc@3.2.0/utils/deno/websocket.server.ts`](https://github.com/Jack-Works/async-call-rpc/blob/master/utils/deno/websocket.server.ts)
 
-Example: [./examples/deno.websocket.server.js](https://github.com/Jack-Works/async-call-rpc/blob/master/examples/deno.websocket.server.ts)
+Example: [./examples/deno.websocket.server.ts](https://github.com/Jack-Works/async-call-rpc/blob/master/examples/deno.websocket.server.ts)
 
 ### WebSocket Client: Web
 
-Entry point: [`https://cdn.jsdelivr.net/npm/async-call-rpc@3.1.0/utils/web/websocket.client.js`](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/websocket.client.ts)
+Entry point: [`https://cdn.jsdelivr.net/npm/async-call-rpc@3.2.0/utils/web/websocket.client.js`](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/websocket.client.ts)
 
 Example: [./examples/browser.websocket.client.js](https://github.com/Jack-Works/async-call-rpc/blob/master/examples/browser.websocket.client.js)
 
 ### [BroadcastChannel](https://mdn.io/BroadcastChannel) Server & Client: Web
 
-Entry point: [`https://cdn.jsdelivr.net/npm/async-call-rpc@3.1.0/utils/web/broadcast.channel.js`](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/broadcast.channel.ts)
+Entry point: [`https://cdn.jsdelivr.net/npm/async-call-rpc@3.2.0/utils/web/broadcast.channel.js`](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/broadcast.channel.ts)
 
 ## Utils available if both server and client are created by this library
 
