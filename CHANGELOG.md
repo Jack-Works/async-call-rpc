@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.2.1](https://github.com/Jack-Works/async-call/compare/v3.2.0...v3.2.1) (2020-06-28)
+
+
+### Bug Fixes
+
+* entry points dts not exported ([28e51f0](https://github.com/Jack-Works/async-call/commit/28e51f0b85db1decdd4bcc1228447a67c46bbdbc))
+* wrong url in readme ([ca2b581](https://github.com/Jack-Works/async-call/commit/ca2b581297bbc5831eaecea8e8a489438aeeb412))
+
 ## [3.2.0](https://github.com/Jack-Works/async-call/compare/v3.1.0...v3.2.0) (2020-06-27)
 
 
