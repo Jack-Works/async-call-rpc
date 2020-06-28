@@ -262,7 +262,7 @@ interface JSONRPC_Response_object {
 
 ### The implementation-defined Error data
 
-In the JSON RPC specification, this is implementation-defined. (Plan to [add API for custom Error data](https://github.com/Jack-Works/async-call/issues/8)).
+In the JSON RPC specification, this is implementation-defined. This is controlled by the option [`options.mapError`](https://jack-works.github.io/async-call-rpc/async-call-rpc.errormapfunction.html)
 
 This library will try to "Recover" the Error object if there is enough information from another side.
 
