@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.2.2](https://github.com/Jack-Works/async-call/compare/v3.2.1...v3.2.2) (2020-06-28)
+
+
+### Bug Fixes
+
+* support entry points for old platform that doesnt support exports field ([9a108cd](https://github.com/Jack-Works/async-call/commit/9a108cd55418d557b61f017db261f83902f8426e))
+
 ### [3.2.1](https://github.com/Jack-Works/async-call/compare/v3.2.0...v3.2.1) (2020-06-28)
 
 
