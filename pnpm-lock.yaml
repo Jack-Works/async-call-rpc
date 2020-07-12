@@ -1,7 +1,7 @@
 devDependencies:
   '@microsoft/api-documenter': 7.8.21
   '@microsoft/api-extractor': 7.9.2
-  '@rollup/plugin-typescript': 4.1.2_ec202980b6b325a9efff80a619319b16
+  '@rollup/plugin-typescript': 5.0.1_ec202980b6b325a9efff80a619319b16
   '@types/jest': 26.0.4
   '@types/node': 14.0.22
   '@types/ws': 7.2.6
@@ -543,7 +543,7 @@ packages:
     dev: true
     resolution:
       integrity: sha512-IpgPxHrNxZiMNUSXqR1l/gePKPkfAmIKoDRP9hp7OwjU29ZR8WCJsOJ8iBKgw0Qk+pFwR+8Y1cy8ImLY6e9m4A==
-  /@rollup/plugin-typescript/4.1.2_ec202980b6b325a9efff80a619319b16:
+  /@rollup/plugin-typescript/5.0.1_ec202980b6b325a9efff80a619319b16:
     dependencies:
       '@rollup/pluginutils': 3.1.0_rollup@2.21.0
       resolve: 1.17.0
@@ -556,9 +556,9 @@ packages:
     peerDependencies:
       rollup: ^1.20.0||^2.0.0
       tslib: '*'
-      typescript: '>=2.1.0'
+      typescript: '>=3.4.0'
     resolution:
-      integrity: sha512-+7UlGat/99e2JbmGNnIauxwEhYLwrL7adO/tSJxUN57xrrS3Ps+ZzYpLCDGPZJ57j+ZJTZLLN89KXW9JMEB+jg==
+      integrity: sha512-r2rfyh7dFfqHwxkITM/I9sW+rkx66/ycr12msvZliU6AX1plIcRq4lU9crcQbcSjMr7T9ONWM6pAwsBiNAYW8g==
   /@rollup/pluginutils/3.1.0_rollup@2.21.0:
     dependencies:
       '@types/estree': 0.0.39
@@ -6332,21 +6332,21 @@ packages:
     resolution:
       integrity: sha512-DUOKC/IhbkdLKKiV89gw9DUauTV8U/8yJl1sjf6MtDmzevLKOF2duNJ495S3MFVjqZarr+qNGCPbkg4mu4PpLw==
 specifiers:
-  '@microsoft/api-documenter': latest
-  '@microsoft/api-extractor': latest
-  '@rollup/plugin-typescript': ^4.1.2
-  '@types/jest': ^26.0.0
-  '@types/node': ^14.0.13
-  '@types/ws': ^7.2.5
+  '@microsoft/api-documenter': ^7.8.21
+  '@microsoft/api-extractor': ^7.9.2
+  '@rollup/plugin-typescript': ^5.0.1
+  '@types/jest': ^26.0.4
+  '@types/node': ^14.0.22
+  '@types/ws': ^7.2.6
   docsify-cli: ^4.4.1
-  jest: ^26.0.1
+  jest: ^26.1.0
   prettier: ^2.0.5
   rimraf: ^3.0.2
-  rollup: ^2.16.1
+  rollup: ^2.21.0
   rollup-plugin-dts: ^1.4.7
   rollup-plugin-terser: ^6.1.0
   standard-version: ^8.0.0
-  ts-jest: ^26.1.0
+  ts-jest: ^26.1.1
   tslib: ^2.0.0
-  typescript: ^3.9.5
-  ws: ^7.3.0
+  typescript: ^3.9.6
+  ws: ^7.3.1
