@@ -88,14 +88,8 @@ export type { CallbackBasedChannel, EventBasedChannel } from './types'
  */
 export interface AsyncCallOptions {
     /**
-     * A key to prevent collision with other AsyncCalls.
-     *
-     * @remarks
-     * The value can be anything, but need to be same on both sides if you're using the deprecated MessageChannel interface.
-     * If you're using other recommended interface for channel like EventBasedChannel or CallbackBasedChannel,
-     * this option will only used for better logging.
-     *
-     * @defaultValue `default-jsonrpc`
+     * This option will only used for better logging.
+     * @defaultValue `jsonrpc`
      */
     key?: string
     /**
@@ -220,7 +214,7 @@ const AsyncCallDefaultOptions = (<
     a: T,
 ) => a)({
     serializer: NoSerialization,
-    key: 'default-jsonrpc',
+    key: 'jsonrpc',
     strict: true,
     log: true,
     parameterStructures: 'by-position',

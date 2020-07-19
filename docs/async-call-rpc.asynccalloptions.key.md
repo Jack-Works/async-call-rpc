@@ -4,15 +4,10 @@
 
 ## AsyncCallOptions.key property
 
-A key to prevent collision with other AsyncCalls.
+This option will only used for better logging.
 
 <b>Signature:</b>
 
 ```typescript
 key?: string;
 ```
-
-## Remarks
-
-The value can be anything, but need to be same on both sides if you're using the deprecated MessageChannel interface. If you're using other recommended interface for channel like EventBasedChannel or CallbackBasedChannel, this option will only used for better logging.
-
