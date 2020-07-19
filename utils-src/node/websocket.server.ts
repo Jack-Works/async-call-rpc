@@ -1,16 +1,14 @@
 import type { Server } from 'ws'
 import type WebSocket from 'ws'
-import type { AsyncCallMessageChannel } from '../shared'
-import { EventEmitter } from 'events'
-export class WebSocketChannel implements AsyncCallMessageChannel {
-    private emitter = new EventEmitter()
-    constructor(public server: Server, private key = '') {
-        server.on('connection', (ws) => ws.on('message', (data) => this.emitter.emit(this.key, data, ws)))
-    }
-    on(event: string, eventListener: (data: unknown, source: WebSocket) => void): void {
-        this.emitter.on(this.key, eventListener)
-    }
-    emit(event: string, data: unknown, source: WebSocket): void {
-        source.send(data)
+import type { CallbackBasedChannel } from '../../src/Async-Call'
+type JSONRPCHandlerCallback = (data: unknown) => Promise<unknown>
+export class WebSocketChannel implements CallbackBasedChannel {
+    constructor(public server: Server) {}
+    setup(callback: JSONRPCHandlerCallback) {
+        const f = (ws: WebSocket) => {
+            ws.on('message', (data) => callback(data).then((x) => x && ws.send(x)))
+        }
+        this.server.on('connection', f)
+        return () => this.server.off('connection', f)
     }
 }

@@ -1,14 +1,14 @@
-import { Server } from 'https://deno.land/std/http/server.ts'
-import { acceptWebSocket, WebSocket } from 'https://deno.land/std/ws/mod.ts'
+import { Server } from 'https://deno.land/std@0.61.0/http/server.ts'
+import { acceptWebSocket, WebSocket } from 'https://deno.land/std@0.61.0/ws/mod.ts'
+import { CallbackBasedChannel } from '../../src/types.ts'
 
-type CE = CustomEvent<[unknown, WebSocket]>
-export class WebSocketChannel extends EventTarget {
-    constructor(public server: Server, private key: string = 'async-call') {
+export class WebSocketChannel extends EventTarget implements CallbackBasedChannel {
+    constructor(public server: Server) {
         super()
-        this.acceptRequest().catch((error) => this.dispatchEvent(new ErrorEvent('error', { error })))
     }
-    async acceptRequest() {
+    private async acceptRequest(callback: (data: unknown) => Promise<unknown>, signal: AbortController) {
         for await (const req of this.server) {
+            if (signal.signal.aborted) return
             const { conn, r: bufReader, w: bufWriter, headers } = req
             const ws = await acceptWebSocket({
                 conn,
@@ -16,21 +16,26 @@ export class WebSocketChannel extends EventTarget {
                 bufWriter,
                 headers,
             })
-            this.handledWebSocket(ws).catch((error) => this.dispatchEvent(new ErrorEvent('wserror', { error })))
+            signal.signal.addEventListener('abort', () => ws.close(), { once: true })
+            this.handledWebSocket(ws, callback, signal).catch(this.error)
         }
     }
-    async handledWebSocket(websocket: WebSocket) {
+    private async handledWebSocket(
+        websocket: WebSocket,
+        callback: (data: unknown) => Promise<unknown>,
+        signal: AbortController,
+    ) {
         for await (const event of websocket) {
-            this.dispatchEvent(new CustomEvent(this.key, { detail: [event, websocket] }) as CE)
+            if (signal.signal.aborted) return
+            callback(event).then((x) => x && websocket.send(x as any), this.error)
         }
     }
-    on(event: string, eventListener: (data: unknown, source: WebSocket) => void): void {
-        this.addEventListener(this.key, (e) => {
-            const ee = e as CE
-            eventListener(ee.detail[0], ee.detail[1])
-        })
+    private error = (error: any) => {
+        this.dispatchEvent(new ErrorEvent('error', { error }))
     }
-    emit(event: string, data: any, source: WebSocket): void {
-        source.send(data)
+    setup(callback: (data: unknown) => Promise<unknown>) {
+        const signal = new AbortController()
+        this.acceptRequest(callback, signal).catch(this.error)
+        return () => signal.abort()
     }
 }

@@ -26,7 +26,7 @@ export interface AsyncCallOptions {
     log?: AsyncCallLogLevel | boolean;
     logger?: Console;
     mapError?: ErrorMapFunction<unknown>;
-    messageChannel: MessageChannel;
+    messageChannel: MessageChannel | CallbackBasedChannel | EventBasedChannel;
     parameterStructures?: 'by-position' | 'by-name';
     preferLocalImplementation?: boolean;
     preservePauseOnException?: boolean;
@@ -61,6 +61,11 @@ export type _AsyncVersionOf<T> = {
 export function batch<T extends object>(asyncCallInstance: T): [T, () => void, (error?: unknown) => void];
 
 // @public
+export interface CallbackBasedChannel<Data = unknown> extends Partial<EventBasedChannel<Data>> {
+    setup(jsonRPCHandlerCallback: (jsonRPCPayload: unknown) => Promise<unknown | undefined>, isValidJSONRPCPayload: (data: unknown) => boolean | Promise<boolean>): (() => void) | void;
+}
+
+// @public
 export interface Console {
     // (undocumented)
     debug?(...args: unknown[]): void;
@@ -72,6 +77,8 @@ export interface Console {
     groupEnd?(...args: unknown[]): void;
     // (undocumented)
     log(...args: unknown[]): void;
+    // (undocumented)
+    warn?(...args: unknown[]): void;
 }
 
 // @public (undocumented)
@@ -86,6 +93,12 @@ export type ErrorMapFunction<T = unknown> = (error: unknown, request: Readonly<{
     data?: T;
 };
 
+// @public
+export interface EventBasedChannel<Data = unknown> {
+    on(listener: (data: Data) => void): void | (() => void);
+    send(data: Data): void;
+}
+
 // @internal (undocumented)
 export type _IgnoreResponse<T> = T extends (...args: infer Args) => unknown ? (...args: Args) => Promise<void> : {
     [key in keyof T]: T[key] extends (...args: infer Args) => unknown ? (...args: Args) => Promise<void> : never;
@@ -94,7 +107,7 @@ export type _IgnoreResponse<T> = T extends (...args: infer Args) => unknown ? (.
 // @public
 export const JSONSerialization: (replacerAndReceiver?: [(((key: string, value: any) => any) | undefined)?, (((key: string, value: any) => any) | undefined)?], space?: string | number | undefined, undefinedKeepingBehavior?: 'keep' | 'null' | false) => Serialization;
 
-// @public
+// @public @deprecated
 export interface MessageChannel<Context = unknown> {
     emit(event: string, data: unknown, context?: Context): void;
     on(event: string, eventListener: (data: unknown, context?: Context) => void): void;

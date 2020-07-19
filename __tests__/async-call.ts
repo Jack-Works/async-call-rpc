@@ -1,14 +1,30 @@
 import { NoSerialization, JSONSerialization, AsyncCall, notify, batch } from '../src/Async-Call'
-import { createServer, sleep, mockError } from './shared'
+import { createServer, sleep, mockError, JestChannelDeprecated, JestChannelCallbackBased } from './shared'
 
 test('AsyncCall basic test', async () => {
     const snapshot = mockConsoleLog('no logs')
     const c = createServer()
     expect(await c.add(1, 3)).toBe(4)
     expect(await c.undef()).toBe(undefined)
-    expect(c.throws()).rejects.toMatchInlineSnapshot(`[Error: impl error]`)
-    expect(c[0]()).rejects.toMatchInlineSnapshot(`[Error: Method not found]`)
+    await expect(c.throws()).rejects.toMatchInlineSnapshot(`[Error: impl error]`)
+    await expect(c[0]()).rejects.toMatchInlineSnapshot(`[Error: Method not found]`)
     snapshot()
+}, 2000)
+
+test('AsyncCall deprecated MessageChannel interface', async () => {
+    const c = createServer({}, undefined, JestChannelDeprecated)
+    expect(await c.add(1, 3)).toBe(4)
+    expect(await c.undef()).toBe(undefined)
+    await expect(c.throws()).rejects.toMatchInlineSnapshot(`[Error: impl error]`)
+    await expect(c[0]()).rejects.toMatchInlineSnapshot(`[Error: Method not found]`)
+}, 2000)
+
+test('AsyncCall CallbackBased interface', async () => {
+    const c = createServer({}, undefined, JestChannelCallbackBased)
+    expect(await c.add(1, 3)).toBe(4)
+    expect(await c.undef()).toBe(undefined)
+    await expect(c.throws()).rejects.toMatchInlineSnapshot(`[Error: impl error]`)
+    await expect(c[0]()).rejects.toMatchInlineSnapshot(`[Error: Method not found]`)
 }, 2000)
 
 test('Should preserve this binding', async () => {
@@ -19,7 +35,7 @@ test('Should preserve this binding', async () => {
         }
     }
     const c = createServer({}, new X())
-    expect(c.n()).resolves.toBe(1)
+    await expect(c.n()).resolves.toBe(1)
 }, 2000)
 
 test('AsyncCall Serialization', async () => {

@@ -14,17 +14,5 @@ key?: string;
 
 ## Remarks
 
-The value can be anything, but need to be same on both sides.
-
-This option is useful when you want to run multiple AsyncCall instances on the same message channel.
-
-## Example
-
-these two AsyncCall run on the same channel but they won't affect each other.
-
-```ts
-AsyncCall({}, { messageChannel, key: 'app1' })
-AsyncCall({}, { messageChannel, key: 'app2' })
-
-```
+The value can be anything, but need to be same on both sides if you're using the deprecated MessageChannel interface. If you're using other recommended interface for messageChannel like EventBasedChannel or CallbackBasedChannel, this option will only used for better logging.
 

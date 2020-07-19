@@ -16,7 +16,7 @@ export declare function batch<T extends object>(asyncCallInstance: T): [T, () =>
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  asyncCallInstance | T |  |
+|  asyncCallInstance | T | The AsyncCall instance |
 
 <b>Returns:</b>
 

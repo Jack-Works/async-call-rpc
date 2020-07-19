@@ -5,6 +5,7 @@ devDependencies:
   '@types/jest': 26.0.4
   '@types/node': 14.0.22
   '@types/ws': 7.2.6
+  async-call-rpc: 'link:'
   jest: 26.1.0
   npm-run-all: 4.1.5
   prettier: 2.0.5
@@ -5459,6 +5460,7 @@ specifiers:
   '@types/jest': ^26.0.4
   '@types/node': ^14.0.22
   '@types/ws': ^7.2.6
+  async-call-rpc: ./
   jest: ^26.1.0
   npm-run-all: ^4.1.5
   prettier: ^2.0.5

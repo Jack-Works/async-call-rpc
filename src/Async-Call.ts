@@ -25,6 +25,7 @@ import { normalizeStrictOptions, normalizeLogOptions } from './utils/normalizeOp
 import { AsyncCallIgnoreResponse, AsyncCallNotify, AsyncCallBatch } from './utils/internalSymbol'
 import { preservePauseOnException as preservePauseOnExceptionCaller } from './utils/preservePauseOnException'
 import { BatchQueue } from './core/batch'
+import { CallbackBasedChannel, EventBasedChannel } from './index'
 
 /**
  * What should AsyncCall log to console.
@@ -83,23 +84,24 @@ export interface AsyncCallStrictJSONRPC {
 /**
  * The message channel interface that allows
  * @public
+ * @deprecated Will be removed in the next major version.
  */
 export interface MessageChannel<Context = unknown> {
     /**
      * AsyncCall will attach a listener to receive messages.
-     * @param event The emitting event name (if supported).
-     * @param eventListener The listener have two parameters. The first one is the received data. The second one is an identifier to identify who send this request. When responding, AsyncCall will call the emit with the same context.
+     * @param event - The emitting event name (if supported).
+     * @param eventListener - The listener have two parameters. The first one is the received data. The second one is an identifier to identify who send this request. When responding, AsyncCall will call the emit with the same context.
      */
     on(event: string, eventListener: (data: unknown, context?: Context) => void): void
     /**
      * AsyncCall will send message by this method.
-     * @param event The emitting event name (if supported).
-     * @param data The sending data.
-     * @param context The same context provided to the second parameter of on.eventListener.
+     * @param event - The emitting event name (if supported).
+     * @param data - The sending data.
+     * @param context - The same context provided to the second parameter of on.eventListener.
      */
     emit(event: string, data: unknown, context?: Context): void
 }
-
+export type { CallbackBasedChannel, EventBasedChannel } from './types'
 /**
  * Options for {@link AsyncCall}
  * @public
@@ -109,16 +111,9 @@ export interface AsyncCallOptions {
      * A key to prevent collision with other AsyncCalls.
      *
      * @remarks
-     * The value can be anything, but need to be same on both sides.
-     *
-     * This option is useful when you want to run multiple AsyncCall instances on the same message channel.
-     *
-     * @example
-     * these two AsyncCall run on the same channel but they won't affect each other.
-     * ```ts
-     * AsyncCall({}, { messageChannel, key: 'app1' })
-     * AsyncCall({}, { messageChannel, key: 'app2' })
-     * ```
+     * The value can be anything, but need to be same on both sides if you're using the deprecated MessageChannel interface.
+     * If you're using other recommended interface for messageChannel like EventBasedChannel or CallbackBasedChannel,
+     * this option will only used for better logging.
      *
      * @defaultValue `default-jsonrpc`
      */
@@ -158,7 +153,7 @@ export interface AsyncCallOptions {
      * }
      * ```
      */
-    messageChannel: MessageChannel
+    messageChannel: MessageChannel | CallbackBasedChannel | EventBasedChannel
     /**
      * Choose log level. See {@link AsyncCallLogLevel}
      * @defaultValue true
@@ -197,13 +192,13 @@ export interface AsyncCallOptions {
     preservePauseOnException?: boolean
     /**
      * The ID generator of each JSON RPC request
-     * @defaultValue () => Math.random().toString(36).slice(2)
+     * @defaultValue () =\> Math.random().toString(36).slice(2)
      */
     idGenerator?(): string | number
     /**
      * Control the error response data
-     * @param error The happened Error
-     * @param request The request object
+     * @param error - The happened Error
+     * @param request - The request object
      */
     mapError?: ErrorMapFunction<unknown>
 }
@@ -285,7 +280,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     Promise.resolve(thisSideImplementation).then((x) => (resolvedThisSideImplementation = x))
     const {
         serializer,
-        key,
+        key: logKey,
         strict,
         log,
         parameterStructures,
@@ -339,11 +334,10 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                   )
                 : new Promise((resolve) => resolve(executor.apply(resolvedThisSideImplementation, args)))
             if (logBeCalled) {
-                if (logType === 'basic')
-                    console.log(`${options.key}.${data.method}(${[...args].toString()}) @${data.id}`)
+                if (logType === 'basic') console.log(`${logKey}.${data.method}(${[...args].toString()}) @${data.id}`)
                 else {
                     const logArgs: unknown[] = [
-                        `${options.key}.%c${data.method}%c(${args.map(() => '%o').join(', ')}%c)\n%o %c@${data.id}`,
+                        `${logKey}.%c${data.method}%c(${args.map(() => '%o').join(', ')}%c)\n%o %c@${data.id}`,
                         'color: #d2c057',
                         '',
                         ...args,
@@ -424,43 +418,80 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         }
         return undefined
     }
-    message.on(key, async (_, source) => {
+    async function rawMessageReceiver(_: unknown): Promise<undefined | Response | (Response | undefined)[]> {
         let data: unknown
         let result: Response | undefined = undefined
         try {
             data = await serializer.deserialization(_)
             if (isJSONRPCObject(data)) {
-                result = await handleSingleMessage(data)
-                if (result) await send(result)
+                return (result = await handleSingleMessage(data))
             } else if (Array.isArray(data) && data.every(isJSONRPCObject) && data.length !== 0) {
                 const result = await Promise.all(data.map(handleSingleMessage))
                 // ? Response
                 if (data.every((x) => x === undefined)) return
-                await send(result.filter((x) => x))
+                return result.filter((x) => x)
             } else {
                 if (banUnknownMessage) {
-                    await send(ErrorResponse.InvalidRequest((data as any).id ?? null))
+                    return ErrorResponse.InvalidRequest((data as any).id ?? null)
                 } else {
                     // ? Ignore this message. The message channel maybe also used to transfer other message too.
+                    return undefined
                 }
             }
         } catch (e) {
             if (logLocalError) console.error(e, data, result)
-            send(ErrorResponse.ParseError(e, mapError || defaultErrorMapper(e?.stack)))
+            return ErrorResponse.ParseError(e, mapError || defaultErrorMapper(e?.stack))
         }
-        async function send(res?: Response | (Response | undefined)[]) {
-            if (Array.isArray(res)) {
-                const reply = res.filter((x) => hasKey(x, 'id'))
-                if (reply.length === 0) return
-                message.emit(key, await serializer.serialization(reply), source)
-            } else {
-                if (!res) return
-                // ? This is a Notification, we MUST not return it.
-                if (!hasKey(res, 'id')) return
-                message.emit(key, await serializer.serialization(res), source)
-            }
+    }
+    async function rawMessageSender(res: undefined | Response | (Response | undefined)[]) {
+        if (!res) return
+        if (Array.isArray(res)) {
+            const reply = res.filter((x) => hasKey(x, 'id'))
+            if (reply.length === 0) return
+            return serializer.serialization(reply)
+        } else {
+            // ? This is a Notification, we MUST not return it.
+            if (!hasKey(res, 'id')) return
+            return serializer.serialization(res)
         }
-    })
+    }
+    function isMessageChannel(x: typeof message): x is MessageChannel {
+        return hasKey(x, 'emit') && typeof x.emit === 'function'
+    }
+    function isEventBasedChannel(x: typeof message): x is EventBasedChannel {
+        return hasKey(x, 'send') && typeof x.send === 'function'
+    }
+    function isCallbackBasedChannel(x: typeof message): x is CallbackBasedChannel {
+        return hasKey(x, 'setup') && typeof x.setup === 'function'
+    }
+    if (isMessageChannel(message)) {
+        console.warn(
+            "The interface you're using in messageChannel is deprecated. Please switch to EventBasedChannel or CallbackBasedChannel",
+        )
+        message.on(logKey, async (_, context) => {
+            const r = await rawMessageReceiver(_)
+            if (r) message.emit(logKey, r, context)
+        })
+    } else if (isCallbackBasedChannel(message)) {
+        message.setup(
+            (data) => rawMessageReceiver(data).then(rawMessageSender),
+            (data) => {
+                const _ = serializer.deserialization(data)
+                if (isJSONRPCObject(_)) return true
+                return Promise.resolve(_).then(isJSONRPCObject)
+            },
+        )
+    } else if (!isEventBasedChannel(message)) {
+        throw new TypeError('Invalid messageChannel')
+    }
+    if (isEventBasedChannel(message)) {
+        const m = message as EventBasedChannel | CallbackBasedChannel
+        m.on?.((_) =>
+            rawMessageReceiver(_)
+                .then(rawMessageSender)
+                .then((x) => x && m.send!(x)),
+        )
+    }
     return new Proxy(
         {},
         {
@@ -517,7 +548,9 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     ) as _AsyncVersionOf<OtherSideImplementedFunctions>
     async function sendPayload(payload: unknown) {
         const data = await serializer.serialization(payload)
-        message.emit(key, data)
+        if (hasKey(message, 'emit')) return message.emit(logKey, data)
+        // CallbackBasedChannel might have no send method. let it throw
+        return message.send!(data)
     }
     function rejectsQueue(this: BatchQueue, error: unknown) {
         for (const x of this) {

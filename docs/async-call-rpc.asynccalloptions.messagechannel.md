@@ -9,7 +9,7 @@ The message channel can let you transport messages between server and client
 <b>Signature:</b>
 
 ```typescript
-messageChannel: MessageChannel;
+messageChannel: MessageChannel | CallbackBasedChannel | EventBasedChannel;
 ```
 
 ## Example

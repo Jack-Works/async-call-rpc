@@ -2,9 +2,10 @@ import { AsyncCallBatch, AsyncCallNotify } from '../utils/internalSymbol'
 import { Request } from '../utils/jsonrpc'
 /**
  * Wrap the AsyncCall instance to use batch call.
- * @param asyncCallInstance
+ * @param asyncCallInstance - The AsyncCall instance
  * @example
  * const [batched, send, drop] = batch(AsyncCall(...))
+ * @public
  */
 export function batch<T extends object>(asyncCallInstance: T): [T, () => void, (error?: unknown) => void] {
     // let pending = new Promise((resolve, reject) => {})

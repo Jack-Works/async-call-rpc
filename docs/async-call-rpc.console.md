@@ -21,4 +21,5 @@ export interface Console
 |  [groupCollapsed(args)](./async-call-rpc.console.groupcollapsed.md) |  |
 |  [groupEnd(args)](./async-call-rpc.console.groupend.md) |  |
 |  [log(args)](./async-call-rpc.console.log.md) |  |
+|  [warn(args)](./async-call-rpc.console.warn.md) |  |
 

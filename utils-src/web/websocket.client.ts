@@ -1,4 +1,4 @@
-import type { AsyncCallMessageChannel } from '../shared'
+import type { EventBasedChannel } from '../../src/Async-Call'
 
 /**
  * WebSocket support for AsyncCall.
@@ -10,12 +10,15 @@ import type { AsyncCallMessageChannel } from '../shared'
  * - Blob
  * - ArrayBufferView
  */
-export class WebSocketMessageChannel extends WebSocket implements AsyncCallMessageChannel {
-    on(event: string, eventListener: (data: unknown) => void): void {
-        this.addEventListener('message', (e) => eventListener(e.data))
+export class WebSocketMessageChannel extends WebSocket implements EventBasedChannel {
+    on(listener: (data: unknown) => void) {
+        const f = (e: MessageEvent) => listener(e.data)
+        this.addEventListener('message', f)
+        return () => this.removeEventListener('message', f)
     }
-    emit(event: string, data: any): void {
-        if (this.readyState === this.CONNECTING) this.addEventListener('open', () => this.send(data), { once: true })
-        else super.send(data)
+    send(data: any): void {
+        if (this.readyState === this.CONNECTING) {
+            this.addEventListener('open', () => this.send(data), { once: true })
+        } else super.send(data)
     }
 }

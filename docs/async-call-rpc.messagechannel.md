@@ -4,6 +4,11 @@
 
 ## MessageChannel interface
 
+> Warning: This API is now obsolete.
+> 
+> Will be removed in the next major version.
+> 
+
 The message channel interface that allows
 
 <b>Signature:</b>

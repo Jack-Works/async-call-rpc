@@ -71,12 +71,12 @@ test('AsyncGeneratorCall non strict', async () => {
 async function channelPeak(buildServer: (channel: JestChannel) => void, out: unknown[]) {
     const { client, server } = createChannelPair()
     buildServer(server)
-    const income = []
-    const outcome = []
-    server.addListener('message', (e) => outcome.push(e))
-    client.addListener('message', (e) => income.push(e))
-    out.forEach((x) => client.emit('message', x))
+    const logToClient = []
+    const logToServer = []
+    server.log.addListener('message', (e) => logToServer.push(e))
+    client.log.addListener('message', (e) => logToClient.push(e))
+    out.forEach((x) => client.send(x))
     await sleep(200)
-    expect(income).toMatchSnapshot('in')
-    expect(outcome).toMatchSnapshot('out')
+    expect(logToClient).toMatchSnapshot('in')
+    expect(logToServer).toMatchSnapshot('out')
 }
