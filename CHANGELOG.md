@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file. See [standa
 ## [3.3.0](https://github.com/Jack-Works/async-call/compare/v3.2.2...v3.3.0) (2020-07-19)
 
 
+### Deprecation
+
+* Old MessageChannel is deprecated, please use new [CallbackBasedChannel](https://jack-works.github.io/async-call-rpc/async-call-rpc.callbackbasedchannel.html) or [EventBasedChannel](https://jack-works.github.io/async-call-rpc/async-call-rpc.eventbasedchannel.html).
+
 ### Features
 
 * impl requestReplay in log, close [#22](https://github.com/Jack-Works/async-call/issues/22) ([d241b34](https://github.com/Jack-Works/async-call/commit/d241b34ddcb47313e74c96662cb16e39d7876d43))
