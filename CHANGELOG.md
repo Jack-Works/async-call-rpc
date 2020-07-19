@@ -7,7 +7,8 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### ⚠ BREAKING CHANGES
 
-* remove support for deprecated messageChannel
+* remove support for deprecated `messageChannel`
+* `messageChannel` has renamed to `channel`
 
 ### Features
 
