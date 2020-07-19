@@ -21,11 +21,13 @@ export interface AsyncCallLogLevel {
 
 // @public
 export interface AsyncCallOptions {
+    channel?: CallbackBasedChannel | EventBasedChannel;
     idGenerator?(): string | number;
     key?: string;
     log?: AsyncCallLogLevel | boolean;
     logger?: Console;
     mapError?: ErrorMapFunction<unknown>;
+    // @deprecated (undocumented)
     messageChannel: MessageChannel | CallbackBasedChannel | EventBasedChannel;
     parameterStructures?: 'by-position' | 'by-name';
     preferLocalImplementation?: boolean;

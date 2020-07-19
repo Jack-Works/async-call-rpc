@@ -61,7 +61,8 @@ test('AsyncCall preferLocal', async () => {
     const x = AsyncCall<any>(
         { f: () => 1 },
         {
-            messageChannel: {
+            messageChannel: undefined!,
+            channel: {
                 on() {},
                 emit() {
                     throw new Error('')

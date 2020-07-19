@@ -4,26 +4,13 @@
 
 ## AsyncCallOptions.messageChannel property
 
-The message channel can let you transport messages between server and client
+> Warning: This API is now obsolete.
+> 
+> renamed to "channel". In next major version, this option will be removed and the "channel" property will be required.
+> 
 
 <b>Signature:</b>
 
 ```typescript
 messageChannel: MessageChannel | CallbackBasedChannel | EventBasedChannel;
 ```
-
-## Example
-
-
-```ts
-const messageChannel = {
-     on(event, callback) {
-         document.addEventListener('remote-data', x => callback(x.details))
-     }
-     emit(event, data) {
-         fetch('/server', { body: data })
-     }
-}
-
-```
-

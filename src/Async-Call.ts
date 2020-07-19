@@ -112,7 +112,7 @@ export interface AsyncCallOptions {
      *
      * @remarks
      * The value can be anything, but need to be same on both sides if you're using the deprecated MessageChannel interface.
-     * If you're using other recommended interface for messageChannel like EventBasedChannel or CallbackBasedChannel,
+     * If you're using other recommended interface for channel like EventBasedChannel or CallbackBasedChannel,
      * this option will only used for better logging.
      *
      * @defaultValue `default-jsonrpc`
@@ -143,7 +143,7 @@ export interface AsyncCallOptions {
      * The message channel can let you transport messages between server and client
      * @example
      * ```ts
-     * const messageChannel = {
+     * const channel = {
      *      on(event, callback) {
      *          document.addEventListener('remote-data', x => callback(x.details))
      *      }
@@ -152,6 +152,12 @@ export interface AsyncCallOptions {
      *      }
      * }
      * ```
+     * @remarks
+     * If you're using this new property, you can use "messageChannel: undefined!" to disable the type system error.
+     */
+    channel?: CallbackBasedChannel | EventBasedChannel
+    /**
+     * @deprecated renamed to "channel". In next major version, this option will be removed and the "channel" property will be required.
      */
     messageChannel: MessageChannel | CallbackBasedChannel | EventBasedChannel
     /**
@@ -240,7 +246,9 @@ export type _IgnoreResponse<T> = T extends (...args: infer Args) => unknown
           [key in keyof T]: T[key] extends (...args: infer Args) => unknown ? (...args: Args) => Promise<void> : never
       }
 
-const AsyncCallDefaultOptions = (<T extends Omit<Required<AsyncCallOptions>, 'messageChannel' | 'logger' | 'mapError'>>(
+const AsyncCallDefaultOptions = (<
+    T extends Omit<Required<AsyncCallOptions>, 'messageChannel' | 'channel' | 'logger' | 'mapError'>
+>(
     a: T,
 ) => a)({
     serializer: NoSerialization,
@@ -289,7 +297,8 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         idGenerator,
         mapError,
         logger,
-        messageChannel: message,
+        channel: oldChannel,
+        channel,
     } = {
         ...AsyncCallDefaultOptions,
         ...options,
@@ -307,6 +316,9 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         requestReplay = false,
     } = normalizeLogOptions(log)
     const console = getConsole(logger)
+    const message: EventBasedChannel | CallbackBasedChannel | MessageChannel = (channel || oldChannel)!
+    if (oldChannel && !channel) console.warn('Deprecation: messageChannel has renamed to channel')
+    if (!message) throw new Error()
     type PromiseParam = Parameters<ConstructorParameters<typeof Promise>[0]>
     const requestContext = new Map<string | number, { f: PromiseParam; stack: string }>()
     async function onRequest(data: Request): Promise<Response | undefined> {
@@ -466,7 +478,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     }
     if (isMessageChannel(message)) {
         console.warn(
-            "The interface you're using in messageChannel is deprecated. Please switch to EventBasedChannel or CallbackBasedChannel",
+            "The interface you're using in channel is deprecated. Please switch to EventBasedChannel or CallbackBasedChannel",
         )
         message.on(logKey, async (_, context) => {
             const r = await rawMessageReceiver(_)
@@ -482,7 +494,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             },
         )
     } else if (!isEventBasedChannel(message)) {
-        throw new TypeError('Invalid messageChannel')
+        throw new TypeError('Invalid channel')
     }
     if (isEventBasedChannel(message)) {
         const m = message as EventBasedChannel | CallbackBasedChannel

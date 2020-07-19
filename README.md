@@ -13,13 +13,13 @@
 
 Chapters:
 
--   [The first concept: `messageChannel`](#the-first-concept-messagechannel)
+-   [The first concept: `channel`](#the-first-concept-messagechannel)
 -   [Example](#example)
 -   [Notifications and Batch requests](#notifications-and-batch-requests)
 -   [Installation](#installation)
 -   [Entries](#entries)
 -   [Utils available if both server and client are created by this library](#utils-available-if-both-server-and-client-are-created-by-this-library)
--   [Builtin `messageChannels` (including WebSocket)](#builtin-messageChannels)
+-   [Builtin `channels` (including WebSocket)](#builtin-channels)
 -   [Implemented JSON RPC internal methods](#implemented-json-rpc-internal-methods)
 -   [Non-standard extension to JSON RPC specification](#non-standard-extension-to-json-rpc-specification)
 
@@ -39,11 +39,11 @@ Chapters:
 -   The async generator mode might leak memory on the server. Use it by your caution.
 -   NOT support JSON RPC 1.0
 
-## The first concept: `messageChannel`
+## The first concept: `channel`
 
-<a id="messageChannel"></a>
+<a id="channel"></a>
 
-The `messageChannel` is the only thing you need to learn to use this library.
+The `channel` is the only thing you need to learn to use this library.
 
 This library is designed to not rely on any specific platform. Only require things defined in the ECMAScript specification.
 In the ES spec, there is no I/O related API so it's impossible to communicate with the outer world.
@@ -62,9 +62,9 @@ In general, the `MessageChannel` should have the following semantics:
 -   When the `data` from the remote arrives (by `addEventListener('message', ...)`, etc), the `callback` should be called.
 -   When the `emit` method is called, the `data` should be sent to the remote properly (by `postMessage` or `fetch`, etc).
 
-> There is a [plan to add built-in messageChannel for Web, Node.JS, and Deno](https://github.com/Jack-Works/async-call/issues/15) to simplify the setup.
+> There is a [plan to add built-in channel for Web, Node.JS, and Deno](https://github.com/Jack-Works/async-call/issues/15) to simplify the setup.
 
-The following document will assume you have defined your `messageChannel`.
+The following document will assume you have defined your `channel`.
 
 ## Example
 
@@ -81,14 +81,14 @@ export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve
 import { AsyncCall } from 'async-call-rpc'
 import * as server from './server'
 // create a server
-AsyncCall(server, { messageChannel })
+AsyncCall(server, { channel })
 ```
 
 ### Client example
 
 ```ts
 import { AsyncCall } from 'async-call-rpc'
-const server = AsyncCall<typeof server>({}, { messageChannel })
+const server = AsyncCall<typeof server>({}, { channel })
 server.add(2, 40).then(console.log) // 42
 ```
 
@@ -107,7 +107,7 @@ Using notifications means results or remote errors will be dropped. Local errors
 
 ```ts
 import { AsyncCall, notify } from 'async-call-rpc'
-const server = notify(AsyncCall<typeof server>({}, { messageChannel }))
+const server = notify(AsyncCall<typeof server>({}, { channel }))
 server.online().then(console.log) // undefined
 ```
 
@@ -115,7 +115,7 @@ AsyncCall can send [batch request](https://www.jsonrpc.org/specification#batch) 
 
 ```ts
 import { AsyncCall, batch } from 'async-call-rpc'
-const [server, emit, drop] = batch(AsyncCall<typeof server>({}, { messageChannel }))
+const [server, emit, drop] = batch(AsyncCall<typeof server>({}, { channel }))
 const a = server.req1() // pending
 const b = server.req2() // pending
 const c = server.req3() // pending
@@ -178,7 +178,7 @@ require('async-rpc-call/base') // or
 import * as RPC from 'async-rpc-call/base'
 ```
 
-## Builtin messageChannels
+## Builtin channels
 
 They're not part of the core library but provided as utils to increase usability.
 

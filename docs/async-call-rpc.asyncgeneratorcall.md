@@ -48,7 +48,7 @@ const server = {
      },
 }
 type Server = typeof server
-const serverRPC = AsyncGeneratorCall<Server>({}, { messageChannel })
+const serverRPC = AsyncGeneratorCall<Server>({}, { channel })
 async function main() {
      for await (const x of serverRPC.generator()) {
          console.log('Server yielded number', x)

@@ -38,7 +38,7 @@
             function define(def, key = `server${count++}`) {
                 // define server
                 AsyncCall(def, {
-                    messageChannel: server,
+                    channel: server,
                     key,
                     preservePauseOnException: true,
                     log: {
@@ -51,7 +51,7 @@
                     },
                 })
                 // define client
-                globalThis[key] = AsyncCall({}, { messageChannel: client, key })
+                globalThis[key] = AsyncCall({}, { channel: client, key })
                 console.log('Server is available as global variable', key, globalThis[key], def)
             }
             function sleep(ms) {

@@ -7,7 +7,8 @@ export const server = {
     rand: Math.random,
 }
 AsyncCall(server, {
-    messageChannel: new WebSocketChannel(serve({ port: 3456 })),
+    messageChannel: undefined!,
+    channel: new WebSocketChannel(serve({ port: 3456 })),
     serializer: JSONSerialization(undefined, undefined),
     log: { type: 'basic' },
 })

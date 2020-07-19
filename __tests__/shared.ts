@@ -57,8 +57,13 @@ export function createServer<T extends object = typeof impl>(
     ctor: ctor = JestChannel,
 ) {
     const { client, server } = createChannelPair(ctor)
-    AsyncCall(Math.random() > 0.5 ? _ : sleep(100).then(() => _), { messageChannel: server, log: false, ...opt })
-    return AsyncCall<T>({}, { messageChannel: client, log: false, ...opt })
+    AsyncCall(Math.random() > 0.5 ? _ : sleep(100).then(() => _), {
+        messageChannel: undefined!,
+        channel: server,
+        log: false,
+        ...opt,
+    })
+    return AsyncCall<T>({}, { messageChannel: undefined!, channel: client, log: false, ...opt })
 }
 const impl2 = {
     *gen(...number: number[]) {
@@ -70,8 +75,8 @@ export function createGeneratorServer<T extends object = typeof impl2>(
     _: T = impl2 as any,
 ) {
     const { client, server } = createChannelPair()
-    AsyncGeneratorCall(_, { messageChannel: server, log: false, ...opt })
-    return AsyncGeneratorCall<T>({}, { messageChannel: client, log: false, ...opt })
+    AsyncGeneratorCall(_, { messageChannel: undefined!, channel: server, log: false, ...opt })
+    return AsyncGeneratorCall<T>({}, { messageChannel: undefined!, channel: client, log: false, ...opt })
 }
 
 export function sleep(x: number) {

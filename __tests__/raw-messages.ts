@@ -16,7 +16,7 @@ test('Batch messages', async () => {
             (server) =>
                 AsyncCall(
                     { f1: () => 1, f2: (args: { x: number }) => args.x },
-                    { messageChannel: server, log: false, key: 'message', serializer: json },
+                    { messageChannel: undefined!, channel: server, log: false, key: 'message', serializer: json },
                 ),
             requests,
         ),
@@ -36,12 +36,26 @@ test('Bad messages', async () => {
         .map(json.serialization)
         .concat('Not JSON!')
     await channelPeak(
-        (server) => AsyncCall({}, { messageChannel: server, log: false, key: 'message', serializer: json }),
+        (server) =>
+            AsyncCall(
+                {},
+                { messageChannel: undefined!, channel: server, log: false, key: 'message', serializer: json },
+            ),
         invalidRequests,
     )
     await channelPeak(
         (server) =>
-            AsyncCall({}, { messageChannel: server, log: false, key: 'message', strict: false, serializer: json }),
+            AsyncCall(
+                {},
+                {
+                    messageChannel: undefined!,
+                    channel: server,
+                    log: false,
+                    key: 'message',
+                    strict: false,
+                    serializer: json,
+                },
+            ),
         invalidRequests,
     )
 })
@@ -50,7 +64,11 @@ test('AsyncGeneratorCall', async () => {
     const json = JSONSerialization()
     const requests = [Request(1, 'rpc.async-iterator.next', ['non-exist'])].map(json.serialization)
     await channelPeak(
-        (server) => AsyncGeneratorCall({}, { messageChannel: server, log: false, key: 'message', serializer: json }),
+        (server) =>
+            AsyncGeneratorCall(
+                {},
+                { messageChannel: undefined!, channel: server, log: false, key: 'message', serializer: json },
+            ),
         requests,
     )
 })
@@ -62,7 +80,14 @@ test('AsyncGeneratorCall non strict', async () => {
         (server) =>
             AsyncGeneratorCall(
                 {},
-                { messageChannel: server, log: false, key: 'message', serializer: json, strict: false },
+                {
+                    messageChannel: undefined!,
+                    channel: server,
+                    log: false,
+                    key: 'message',
+                    serializer: json,
+                    strict: false,
+                },
             ),
         requests,
     )
