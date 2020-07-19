@@ -56,10 +56,10 @@ function outputMatrix(name, format) {
                     unsafe_arrows: true,
                     passes: 2,
                     unsafe_symbols: true,
+                    drop_debugger: false,
                 },
                 output: {
                     ecma: 2018,
-                    semicolons: false,
                     comments: /reference types/,
                 },
             }),

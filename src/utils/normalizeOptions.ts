@@ -6,6 +6,9 @@ export function normalizeLogOptions(log: NonNullable<AsyncCallOptions['log']>): 
         localError: log,
         remoteError: log,
         type: log ? 'pretty' : 'basic',
+        // these two options need opt in
+        // requestReplay: undefined,
+        // sendLocalStack: undefined,
     }
 }
 export function normalizeStrictOptions(strict: NonNullable<AsyncCallOptions['strict']>): AsyncCallStrictJSONRPC {

@@ -82,7 +82,7 @@ test('AsyncCall logs', async () => {
     await sleep(2000)
 
     const s4 = createServer({
-        log: { beCalled: true, localError: true, remoteError: true, sendLocalStack: false },
+        log: { beCalled: true, localError: true, remoteError: true, sendLocalStack: false, requestReplay: true },
         idGenerator: idGen,
     })
     await s4.add(1, 2)

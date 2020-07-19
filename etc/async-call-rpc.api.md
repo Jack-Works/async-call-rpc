@@ -14,6 +14,7 @@ export interface AsyncCallLogLevel {
     beCalled?: boolean;
     localError?: boolean;
     remoteError?: boolean;
+    requestReplay?: boolean;
     sendLocalStack?: boolean;
     type?: 'basic' | 'pretty';
 }

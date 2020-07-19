@@ -116,6 +116,7 @@ Array [
     "",
     Promise {},
     "color: gray; font-style: italic;",
+    [Function],
   ],
   Array [
     "undefined.%cthrows%c(%c)
@@ -125,6 +126,7 @@ Array [
     "",
     Promise {},
     "color: gray; font-style: italic;",
+    [Function],
   ],
 ]
 `;

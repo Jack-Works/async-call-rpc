@@ -56,6 +56,11 @@ export interface AsyncCallLogLevel {
      * @defaultValue 'pretty'
      */
     type?: 'basic' | 'pretty'
+    /**
+     * Log a function that allows to execute the request again.
+     * @defaultValue false
+     */
+    requestReplay?: boolean
 }
 
 /**
@@ -288,11 +293,12 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         preservePauseOnException,
         idGenerator,
         mapError,
+        logger,
+        messageChannel: message,
     } = {
         ...AsyncCallDefaultOptions,
         ...options,
     }
-    const message = options.messageChannel
     const {
         methodNotFound: banMethodNotFound = false,
         unknownMessage: banUnknownMessage = false,
@@ -303,8 +309,9 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         remoteError: logRemoteError = true,
         type: logType = 'pretty',
         sendLocalStack = false,
+        requestReplay = false,
     } = normalizeLogOptions(log)
-    const console = getConsole(options.logger)
+    const console = getConsole(logger)
     type PromiseParam = Parameters<ConstructorParameters<typeof Promise>[0]>
     const requestContext = new Map<string | number, { f: PromiseParam; stack: string }>()
     async function onRequest(data: Request): Promise<Response | undefined> {
@@ -335,7 +342,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                 if (logType === 'basic')
                     console.log(`${options.key}.${data.method}(${[...args].toString()}) @${data.id}`)
                 else {
-                    const logArgs = [
+                    const logArgs: unknown[] = [
                         `${options.key}.%c${data.method}%c(${args.map(() => '%o').join(', ')}%c)\n%o %c@${data.id}`,
                         'color: #d2c057',
                         '',
@@ -344,6 +351,11 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                         promise,
                         'color: gray; font-style: italic;',
                     ]
+                    if (requestReplay)
+                        logArgs.push(() => {
+                            debugger
+                            return executor.apply(resolvedThisSideImplementation, args)
+                        })
                     if (data.remoteStack) {
                         console.groupCollapsed(...logArgs)
                         console.log(data.remoteStack)

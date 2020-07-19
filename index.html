@@ -2,36 +2,8 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <title>async-call-rpc - A lightweight JSON RPC server & client</title>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-        <meta name="description" content="A lightweight JSON RPC server & client" />
-        <meta
-            name="viewport"
-            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
-        />
-        <link
-            media="(prefers-color-scheme: dark)"
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/docsify-themeable@0.7.2/dist/css/theme-simple-dark.css"
-        />
-        <link
-            media="(prefers-color-scheme: light)"
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/docsify-themeable@0.7.2/dist/css/theme-simple.css"
-        />
     </head>
     <body>
-        <div id="app"></div>
-        <script>
-            window.$docsify = {
-                name: 'async-call-rpc',
-                repo: 'https://github.com/Jack-Works/async-call',
-                homepage: 'async-call-rpc.md',
-                basePath: './docs/',
-            }
-        </script>
-        <script src="//unpkg.com/docsify@4.10.2/lib/docsify.min.js"></script>
-        <script src="//unpkg.com/prismjs@1.17.1/components/prism-typescript.js"></script>
         <script src="./out/full.js"></script>
         <script>
             Object.assign(globalThis, AsyncCall)
@@ -65,7 +37,19 @@
             let count = 0
             function define(def, key = `server${count++}`) {
                 // define server
-                AsyncCall(def, { messageChannel: server, key, preservePauseOnException: true })
+                AsyncCall(def, {
+                    messageChannel: server,
+                    key,
+                    preservePauseOnException: true,
+                    log: {
+                        beCalled: true,
+                        localError: true,
+                        remoteError: true,
+                        type: 'pretty',
+                        requestReplay: true,
+                        sendLocalStack: true,
+                    },
+                })
                 // define client
                 globalThis[key] = AsyncCall({}, { messageChannel: client, key })
                 console.log('Server is available as global variable', key, globalThis[key], def)
