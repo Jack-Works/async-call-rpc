@@ -48,21 +48,12 @@ The `channel` is the only thing you need to learn to use this library.
 This library is designed to not rely on any specific platform. Only require things defined in the ECMAScript specification.
 In the ES spec, there is no I/O related API so it's impossible to communicate with the outer world.
 
-Therefore, this library require you to provide an object in the following shape:
+You need to implement one of the following interfaces:
 
-```ts
-interface MessageChannel {
-    on(event: string, callback: (data: unknown) => void): void
-    emit(event: string, data: unknown): void
-}
-```
+-   [CallbackBasedChannel](https://jack-works.github.io/async-call-rpc/async-call-rpc.callbackbasedchannel.html), generally used in the server. [Example](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/websocket.client.ts).
+-   [EventBasedChannel](https://jack-works.github.io/async-call-rpc/async-call-rpc.eventbasedchannel.html), generally used in the client. [Example](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/node/websocket.server.ts)
 
-In general, the `MessageChannel` should have the following semantics:
-
--   When the `data` from the remote arrives (by `addEventListener('message', ...)`, etc), the `callback` should be called.
--   When the `emit` method is called, the `data` should be sent to the remote properly (by `postMessage` or `fetch`, etc).
-
-> There is a [plan to add built-in channel for Web, Node.JS, and Deno](https://github.com/Jack-Works/async-call/issues/15) to simplify the setup.
+There are some [built-in channel](#builtin-channels) you can simplify the usage.
 
 The following document will assume you have defined your `channel`.
 
@@ -81,14 +72,14 @@ export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve
 import { AsyncCall } from 'async-call-rpc'
 import * as server from './server'
 // create a server
-AsyncCall(server, { channel })
+AsyncCall(server, { channel, messageChannel: undefined! })
 ```
 
 ### Client example
 
 ```ts
 import { AsyncCall } from 'async-call-rpc'
-const server = AsyncCall<typeof server>({}, { channel })
+const server = AsyncCall<typeof server>({}, { channel, messageChannel: undefined! })
 server.add(2, 40).then(console.log) // 42
 ```
 
@@ -107,7 +98,7 @@ Using notifications means results or remote errors will be dropped. Local errors
 
 ```ts
 import { AsyncCall, notify } from 'async-call-rpc'
-const server = notify(AsyncCall<typeof server>({}, { channel }))
+const server = notify(AsyncCall<typeof server>({}, { channel, messageChannel: undefined! }))
 server.online().then(console.log) // undefined
 ```
 
@@ -115,7 +106,7 @@ AsyncCall can send [batch request](https://www.jsonrpc.org/specification#batch) 
 
 ```ts
 import { AsyncCall, batch } from 'async-call-rpc'
-const [server, emit, drop] = batch(AsyncCall<typeof server>({}, { channel }))
+const [server, emit, drop] = batch(AsyncCall<typeof server>({}, { channel, messageChannel: undefined! }))
 const a = server.req1() // pending
 const b = server.req2() // pending
 const c = server.req3() // pending

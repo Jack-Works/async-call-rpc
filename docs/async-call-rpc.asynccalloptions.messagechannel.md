@@ -9,6 +9,8 @@
 > renamed to "channel". In next major version, this option will be removed and the "channel" property will be required.
 > 
 
+Leave this option "undefined!" if you're providing channel.
+
 <b>Signature:</b>
 
 ```typescript

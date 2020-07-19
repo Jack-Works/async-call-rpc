@@ -27,7 +27,7 @@ export interface AsyncCallOptions {
     log?: AsyncCallLogLevel | boolean;
     logger?: Console;
     mapError?: ErrorMapFunction<unknown>;
-    // @deprecated (undocumented)
+    // @deprecated
     messageChannel: MessageChannel | CallbackBasedChannel | EventBasedChannel;
     parameterStructures?: 'by-position' | 'by-name';
     preferLocalImplementation?: boolean;
