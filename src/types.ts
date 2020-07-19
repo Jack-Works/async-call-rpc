@@ -3,6 +3,9 @@
  * @remarks
  * Usually used for there is only 1 remote (act like a client).
  * @public
+ * @example
+ *
+ * [Example for EventBasedChannel](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/node/websocket.server.ts).
  */
 export interface EventBasedChannel<Data = unknown> {
     /**
@@ -23,6 +26,9 @@ export interface EventBasedChannel<Data = unknown> {
  * @remarks
  * Usually used for there are many remotes (act like a server).
  * @public
+ * @example
+ *
+ * [Example for CallbackBasedChannel](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/websocket.client.ts).
  */
 export interface CallbackBasedChannel<Data = unknown> extends Partial<EventBasedChannel<Data>> {
     /**

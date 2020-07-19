@@ -1,5 +1,5 @@
 import { NoSerialization, JSONSerialization, AsyncCall, notify, batch } from '../src/Async-Call'
-import { createServer, sleep, mockError, JestChannelDeprecated, JestChannelCallbackBased } from './shared'
+import { createServer, sleep, mockError, JestChannelCallbackBased } from './shared'
 
 test('AsyncCall basic test', async () => {
     const snapshot = mockConsoleLog('no logs')
@@ -9,14 +9,6 @@ test('AsyncCall basic test', async () => {
     await expect(c.throws()).rejects.toMatchInlineSnapshot(`[Error: impl error]`)
     await expect(c[0]()).rejects.toMatchInlineSnapshot(`[Error: Method not found]`)
     snapshot()
-}, 2000)
-
-test('AsyncCall deprecated MessageChannel interface', async () => {
-    const c = createServer({}, undefined, JestChannelDeprecated)
-    expect(await c.add(1, 3)).toBe(4)
-    expect(await c.undef()).toBe(undefined)
-    await expect(c.throws()).rejects.toMatchInlineSnapshot(`[Error: impl error]`)
-    await expect(c[0]()).rejects.toMatchInlineSnapshot(`[Error: Method not found]`)
 }, 2000)
 
 test('AsyncCall CallbackBased interface', async () => {
@@ -61,7 +53,6 @@ test('AsyncCall preferLocal', async () => {
     const x = AsyncCall<any>(
         { f: () => 1 },
         {
-            messageChannel: undefined!,
             channel: {
                 on() {},
                 emit() {

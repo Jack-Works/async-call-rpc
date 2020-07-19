@@ -21,7 +21,6 @@ export interface AsyncCallOptions
 |  [log](./async-call-rpc.asynccalloptions.log.md) | [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) \| boolean | Choose log level. See [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) |
 |  [logger](./async-call-rpc.asynccalloptions.logger.md) | [Console](./async-call-rpc.console.md) | The logger of AsyncCall |
 |  [mapError](./async-call-rpc.asynccalloptions.maperror.md) | [ErrorMapFunction](./async-call-rpc.errormapfunction.md)<!-- -->&lt;unknown&gt; | Control the error response data |
-|  [messageChannel](./async-call-rpc.asynccalloptions.messagechannel.md) | [MessageChannel](./async-call-rpc.messagechannel.md) \| [CallbackBasedChannel](./async-call-rpc.callbackbasedchannel.md) \| [EventBasedChannel](./async-call-rpc.eventbasedchannel.md) | Leave this option "undefined!" if you're providing channel. |
 |  [parameterStructures](./async-call-rpc.asynccalloptions.parameterstructures.md) | 'by-position' \| 'by-name' | How parameters passed to remote |
 |  [preferLocalImplementation](./async-call-rpc.asynccalloptions.preferlocalimplementation.md) | boolean | Prefer local implementation than remote. |
 |  [preservePauseOnException](./async-call-rpc.asynccalloptions.preservepauseonexception.md) | boolean | (Browser) Try to preserve the browser "pause on uncaught exception". |

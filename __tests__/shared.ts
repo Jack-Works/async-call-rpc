@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events'
-import { AsyncCallOptions, AsyncCall, MessageChannel, EventBasedChannel, CallbackBasedChannel } from '../src/Async-Call'
+import { AsyncCallOptions, AsyncCall, EventBasedChannel, CallbackBasedChannel } from '../src/Async-Call'
 import { AsyncGeneratorCall } from '../src/Async-Call-Generator'
 
 const impl = {
@@ -21,15 +21,6 @@ export class JestChannel implements EventBasedChannel {
         this.otherSide.log.emit('message', data)
     }
 }
-/** @deprecated */
-export class JestChannelDeprecated extends EventEmitter implements MessageChannel {
-    constructor(public otherSide: JestChannelDeprecated) {
-        super()
-    }
-    emit(event: any, data: any): boolean {
-        return super.emit.call(this.otherSide, event, data)
-    }
-}
 export class JestChannelCallbackBased extends JestChannel implements CallbackBasedChannel {
     constructor(ctor) {
         super(ctor)
@@ -43,7 +34,7 @@ export class JestChannelCallbackBased extends JestChannel implements CallbackBas
         this.log.addListener('message', async (msg) => this.otherSide.log.emit('message', await cb(msg)))
     }
 }
-type ctor = typeof JestChannelDeprecated | typeof JestChannel | typeof JestChannelCallbackBased
+type ctor = typeof JestChannel | typeof JestChannelCallbackBased
 export function createChannelPair(ctor: ctor = JestChannel) {
     const server = new ctor(undefined!) as JestChannel
     const client = new ctor(server as any) as JestChannel
@@ -52,18 +43,17 @@ export function createChannelPair(ctor: ctor = JestChannel) {
     return { server, client }
 }
 export function createServer<T extends object = typeof impl>(
-    opt: Omit<AsyncCallOptions, 'messageChannel'> = {},
+    opt: Omit<AsyncCallOptions, 'channel'> = {},
     _: T = impl as any,
     ctor: ctor = JestChannel,
 ) {
     const { client, server } = createChannelPair(ctor)
     AsyncCall(Math.random() > 0.5 ? _ : sleep(100).then(() => _), {
-        messageChannel: undefined!,
         channel: server,
         log: false,
         ...opt,
     })
-    return AsyncCall<T>({}, { messageChannel: undefined!, channel: client, log: false, ...opt })
+    return AsyncCall<T>({}, { channel: client, log: false, ...opt })
 }
 const impl2 = {
     *gen(...number: number[]) {
@@ -71,12 +61,12 @@ const impl2 = {
     },
 }
 export function createGeneratorServer<T extends object = typeof impl2>(
-    opt: Omit<AsyncCallOptions, 'messageChannel'> = {},
+    opt: Omit<AsyncCallOptions, 'channel'> = {},
     _: T = impl2 as any,
 ) {
     const { client, server } = createChannelPair()
-    AsyncGeneratorCall(_, { messageChannel: undefined!, channel: server, log: false, ...opt })
-    return AsyncGeneratorCall<T>({}, { messageChannel: undefined!, channel: client, log: false, ...opt })
+    AsyncGeneratorCall(_, { channel: server, log: false, ...opt })
+    return AsyncGeneratorCall<T>({}, { channel: client, log: false, ...opt })
 }
 
 export function sleep(x: number) {

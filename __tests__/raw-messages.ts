@@ -16,7 +16,7 @@ test('Batch messages', async () => {
             (server) =>
                 AsyncCall(
                     { f1: () => 1, f2: (args: { x: number }) => args.x },
-                    { messageChannel: undefined!, channel: server, log: false, key: 'message', serializer: json },
+                    { channel: server, log: false, key: 'message', serializer: json },
                 ),
             requests,
         ),
@@ -36,11 +36,7 @@ test('Bad messages', async () => {
         .map(json.serialization)
         .concat('Not JSON!')
     await channelPeak(
-        (server) =>
-            AsyncCall(
-                {},
-                { messageChannel: undefined!, channel: server, log: false, key: 'message', serializer: json },
-            ),
+        (server) => AsyncCall({}, { channel: server, log: false, key: 'message', serializer: json }),
         invalidRequests,
     )
     await channelPeak(
@@ -48,7 +44,6 @@ test('Bad messages', async () => {
             AsyncCall(
                 {},
                 {
-                    messageChannel: undefined!,
                     channel: server,
                     log: false,
                     key: 'message',
@@ -64,11 +59,7 @@ test('AsyncGeneratorCall', async () => {
     const json = JSONSerialization()
     const requests = [Request(1, 'rpc.async-iterator.next', ['non-exist'])].map(json.serialization)
     await channelPeak(
-        (server) =>
-            AsyncGeneratorCall(
-                {},
-                { messageChannel: undefined!, channel: server, log: false, key: 'message', serializer: json },
-            ),
+        (server) => AsyncGeneratorCall({}, { channel: server, log: false, key: 'message', serializer: json }),
         requests,
     )
 })
@@ -81,7 +72,6 @@ test('AsyncGeneratorCall non strict', async () => {
             AsyncGeneratorCall(
                 {},
                 {
-                    messageChannel: undefined!,
                     channel: server,
                     log: false,
                     key: 'message',

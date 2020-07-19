@@ -16,6 +16,10 @@ export interface EventBasedChannel<Data = unknown>
 
 Usually used for there is only 1 remote (act like a client).
 
+## Example
+
+\[Example for EventBasedChannel\](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/node/websocket.server.ts).
+
 ## Methods
 
 |  Method | Description |

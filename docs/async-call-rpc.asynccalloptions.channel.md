@@ -9,25 +9,14 @@ The message channel can let you transport messages between server and client
 <b>Signature:</b>
 
 ```typescript
-channel?: CallbackBasedChannel | EventBasedChannel;
+channel: CallbackBasedChannel | EventBasedChannel;
 ```
 
 ## Remarks
 
-If you're using this new property, you can use "messageChannel: undefined!" to disable the type system error.
+If you're using this new property, you can use "" to disable the type system error.
 
 ## Example
 
-
-```ts
-const channel = {
-     on(event, callback) {
-         document.addEventListener('remote-data', x => callback(x.details))
-     }
-     emit(event, data) {
-         fetch('/server', { body: data })
-     }
-}
-
-```
+\[Example for CallbackBasedChannel\](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/websocket.client.ts). \[Example for EventBasedChannel\](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/node/websocket.server.ts).
 

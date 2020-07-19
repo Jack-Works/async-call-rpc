@@ -81,26 +81,6 @@ export interface AsyncCallStrictJSONRPC {
     unknownMessage?: boolean
 }
 
-/**
- * The message channel interface that allows
- * @public
- * @deprecated Will be removed in the next major version.
- */
-export interface MessageChannel<Context = unknown> {
-    /**
-     * AsyncCall will attach a listener to receive messages.
-     * @param event - The emitting event name (if supported).
-     * @param eventListener - The listener have two parameters. The first one is the received data. The second one is an identifier to identify who send this request. When responding, AsyncCall will call the emit with the same context.
-     */
-    on(event: string, eventListener: (data: unknown, context?: Context) => void): void
-    /**
-     * AsyncCall will send message by this method.
-     * @param event - The emitting event name (if supported).
-     * @param data - The sending data.
-     * @param context - The same context provided to the second parameter of on.eventListener.
-     */
-    emit(event: string, data: unknown, context?: Context): void
-}
 export type { CallbackBasedChannel, EventBasedChannel } from './types'
 /**
  * Options for {@link AsyncCall}
@@ -142,25 +122,12 @@ export interface AsyncCallOptions {
     /**
      * The message channel can let you transport messages between server and client
      * @example
-     * ```ts
-     * const channel = {
-     *      on(event, callback) {
-     *          document.addEventListener('remote-data', x => callback(x.details))
-     *      }
-     *      emit(event, data) {
-     *          fetch('/server', { body: data })
-     *      }
-     * }
-     * ```
+     * [Example for CallbackBasedChannel](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/websocket.client.ts).
+     * [Example for EventBasedChannel](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/node/websocket.server.ts).
      * @remarks
-     * If you're using this new property, you can use "messageChannel: undefined!" to disable the type system error.
+     * If you're using this new property, you can use "" to disable the type system error.
      */
-    channel?: CallbackBasedChannel | EventBasedChannel
-    /**
-     * Leave this option "undefined!" if you're providing channel.
-     * @deprecated renamed to "channel". In next major version, this option will be removed and the "channel" property will be required.
-     */
-    messageChannel: MessageChannel | CallbackBasedChannel | EventBasedChannel
+    channel: CallbackBasedChannel | EventBasedChannel
     /**
      * Choose log level. See {@link AsyncCallLogLevel}
      * @defaultValue true
@@ -298,7 +265,6 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         idGenerator,
         mapError,
         logger,
-        channel: oldChannel,
         channel,
     } = {
         ...AsyncCallDefaultOptions,
@@ -317,9 +283,6 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         requestReplay = false,
     } = normalizeLogOptions(log)
     const console = getConsole(logger)
-    const message: EventBasedChannel | CallbackBasedChannel | MessageChannel = (channel || oldChannel)!
-    if (oldChannel && !channel) console.warn('Deprecation: messageChannel has renamed to channel')
-    if (!message) throw new Error()
     type PromiseParam = Parameters<ConstructorParameters<typeof Promise>[0]>
     const requestContext = new Map<string | number, { f: PromiseParam; stack: string }>()
     async function onRequest(data: Request): Promise<Response | undefined> {
@@ -468,25 +431,14 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             return serializer.serialization(res)
         }
     }
-    function isMessageChannel(x: typeof message): x is MessageChannel {
-        return hasKey(x, 'emit') && typeof x.emit === 'function'
-    }
-    function isEventBasedChannel(x: typeof message): x is EventBasedChannel {
+    function isEventBasedChannel(x: typeof channel): x is EventBasedChannel {
         return hasKey(x, 'send') && typeof x.send === 'function'
     }
-    function isCallbackBasedChannel(x: typeof message): x is CallbackBasedChannel {
+    function isCallbackBasedChannel(x: typeof channel): x is CallbackBasedChannel {
         return hasKey(x, 'setup') && typeof x.setup === 'function'
     }
-    if (isMessageChannel(message)) {
-        console.warn(
-            "The interface you're using in channel is deprecated. Please switch to EventBasedChannel or CallbackBasedChannel",
-        )
-        message.on(logKey, async (_, context) => {
-            const r = await rawMessageReceiver(_)
-            if (r) message.emit(logKey, r, context)
-        })
-    } else if (isCallbackBasedChannel(message)) {
-        message.setup(
+    if (isCallbackBasedChannel(channel)) {
+        channel.setup(
             (data) => rawMessageReceiver(data).then(rawMessageSender),
             (data) => {
                 const _ = serializer.deserialization(data)
@@ -494,11 +446,9 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                 return Promise.resolve(_).then(isJSONRPCObject)
             },
         )
-    } else if (!isEventBasedChannel(message)) {
-        throw new TypeError('Invalid channel')
     }
-    if (isEventBasedChannel(message)) {
-        const m = message as EventBasedChannel | CallbackBasedChannel
+    if (isEventBasedChannel(channel)) {
+        const m = channel as EventBasedChannel | CallbackBasedChannel
         m.on?.((_) =>
             rawMessageReceiver(_)
                 .then(rawMessageSender)
@@ -561,9 +511,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     ) as _AsyncVersionOf<OtherSideImplementedFunctions>
     async function sendPayload(payload: unknown) {
         const data = await serializer.serialization(payload)
-        if (hasKey(message, 'emit')) return message.emit(logKey, data)
-        // CallbackBasedChannel might have no send method. let it throw
-        return message.send!(data)
+        return channel.send!(data)
     }
     function rejectsQueue(this: BatchQueue, error: unknown) {
         for (const x of this) {

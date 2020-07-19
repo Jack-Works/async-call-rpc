@@ -72,14 +72,14 @@ export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve
 import { AsyncCall } from 'async-call-rpc'
 import * as server from './server'
 // create a server
-AsyncCall(server, { channel, messageChannel: undefined! })
+AsyncCall(server, { channel })
 ```
 
 ### Client example
 
 ```ts
 import { AsyncCall } from 'async-call-rpc'
-const server = AsyncCall<typeof server>({}, { channel, messageChannel: undefined! })
+const server = AsyncCall<typeof server>({}, { channel })
 server.add(2, 40).then(console.log) // 42
 ```
 
@@ -98,7 +98,7 @@ Using notifications means results or remote errors will be dropped. Local errors
 
 ```ts
 import { AsyncCall, notify } from 'async-call-rpc'
-const server = notify(AsyncCall<typeof server>({}, { channel, messageChannel: undefined! }))
+const server = notify(AsyncCall<typeof server>({}, { channel }))
 server.online().then(console.log) // undefined
 ```
 
@@ -106,7 +106,7 @@ AsyncCall can send [batch request](https://www.jsonrpc.org/specification#batch) 
 
 ```ts
 import { AsyncCall, batch } from 'async-call-rpc'
-const [server, emit, drop] = batch(AsyncCall<typeof server>({}, { channel, messageChannel: undefined! }))
+const [server, emit, drop] = batch(AsyncCall<typeof server>({}, { channel }))
 const a = server.req1() // pending
 const b = server.req2() // pending
 const c = server.req3() // pending

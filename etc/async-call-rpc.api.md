@@ -21,14 +21,12 @@ export interface AsyncCallLogLevel {
 
 // @public
 export interface AsyncCallOptions {
-    channel?: CallbackBasedChannel | EventBasedChannel;
+    channel: CallbackBasedChannel | EventBasedChannel;
     idGenerator?(): string | number;
     key?: string;
     log?: AsyncCallLogLevel | boolean;
     logger?: Console;
     mapError?: ErrorMapFunction<unknown>;
-    // @deprecated
-    messageChannel: MessageChannel | CallbackBasedChannel | EventBasedChannel;
     parameterStructures?: 'by-position' | 'by-name';
     preferLocalImplementation?: boolean;
     preservePauseOnException?: boolean;
@@ -108,12 +106,6 @@ export type _IgnoreResponse<T> = T extends (...args: infer Args) => unknown ? (.
 
 // @public
 export const JSONSerialization: (replacerAndReceiver?: [(((key: string, value: any) => any) | undefined)?, (((key: string, value: any) => any) | undefined)?], space?: string | number | undefined, undefinedKeepingBehavior?: 'keep' | 'null' | false) => Serialization;
-
-// @public @deprecated
-export interface MessageChannel<Context = unknown> {
-    emit(event: string, data: unknown, context?: Context): void;
-    on(event: string, eventListener: (data: unknown, context?: Context) => void): void;
-}
 
 // @public
 export const NoSerialization: Serialization;

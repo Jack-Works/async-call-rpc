@@ -29,7 +29,6 @@ See the introduction at [Github](https://github.com/Jack-Works/async-call)
 |  [CallbackBasedChannel](./async-call-rpc.callbackbasedchannel.md) | This interface represents a "callback" model. |
 |  [Console](./async-call-rpc.console.md) | The minimal Console interface that AsyncCall needs. |
 |  [EventBasedChannel](./async-call-rpc.eventbasedchannel.md) | This interface represents a "on message"-"send response" model. |
-|  [MessageChannel](./async-call-rpc.messagechannel.md) | The message channel interface that allows |
 |  [Serialization](./async-call-rpc.serialization.md) | Serialization and deserialization of the JSON RPC payload |
 
 ## Variables
