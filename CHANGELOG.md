@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.3.0](https://github.com/Jack-Works/async-call/compare/v3.2.2...v3.3.0) (2020-07-19)
+
+
+### Features
+
+* impl requestReplay in log, close [#22](https://github.com/Jack-Works/async-call/issues/22) ([d241b34](https://github.com/Jack-Works/async-call/commit/d241b34ddcb47313e74c96662cb16e39d7876d43))
+* new interface for messageChannel and deprecates old, close [#19](https://github.com/Jack-Works/async-call/issues/19) ([7022b8c](https://github.com/Jack-Works/async-call/commit/7022b8c78235e53cd1215c12990f1e11bdfff01b))
+
+
+### Bug Fixes
+
+* install error ([4b3d78f](https://github.com/Jack-Works/async-call/commit/4b3d78fd106bd9384de001db33eb41b0958339be))
+
 ### [3.2.2](https://github.com/Jack-Works/async-call/compare/v3.2.1...v3.2.2) (2020-06-28)
 
 
