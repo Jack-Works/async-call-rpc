@@ -7,4 +7,4 @@ const channel = new WebSocketChannel(ws)
 const server = (module.exports.server = {
     now: Date.now,
 })
-AsyncCall(server, { messageChannel: undefined, channel: channel, serializer: JSONSerialization() })
+AsyncCall(server, { channel: channel, serializer: JSONSerialization() })

@@ -208,9 +208,7 @@ export type _IgnoreResponse<T> = T extends (...args: infer Args) => unknown
           [key in keyof T]: T[key] extends (...args: infer Args) => unknown ? (...args: Args) => Promise<void> : never
       }
 
-const AsyncCallDefaultOptions = (<
-    T extends Omit<Required<AsyncCallOptions>, 'messageChannel' | 'channel' | 'logger' | 'mapError'>
->(
+const AsyncCallDefaultOptions = (<T extends Omit<Required<AsyncCallOptions>, 'channel' | 'logger' | 'mapError'>>(
     a: T,
 ) => a)({
     serializer: NoSerialization,

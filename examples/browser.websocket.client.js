@@ -9,7 +9,6 @@ const { AsyncCall, JSONSerialization } = rpc
 const server = AsyncCall(
     {},
     {
-        messageChannel: undefined,
         channel: new WebSocketMessageChannel('ws://localhost:3456/'),
         serializer: JSONSerialization(),
     },
