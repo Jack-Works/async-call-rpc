@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0](https://github.com/Jack-Works/async-call/compare/v3.3.0...v4.0.0) (2020-07-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove support for deprecated messageChannel
+
+### Features
+
+* remove support for deprecated messageChannel ([e6681f7](https://github.com/Jack-Works/async-call/commit/e6681f7a13624d955b98e9e10c38db73a652a6fa))
+
 ## [3.3.0](https://github.com/Jack-Works/async-call/compare/v3.2.2...v3.3.0) (2020-07-19)
 
 
