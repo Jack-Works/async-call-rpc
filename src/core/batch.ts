@@ -8,7 +8,6 @@ import { Request } from '../utils/jsonrpc'
  * @public
  */
 export function batch<T extends object>(asyncCallInstance: T): [T, () => void, (error?: unknown) => void] {
-    // let pending = new Promise((resolve, reject) => {})
     let queue: BatchQueue = [] as any
     return [
         new Proxy(asyncCallInstance, {
