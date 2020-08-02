@@ -226,6 +226,19 @@ Main frame: `new WorkerChannel(new Worker(...))`
 
 Worker: `new WorkerChannel()`
 
+## Builtin serializers
+
+### (Web, Deno and Node) BSON
+
+|                          | Server                                                                                                                                                                      |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Entry point Node         | `async-call-rpc/utils/node/bson.js`<br />[(Source code)](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/node/bson.ts)                                   |
+| Entry point Browser/Deno | `https://cdn.jsdelivr.net/npm/async-call-rpc@latest/utils/web/bson.js`<br />[(Source code)](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/bson.ts) |
+| Dependencies             | [bson](https://npmjs.com/bson)                                                                                                                                              |
+| Example (Node)           | [./examples/node.websocket.server.js](https://github.com/Jack-Works/async-call-rpc/blob/master/examples/node.websocket.server.js)                                           |
+| Example (Deno)           | [./examples/deno.websocket.server.ts](https://github.com/Jack-Works/async-call-rpc/blob/master/examples/deno.websocket.server.ts)                                           |
+| Example (Web)            | [./examples/browser.websocket.client.js](https://github.com/Jack-Works/async-call-rpc/blob/master/examples/browser.websocket.client.js)                                     |
+
 ## Utils available if both server and client are created by this library
 
 AsyncCall has some non-standard extensions to the JSON RPC specification that can help the library easier to use. Those features aren't enabled by default.
