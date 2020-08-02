@@ -67,6 +67,6 @@
     "composite": true,
     "tsBuildInfoFile": "../temp/web.tsbuildinfo"
   },
-  "files": ["./web/broadcast.channel.ts", "./web/websocket.client.ts", "./web/worker.ts"],
+  "include": ["./web/**/*.ts"],
   "references": [{ "path": "../tsconfig.es.json" }]
 }

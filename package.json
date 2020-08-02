@@ -4,7 +4,7 @@
   "description": "A lightweight JSON RPC server & client",
   "main": "out/base.js",
   "module": "out/base.mjs",
-  "types": "./out/base.d.ts",
+  "types": "out/base.d.ts",
   "exports": {
     ".": {
       "require": "./out/base.js",
@@ -53,9 +53,12 @@
     "@microsoft/api-documenter": "^7.8.21",
     "@microsoft/api-extractor": "^7.9.2",
     "@rollup/plugin-typescript": "^5.0.1",
+    "@types/bson": "^4.0.2",
     "@types/jest": "^26.0.4",
     "@types/node": "^14.0.22",
     "@types/ws": "^7.2.6",
+    "async-call-rpc": "link:",
+    "bson": "^4.0.4",
     "jest": "^26.1.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.0.5",
@@ -67,8 +70,7 @@
     "ts-jest": "^26.1.1",
     "tslib": "^2.0.0",
     "typescript": "^3.9.6",
-    "ws": "^7.3.1",
-    "async-call-rpc": "./"
+    "ws": "^7.3.1"
   },
   "files": [
     "src",
