@@ -173,29 +173,58 @@ import * as RPC from 'async-rpc-call/base'
 
 They're not part of the core library but provided as utils to increase usability.
 
-### WebSocket Server: Node
+### (Node) WebSocket
 
-Entry point: [`async-call-rpc/utils/node/websocket.server.js`](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/node/websocket.server.ts).
+|                  | Server                                                                                                                                                            | Client                     |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| Entry point      | `async-call-rpc/utils/node/websocket.server.js`<br />[(Source code)](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/node/websocket.server.ts) | TBD                        |
+| Entry point type | CommonJS                                                                                                                                                          | CommonJS                   |
+| Dependencies     | [ws](https://npmjs.com/ws)                                                                                                                                        | [ws](https://npmjs.com/ws) |
+| Example          | [./examples/node.websocket.server.js](https://github.com/Jack-Works/async-call-rpc/blob/master/examples/node.websocket.server.js)                                 | TBD                        |
 
-Dependencies: [ws](https://npmjs.com/ws)
+### (Deno) WebSocket
 
-Example: [./examples/node.websocket.server.js](https://github.com/Jack-Works/async-call-rpc/blob/master/examples/node.websocket.server.js)
+|                  | Server                                                                                                                                                                                            | Client    |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| Entry point      | `https://cdn.jsdelivr.net/npm/async-call-rpc@latest/utils/deno/websocket.server.ts`<br />[(Source code)](https://github.com/Jack-Works/async-call-rpc/blob/master/utils/deno/websocket.server.ts) | TBD       |
+| Entry point type | ES Module                                                                                                                                                                                         | ES Module |
+| Dependencies     | Deno std                                                                                                                                                                                          | Deno std  |
+| Example          | [./examples/deno.websocket.server.ts](https://github.com/Jack-Works/async-call-rpc/blob/master/examples/deno.websocket.server.ts)                                                                 | TBD       |
 
-### WebSocket Server: Deno
+### (Web) WebSocket
 
-Entry point: [`https://cdn.jsdelivr.net/npm/async-call-rpc@3.2.0/utils/deno/websocket.server.ts`](https://github.com/Jack-Works/async-call-rpc/blob/master/utils/deno/websocket.server.ts)
+|                  | Client                                                                                                                                                                                              |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Entry point      | `https://cdn.jsdelivr.net/npm/async-call-rpc@latest/utils/web/websocket.client.js`<br />[(Source code)](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/websocket.client.ts) |
+| Entry point type | ES Module                                                                                                                                                                                           |
+| Dependencies     | Nothing                                                                                                                                                                                             |
+| Example          | [./examples/browser.websocket.client.js](https://github.com/Jack-Works/async-call-rpc/blob/master/examples/browser.websocket.client.js)                                                             |
 
-Example: [./examples/deno.websocket.server.ts](https://github.com/Jack-Works/async-call-rpc/blob/master/examples/deno.websocket.server.ts)
+### (Web) [BroadcastChannel](https://mdn.io/BroadcastChannel)
 
-### WebSocket Client: Web
+> ⚠️ Broadcast Channel is not supported by Safari yet ⚠️
 
-Entry point: [`https://cdn.jsdelivr.net/npm/async-call-rpc@3.2.0/utils/web/websocket.client.js`](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/websocket.client.ts)
+|                  | Server & Client                                                                                                                                                                                       |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Entry point      | `https://cdn.jsdelivr.net/npm/async-call-rpc@latest/utils/web/broadcast.channel.js`<br />[(Source code)](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/broadcast.channel.ts) |
+| Entry point type | ES Module                                                                                                                                                                                             |
+| Dependencies     | Nothing                                                                                                                                                                                               |
+| Example          | TBD                                                                                                                                                                                                   |
 
-Example: [./examples/browser.websocket.client.js](https://github.com/Jack-Works/async-call-rpc/blob/master/examples/browser.websocket.client.js)
+### (Web) [Worker](https://mdn.io/Worker)
 
-### [BroadcastChannel](https://mdn.io/BroadcastChannel) Server & Client: Web
+> ⚠️ Import a ES Module in a Web Worker is only supported by Chrome yet! ⚠️
 
-Entry point: [`https://cdn.jsdelivr.net/npm/async-call-rpc@3.2.0/utils/web/broadcast.channel.js`](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/broadcast.channel.ts)
+|                  | Host & Worker                                                                                                                                                                                                                                                                                          |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Entry point      | `https://cdn.jsdelivr.net/npm/async-call-rpc@latest/utils/web/webworker.js`<br />[(Source code)](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/webworker.ts)                                                                                                                  |
+| Entry point type | ES Module                                                                                                                                                                                                                                                                                              |
+| Dependencies     | Nothing                                                                                                                                                                                                                                                                                                |
+| Example          | Main frame: [./examples/browser.webworker-main.js](https://github.com/Jack-Works/async-call-rpc/blob/master/examples/browser.webworker-main.js) <br /> Worker: [./examples/browser.webworker-worker.js](https://github.com/Jack-Works/async-call-rpc/blob/master/examples/browser.webworker-worker.js) |
+
+Main frame: `new WorkerChannel(new Worker(...))`
+
+Worker: `new WorkerChannel()`
 
 ## Utils available if both server and client are created by this library
 
