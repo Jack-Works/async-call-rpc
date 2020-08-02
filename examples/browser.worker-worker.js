@@ -1,5 +1,5 @@
 import * as rpc from '../out/base.mjs'
-import { WorkerChannel } from '../utils/web/webworker.js'
+import { WorkerChannel } from '../utils/web/worker.js'
 
 const impl = {
     hello: () => 'hello from worker',
