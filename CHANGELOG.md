@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.1.0](https://github.com/Jack-Works/async-call/compare/v4.0.0...v4.1.0) (2020-08-23)
+
+
+### Features
+
+* add BSON serializer ([baee607](https://github.com/Jack-Works/async-call/commit/baee607392525ae6743cc67b3d816032b5ee4469))
+* add WebWorker ([e4fa542](https://github.com/Jack-Works/async-call/commit/e4fa54211bfcdd5a769fb8969f4d5ef666fbb180))
+
 ## [4.0.0](https://github.com/Jack-Works/async-call/compare/v3.3.0...v4.0.0) (2020-07-19)
 
 
