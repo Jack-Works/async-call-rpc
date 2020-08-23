@@ -23,7 +23,6 @@ import { removeStackHeader, RecoverError } from './utils/error'
 import { generateRandomID } from './utils/generateRandomID'
 import { normalizeStrictOptions, normalizeLogOptions } from './utils/normalizeOptions'
 import { AsyncCallIgnoreResponse, AsyncCallNotify, AsyncCallBatch } from './utils/internalSymbol'
-import { preservePauseOnException as preservePauseOnExceptionCaller } from './utils/preservePauseOnException'
 import { BatchQueue } from './core/batch'
 import { CallbackBasedChannel, EventBasedChannel } from './index'
 
@@ -147,14 +146,7 @@ export interface AsyncCallOptions {
      */
     preferLocalImplementation?: boolean
     /**
-     * (Browser) Try to preserve the browser "pause on uncaught exception".
-     * @remarks
-     * This options only works for the browser.
-     *
-     * DON'T use it in production. Use it like "preservePauseOnException": process.env.NODE_ENV === "development"
-     *
-     * It's based on a hacky way to preserve the breakpoint. If you find your the server function isn't get called or called twice, try to close this option.
-     *
+     * @deprecated Cause it doesn't work well
      * @defaultValue false
      */
     preservePauseOnException?: boolean
@@ -208,7 +200,9 @@ export type _IgnoreResponse<T> = T extends (...args: infer Args) => unknown
           [key in keyof T]: T[key] extends (...args: infer Args) => unknown ? (...args: Args) => Promise<void> : never
       }
 
-const AsyncCallDefaultOptions = (<T extends Omit<Required<AsyncCallOptions>, 'channel' | 'logger' | 'mapError'>>(
+const AsyncCallDefaultOptions = (<
+    T extends Omit<Required<AsyncCallOptions>, 'preservePauseOnException' | 'channel' | 'logger' | 'mapError'>
+>(
     a: T,
 ) => a)({
     serializer: NoSerialization,
@@ -217,7 +211,6 @@ const AsyncCallDefaultOptions = (<T extends Omit<Required<AsyncCallOptions>, 'ch
     log: true,
     parameterStructures: 'by-position',
     preferLocalImplementation: false,
-    preservePauseOnException: false,
     idGenerator: generateRandomID,
 })
 
@@ -253,7 +246,6 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         log,
         parameterStructures,
         preferLocalImplementation,
-        preservePauseOnException,
         idGenerator,
         mapError,
         logger,
@@ -293,14 +285,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             const { params } = data
             const args = Array.isArray(params) ? params : [params]
             frameworkStack = removeStackHeader(new Error().stack)
-            const promise = preservePauseOnException
-                ? preservePauseOnExceptionCaller(
-                      (x) => (frameworkStack = x),
-                      executor,
-                      resolvedThisSideImplementation,
-                      args,
-                  )
-                : new Promise((resolve) => resolve(executor.apply(resolvedThisSideImplementation, args)))
+            const promise = new Promise((resolve) => resolve(executor.apply(resolvedThisSideImplementation, args)))
             if (logBeCalled) {
                 if (logType === 'basic') console.log(`${logKey}.${data.method}(${[...args].toString()}) @${data.id}`)
                 else {

@@ -29,6 +29,7 @@ export interface AsyncCallOptions {
     mapError?: ErrorMapFunction<unknown>;
     parameterStructures?: 'by-position' | 'by-name';
     preferLocalImplementation?: boolean;
+    // @deprecated (undocumented)
     preservePauseOnException?: boolean;
     serializer?: Serialization;
     strict?: AsyncCallStrictJSONRPC | boolean;

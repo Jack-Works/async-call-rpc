@@ -16,21 +16,6 @@ test('DOMException', async () => {
     ).toMatchSnapshot()
 })
 
-test('preservePauseOnException', async () => {
-    const { preservePauseOnException } = await import('../src/utils/preservePauseOnException')
-    const { createServer } = await import('./shared')
-
-    const e = () => {}
-    await expect(preservePauseOnException(e, async () => 1, undefined, [])).resolves.toBe(1)
-    // const throws = async () => {
-    //     // Jest cannot let us test unhandledRejection well https://github.com/facebook/jest/issues/5620
-    //     throw new Error('unhandledRejection test')
-    // }
-    // await expect(preservePauseOnException(e, throws, [])).rejects.toMatchInlineSnapshot()
-    const x = createServer({ preservePauseOnException: true })
-    await expect(x.add(1, 2)).resolves.toBe(3)
-}, 2000)
-
 beforeAll(() => {
     globalThis.DOMException = Exception as any
     globalThis.document = {

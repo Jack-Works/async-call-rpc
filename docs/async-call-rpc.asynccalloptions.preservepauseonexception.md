@@ -4,19 +4,13 @@
 
 ## AsyncCallOptions.preservePauseOnException property
 
-(Browser) Try to preserve the browser "pause on uncaught exception".
+> Warning: This API is now obsolete.
+> 
+> Cause it doesn't work well
+> 
 
 <b>Signature:</b>
 
 ```typescript
 preservePauseOnException?: boolean;
 ```
-
-## Remarks
-
-This options only works for the browser.
-
-DON'T use it in production. Use it like "preservePauseOnException": process.env.NODE\_ENV === "development"
-
-It's based on a hacky way to preserve the breakpoint. If you find your the server function isn't get called or called twice, try to close this option.
-
