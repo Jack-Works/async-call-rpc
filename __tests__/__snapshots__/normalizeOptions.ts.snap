@@ -1,92 +1,93 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`normalize log options 1`] = `
-Object {
-  "beCalled": true,
-  "localError": true,
-  "remoteError": true,
-  "type": "pretty",
-}
+Array [
+  true,
+  true,
+  true,
+  true,
+]
 `;
 
-exports[`normalize log options 2`] = `
-Object {
-  "beCalled": false,
-  "localError": false,
-  "remoteError": false,
-  "type": "basic",
-}
-`;
+exports[`normalize log options 2`] = `Array []`;
 
 exports[`normalize log options 3`] = `
-Object {
-  "beCalled": true,
-  "localError": false,
-}
+Array [
+  true,
+  false,
+  undefined,
+  true,
+  undefined,
+  undefined,
+]
 `;
 
 exports[`normalize strict options 1`] = `
-Object {
-  "methodNotFound": true,
-  "unknownMessage": true,
-}
+Array [
+  true,
+  true,
+]
 `;
 
 exports[`normalize strict options 2`] = `
-Object {
-  "methodNotFound": false,
-  "unknownMessage": false,
-}
+Array [
+  false,
+  false,
+]
 `;
 
 exports[`normalize strict options 3`] = `
-Object {
-  "methodNotFound": false,
-  "unknownMessage": false,
-}
+Array [
+  false,
+  false,
+]
 `;
 
 exports[`normalize strict options 4`] = `
-Object {
-  "methodNotFound": false,
-  "unknownMessage": true,
-}
+Array [
+  false,
+  true,
+]
 `;
 
 exports[`normalize strict options 5`] = `
-Object {
-  "methodNotFound": true,
-  "unknownMessage": false,
-}
+Array [
+  true,
+  false,
+]
 `;
 
 exports[`normalize strict options 6`] = `
-Object {
-  "methodNotFound": true,
-  "unknownMessage": true,
-}
+Array [
+  true,
+  true,
+]
 `;
 
 exports[`normalize strict options 7`] = `
-Object {
-  "methodNotFound": false,
-}
+Array [
+  false,
+  undefined,
+]
 `;
 
 exports[`normalize strict options 8`] = `
-Object {
-  "methodNotFound": true,
-}
+Array [
+  true,
+  undefined,
+]
 `;
 
 exports[`normalize strict options 9`] = `
-Object {
-  "unknownMessage": false,
-}
+Array [
+  undefined,
+  false,
+]
 `;
 
 exports[`normalize strict options 10`] = `
-Object {
-  "unknownMessage": true,
-}
+Array [
+  undefined,
+  true,
+]
 `;

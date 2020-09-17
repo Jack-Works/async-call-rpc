@@ -1,5 +1,6 @@
-import { DOMException, DOMExceptionHeader } from './error'
+import { globalDOMException as DOMException, DOMExceptionHeader } from './error'
 import { ErrorMapFunction } from '../Async-Call'
+import { ERROR, isArray, isBoolean, isFunction, isObject, isString, undefined } from './constants'
 
 export const jsonrpc = '2.0'
 export type ID = string | number | null | undefined
@@ -15,7 +16,7 @@ export interface Request
         remoteStack?: string
     }> {}
 
-export function Request(id: ID, method: string, params: readonly unknown[] | object, remoteStack?: string): Request {
+export const Request = (id: ID, method: string, params: readonly unknown[] | object, remoteStack?: string): Request => {
     const x: Request = { jsonrpc, id, method, params, remoteStack }
     deleteUndefined(x, 'id')
     deleteFalsy(x, 'remoteStack')
@@ -31,7 +32,7 @@ export interface SuccessResponse
         id?: ID
         result: unknown
     }> {}
-export function SuccessResponse(id: ID, result: unknown): SuccessResponse {
+export const SuccessResponse = (id: ID, result: unknown): SuccessResponse => {
     const x: SuccessResponse = { jsonrpc, id, result }
     deleteUndefined(x, 'id')
     return x
@@ -48,7 +49,7 @@ export interface ErrorResponse<E = unknown>
         error: Readonly<{ code: number; message: string; data?: E }>
     }> {}
 
-export function ErrorResponse<T>(id: ID, code: number, message: string, data?: T): ErrorResponse<T> {
+export const ErrorResponse = <T>(id: ID, code: number, message: string, data?: T): ErrorResponse<T> => {
     if (id === undefined) id = null
     code = Math.floor(code)
     if (Number.isNaN(code)) code = -1
@@ -57,7 +58,8 @@ export function ErrorResponse<T>(id: ID, code: number, message: string, data?: T
     return x
 }
 // Pre defined error in section 5.1
-ErrorResponse.ParseError = <T>(e: unknown, mapper: ErrorMapFunction<T>): ErrorResponse<T> => {
+// ! side effect
+export const ErrorResponseParseError = <T>(e: unknown, mapper: ErrorMapFunction<T>): ErrorResponse<T> => {
     const obj = ErrorResponseMapped({} as any, e, mapper)
     const o = obj.error as Mutable<ErrorResponse['error']>
     o.code = -32700
@@ -68,14 +70,14 @@ ErrorResponse.ParseError = <T>(e: unknown, mapper: ErrorMapFunction<T>): ErrorRe
 // Not using.
 // InvalidParams -32602 'Invalid params'
 // InternalError -32603 'Internal error'
-ErrorResponse.InvalidRequest = (id: ID) => ErrorResponse(id, -32600, 'Invalid Request')
-ErrorResponse.MethodNotFound = (id: ID) => ErrorResponse(id, -32601, 'Method not found')
+export const ErrorResponseInvalidRequest = (id: ID) => ErrorResponse(id, -32600, 'Invalid Request')
+export const ErrorResponseMethodNotFound = (id: ID) => ErrorResponse(id, -32601, 'Method not found')
 
 type AsyncCallErrorDetail = {
     stack?: string
     type?: string
 }
-export function ErrorResponseMapped<T>(request: Request, e: unknown, mapper: ErrorMapFunction<T>): ErrorResponse<T> {
+export const ErrorResponseMapped = <T>(request: Request, e: unknown, mapper: ErrorMapFunction<T>): ErrorResponse<T> => {
     const { id } = request
     const { code, message, data } = mapper(e, request)
     return ErrorResponse(id, code, message, data)
@@ -83,11 +85,11 @@ export function ErrorResponseMapped<T>(request: Request, e: unknown, mapper: Err
 
 export const defaultErrorMapper = (stack = '', code = -1): ErrorMapFunction<AsyncCallErrorDetail> => (e) => {
     let message = ''
-    if (isObject(e) && hasKey(e, 'message') && typeof e.message === 'string') message = e.message
-    let type = toString('Error', () => (e as any)?.constructor?.name)
+    if (isObject(e) && hasKey(e, 'message') && isString(e.message)) message = e.message
+    let type = toString(ERROR, (ctor = (e as any).constructor) => isFunction(ctor) && ctor.name)
     if (DOMException && e instanceof DOMException) type = DOMExceptionHeader + e.name
-    if (typeof e === 'string' || typeof e === 'number' || typeof e === 'boolean' || typeof e === 'bigint') {
-        type = 'Error'
+    if (isString(e) || typeof e === 'number' || isBoolean(e) || typeof e === 'bigint') {
+        type = ERROR
         message = String(e)
     }
     const data: AsyncCallErrorDetail = stack ? { stack, type } : { type }
@@ -99,43 +101,39 @@ export const defaultErrorMapper = (stack = '', code = -1): ErrorMapFunction<Asyn
  */
 export type Response = SuccessResponse | ErrorResponse
 
-export function isJSONRPCObject(data: any): data is Response | Request {
+export const isJSONRPCObject = (data: any): data is Response | Request => {
     if (!isObject(data)) return false
     if (!hasKey(data, 'jsonrpc')) return false
     if (data.jsonrpc !== jsonrpc) return false
     if (hasKey(data, 'params')) {
         const params = (data as Request).params
-        if (!Array.isArray(params) && !isObject(params)) return false
+        if (!isArray(params) && !isObject(params)) return false
     }
     return true
 }
 
-export function isObject(params: any): params is object {
-    return typeof params === 'object' && params !== null
-}
+export { isObject } from './constants'
 
-export function hasKey<T, Q extends string>(
+export const hasKey = <T, Q extends string>(
     obj: T,
     key: Q,
 ): obj is T &
     {
         [key in Q]: unknown
-    } {
-    return key in obj
-}
+    } => key in obj
 
-function toString(def: string, val: () => any) {
+const toString = (def: string, val: () => any) => {
     let str = def
     try {
         str = val()
     } catch {}
-    if (typeof str !== 'string') return def
+    if (!isString(str)) return def
     return str
 }
-function deleteUndefined<O>(x: O, key: keyof O) {
+const deleteUndefined = <O>(x: O, key: keyof O) => {
     if (x[key] === undefined) delete x[key]
 }
-function deleteFalsy<T>(x: T, key: keyof T) {
+const deleteFalsy = <T>(x: T, key: keyof T) => {
     if (!x[key]) delete x[key]
 }
 type Mutable<T> = { -readonly [key in keyof T]: T[key] }

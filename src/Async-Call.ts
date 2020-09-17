@@ -4,7 +4,7 @@
 
 import { Serialization, NoSerialization } from './utils/serialization'
 export { JSONSerialization, NoSerialization, Serialization } from './utils/serialization'
-import { Console, getConsole } from './utils/console'
+import type { Console } from './utils/console'
 export { Console } from './utils/console'
 export { notify } from './core/notify'
 export { batch } from './core/batch'
@@ -18,6 +18,9 @@ import {
     isObject,
     ErrorResponse,
     defaultErrorMapper,
+    ErrorResponseMethodNotFound,
+    ErrorResponseInvalidRequest,
+    ErrorResponseParseError,
 } from './utils/jsonrpc'
 import { removeStackHeader, RecoverError } from './utils/error'
 import { generateRandomID } from './utils/generateRandomID'
@@ -25,6 +28,7 @@ import { normalizeStrictOptions, normalizeLogOptions } from './utils/normalizeOp
 import { AsyncCallIgnoreResponse, AsyncCallNotify, AsyncCallBatch } from './utils/internalSymbol'
 import { BatchQueue } from './core/batch'
 import { CallbackBasedChannel, EventBasedChannel } from './index'
+import { ERROR, isArray, isFunction, isString, Promise_reject, Promise_resolve, undefined } from './utils/constants'
 
 /**
  * What should AsyncCall log to console.
@@ -200,20 +204,6 @@ export type _IgnoreResponse<T> = T extends (...args: infer Args) => unknown
           [key in keyof T]: T[key] extends (...args: infer Args) => unknown ? (...args: Args) => Promise<void> : never
       }
 
-const AsyncCallDefaultOptions = (<
-    T extends Omit<Required<AsyncCallOptions>, 'preservePauseOnException' | 'channel' | 'logger' | 'mapError'>
->(
-    a: T,
-) => a)({
-    serializer: NoSerialization,
-    key: 'jsonrpc',
-    strict: true,
-    log: true,
-    parameterStructures: 'by-position',
-    preferLocalImplementation: false,
-    idGenerator: generateRandomID,
-})
-
 /**
  * Create a RPC server & client.
  *
@@ -232,65 +222,65 @@ const AsyncCallDefaultOptions = (<
  * @returns Same as the `OtherSideImplementedFunctions` type parameter, but every function in that interface becomes async and non-function value is removed.
  * @public
  */
-export function AsyncCall<OtherSideImplementedFunctions = {}>(
+export const AsyncCall = <OtherSideImplementedFunctions = {}>(
     thisSideImplementation: object | Promise<object> = {},
     options: AsyncCallOptions,
-): _AsyncVersionOf<OtherSideImplementedFunctions> {
+): _AsyncVersionOf<OtherSideImplementedFunctions> => {
     let resolvedThisSideImplementation: object | undefined = undefined
     if (!(thisSideImplementation instanceof Promise)) resolvedThisSideImplementation = thisSideImplementation
-    Promise.resolve(thisSideImplementation).then((x) => (resolvedThisSideImplementation = x))
+    Promise_resolve(thisSideImplementation).then((x) => (resolvedThisSideImplementation = x))
+
     const {
-        serializer,
-        key: logKey,
-        strict,
-        log,
-        parameterStructures,
-        preferLocalImplementation,
-        idGenerator,
+        serializer = NoSerialization,
+        key: logKey = 'jsonrpc',
+        strict = true,
+        log = true,
+        parameterStructures = 'by-position',
+        preferLocalImplementation = false,
+        idGenerator = generateRandomID,
         mapError,
         logger,
         channel,
-    } = {
-        ...AsyncCallDefaultOptions,
-        ...options,
-    }
+    } = options
+    const [banMethodNotFound, banUnknownMessage] = normalizeStrictOptions(strict)
+    const [
+        log_beCalled,
+        log_localError,
+        log_remoteError,
+        log_pretty,
+        log_requestReplay,
+        log_sendLocalStack,
+    ] = normalizeLogOptions(log)
     const {
-        methodNotFound: banMethodNotFound = false,
-        unknownMessage: banUnknownMessage = false,
-    } = normalizeStrictOptions(strict)
-    const {
-        beCalled: logBeCalled = true,
-        localError: logLocalError = true,
-        remoteError: logRemoteError = true,
-        type: logType = 'pretty',
-        sendLocalStack = false,
-        requestReplay = false,
-    } = normalizeLogOptions(log)
-    const console = getConsole(logger)
-    type PromiseParam = Parameters<ConstructorParameters<typeof Promise>[0]>
+        log: console_log,
+        error: console_error = console_log,
+        debug: console_debug = console_log,
+        groupCollapsed: console_groupCollapsed = console_log,
+        groupEnd: console_groupEnd = console_log,
+    } = (logger || console) as Console
+    type PromiseParam = [resolve: (value?: any) => void, reject: (reason?: any) => void]
     const requestContext = new Map<string | number, { f: PromiseParam; stack: string }>()
-    async function onRequest(data: Request): Promise<Response | undefined> {
+    const onRequest = async (data: Request): Promise<Response | undefined> => {
         if (!resolvedThisSideImplementation) await thisSideImplementation
         let frameworkStack: string = ''
         try {
+            const { params, method, id: req_id, remoteStack } = data
             // ? We're mapping any method starts with 'rpc.' to a Symbol.for
-            const key = (data.method.startsWith('rpc.') ? Symbol.for(data.method) : data.method) as keyof object
+            const key = (method.startsWith('rpc.') ? Symbol.for(method) : method) as keyof object
             const executor: unknown = resolvedThisSideImplementation![key]
-            if (typeof executor !== 'function') {
+            if (!isFunction(executor)) {
                 if (!banMethodNotFound) {
-                    if (logLocalError) console.debug('Receive remote call, but not implemented.', key, data)
+                    if (log_localError) console_debug('Missing method', key, data)
                     return
-                } else return ErrorResponse.MethodNotFound(data.id)
+                } else return ErrorResponseMethodNotFound(req_id)
             }
-            const { params } = data
-            const args = Array.isArray(params) ? params : [params]
+            const args = isArray(params) ? params : [params]
             frameworkStack = removeStackHeader(new Error().stack)
             const promise = new Promise((resolve) => resolve(executor.apply(resolvedThisSideImplementation, args)))
-            if (logBeCalled) {
-                if (logType === 'basic') console.log(`${logKey}.${data.method}(${[...args].toString()}) @${data.id}`)
-                else {
+            if (log_beCalled) {
+                if (log_pretty) {
                     const logArgs: unknown[] = [
-                        `${logKey}.%c${data.method}%c(${args.map(() => '%o').join(', ')}%c)\n%o %c@${data.id}`,
+                        `${logKey}.%c${method}%c(${args.map(() => '%o').join(', ')}%c)\n%o %c@${req_id}`,
                         'color: #d2c057',
                         '',
                         ...args,
@@ -298,56 +288,59 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                         promise,
                         'color: gray; font-style: italic;',
                     ]
-                    if (requestReplay)
+                    if (log_requestReplay)
                         logArgs.push(() => {
                             debugger
                             return executor.apply(resolvedThisSideImplementation, args)
                         })
-                    if (data.remoteStack) {
-                        console.groupCollapsed(...logArgs)
-                        console.log(data.remoteStack)
-                        console.groupEnd()
-                    } else console.log(...logArgs)
-                }
+                    if (remoteStack) {
+                        console_groupCollapsed(...logArgs)
+                        console_log(remoteStack)
+                        console_groupEnd()
+                    } else console_log(...logArgs)
+                } else console_log(`${logKey}.${method}(${[...args].toString()}) @${req_id}`)
             }
             const result = await promise
             if (result === AsyncCallIgnoreResponse) return
-            return SuccessResponse(data.id, await promise)
+            return SuccessResponse(req_id, await promise)
         } catch (e) {
-            if (typeof e === 'object' && 'stack' in e)
+            if (isObject(e) && hasKey(e, 'stack'))
                 e.stack = frameworkStack
                     .split('\n')
-                    .reduce((stack, fstack) => stack.replace(fstack + '\n', ''), e.stack || '')
-            if (logLocalError) console.error(e)
-            return ErrorResponseMapped(data, e, mapError || defaultErrorMapper(sendLocalStack ? e.stack : void 0))
+                    .reduce((stack, fstack) => stack.replace(fstack + '\n', ''), '' + e.stack || '')
+            if (log_localError) console_error(e)
+            return ErrorResponseMapped(
+                data,
+                e,
+                mapError || defaultErrorMapper(log_sendLocalStack ? e.stack : undefined),
+            )
         }
     }
-    async function onResponse(data: Response): Promise<undefined> {
+    const onResponse = async (data: Response): Promise<void> => {
         let errorMessage = '',
             remoteErrorStack = '',
             errorCode = 0,
-            errorType = 'Error'
+            errorType = ERROR
         if (hasKey(data, 'error')) {
             const e = data.error
             errorMessage = e.message
             errorCode = e.code
             const detail = e.data
 
-            if (isObject(detail) && hasKey(detail, 'stack') && typeof detail.stack === 'string')
-                remoteErrorStack = detail.stack
+            if (isObject(detail) && hasKey(detail, 'stack') && isString(detail.stack)) remoteErrorStack = detail.stack
             else remoteErrorStack = '<remote stack not available>'
 
-            if (isObject(detail) && hasKey(detail, 'type') && typeof detail.type === 'string') errorType = detail.type
-            else errorType = 'Error'
+            if (isObject(detail) && hasKey(detail, 'type') && isString(detail.type)) errorType = detail.type
+            else errorType = ERROR
 
-            if (logRemoteError)
-                logType === 'basic'
-                    ? console.error(`${errorType}: ${errorMessage}(${errorCode}) @${data.id}\n${remoteErrorStack}`)
-                    : console.error(
+            if (log_remoteError)
+                log_pretty
+                    ? console_error(
                           `${errorType}: ${errorMessage}(${errorCode}) %c@${data.id}\n%c${remoteErrorStack}`,
                           'color: gray',
                           '',
                       )
+                    : console_error(`${errorType}: ${errorMessage}(${errorCode}) @${data.id}\n${remoteErrorStack}`)
         }
         if (data.id === null || data.id === undefined) return
         const {
@@ -369,68 +362,89 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         } else {
             resolve(data.result)
         }
-        return undefined
+        return
     }
-    async function rawMessageReceiver(_: unknown): Promise<undefined | Response | (Response | undefined)[]> {
+    const rawMessageReceiver = async (_: unknown): Promise<undefined | Response | (Response | undefined)[]> => {
         let data: unknown
         let result: Response | undefined = undefined
         try {
-            data = await serializer.deserialization(_)
+            data = await deserialization(_)
             if (isJSONRPCObject(data)) {
                 return (result = await handleSingleMessage(data))
-            } else if (Array.isArray(data) && data.every(isJSONRPCObject) && data.length !== 0) {
+            } else if (isArray(data) && data.every(isJSONRPCObject) && data.length !== 0) {
                 const result = await Promise.all(data.map(handleSingleMessage))
                 // ? Response
                 if (data.every((x) => x === undefined)) return
                 return result.filter((x) => x)
             } else {
                 if (banUnknownMessage) {
-                    return ErrorResponse.InvalidRequest((data as any).id ?? null)
+                    let id = (data as any).id
+                    if (id === undefined) id = null
+                    return ErrorResponseInvalidRequest(id)
                 } else {
                     // ? Ignore this message. The message channel maybe also used to transfer other message too.
                     return undefined
                 }
             }
         } catch (e) {
-            if (logLocalError) console.error(e, data, result)
-            return ErrorResponse.ParseError(e, mapError || defaultErrorMapper(e?.stack))
+            if (log_localError) console_error(e, data, result)
+            return ErrorResponseParseError(e, mapError || defaultErrorMapper(e && e.stack))
         }
     }
-    async function rawMessageSender(res: undefined | Response | (Response | undefined)[]) {
+    const rawMessageSender = async (res: undefined | Response | (Response | undefined)[]) => {
         if (!res) return
-        if (Array.isArray(res)) {
+        if (isArray(res)) {
             const reply = res.filter((x) => hasKey(x, 'id'))
             if (reply.length === 0) return
-            return serializer.serialization(reply)
+            return serialization(reply)
         } else {
             // ? This is a Notification, we MUST not return it.
             if (!hasKey(res, 'id')) return
-            return serializer.serialization(res)
+            return serialization(res)
         }
     }
-    function isEventBasedChannel(x: typeof channel): x is EventBasedChannel {
-        return hasKey(x, 'send') && typeof x.send === 'function'
-    }
-    function isCallbackBasedChannel(x: typeof channel): x is CallbackBasedChannel {
-        return hasKey(x, 'setup') && typeof x.setup === 'function'
-    }
+    const serialization = (x: unknown) => serializer.serialization(x)
+    const deserialization = (x: unknown) => serializer.deserialization(x)
+    const isEventBasedChannel = (x: typeof channel): x is EventBasedChannel => hasKey(x, 'send') && isFunction(x.send)
+    const isCallbackBasedChannel = (x: typeof channel): x is CallbackBasedChannel =>
+        hasKey(x, 'setup') && isFunction(x.setup)
+
     if (isCallbackBasedChannel(channel)) {
         channel.setup(
             (data) => rawMessageReceiver(data).then(rawMessageSender),
             (data) => {
-                const _ = serializer.deserialization(data)
+                const _ = deserialization(data)
                 if (isJSONRPCObject(_)) return true
-                return Promise.resolve(_).then(isJSONRPCObject)
+                return Promise_resolve(_).then(isJSONRPCObject)
             },
         )
     }
     if (isEventBasedChannel(channel)) {
         const m = channel as EventBasedChannel | CallbackBasedChannel
-        m.on?.((_) =>
-            rawMessageReceiver(_)
-                .then(rawMessageSender)
-                .then((x) => x && m.send!(x)),
-        )
+        m.on &&
+            m.on((_) =>
+                rawMessageReceiver(_)
+                    .then(rawMessageSender)
+                    .then((x) => x && m.send!(x)),
+            )
+    }
+    const sendPayload = async (payload: unknown) => {
+        const data = await serialization(payload)
+        return channel.send!(data)
+    }
+    const rejectsQueue = (queue: BatchQueue, error: unknown) => {
+        for (const x of queue) {
+            if (hasKey(x, 'id')) {
+                const ctx = requestContext.get(x.id!)
+                ctx && ctx.f[1](error)
+            }
+        }
+    }
+    const handleSingleMessage = (
+        data: SuccessResponse | ErrorResponse | Request,
+    ): Promise<SuccessResponse | ErrorResponse | undefined> => {
+        if (hasKey(data, 'method')) return onRequest(data)
+        return onResponse(data) as Promise<undefined>
     }
     return new Proxy(
         {},
@@ -447,28 +461,28 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                         const RPCInternalMethod = Symbol.keyFor(method) || (method as any).description
                         if (RPCInternalMethod) {
                             if (RPCInternalMethod.startsWith('rpc.')) method = RPCInternalMethod
-                            else return Promise.reject('[AsyncCall] An internal method must start with "rpc."')
+                            else return Promise_reject('Not start with rpc.')
                         }
                     } else if (method.startsWith('rpc.'))
-                        return Promise.reject(new TypeError("[AsyncCall] Can't call internal methods directly"))
-                    if (preferLocalImplementation && resolvedThisSideImplementation && typeof method === 'string') {
+                        return Promise_reject(new TypeError('No direct call to internal methods'))
+                    if (preferLocalImplementation && resolvedThisSideImplementation && isString(method)) {
                         const localImpl: unknown = resolvedThisSideImplementation[method as keyof object]
-                        if (localImpl && typeof localImpl === 'function') {
+                        if (localImpl && isFunction(localImpl)) {
                             return new Promise((resolve) => resolve(localImpl(...params)))
                         }
                     }
-                    return new Promise((resolve, reject) => {
+                    return new Promise<void>((resolve, reject) => {
                         const id = idGenerator()
                         const [param0] = params
-                        const sendingStack = sendLocalStack ? stack : ''
+                        const sendingStack = log_sendLocalStack ? stack : ''
                         const param =
                             parameterStructures === 'by-name' && params.length === 1 && isObject(param0)
                                 ? param0
                                 : params
-                        const request = Request(notify ? void 0 : id, method as string, param, sendingStack)
+                        const request = Request(notify ? undefined : id, method as string, param, sendingStack)
                         if (queue) {
                             queue.push(request)
-                            if (!queue.r) queue.r = [() => sendPayload(queue), rejectsQueue.bind(queue)]
+                            if (!queue.r) queue.r = [() => sendPayload(queue), (e) => rejectsQueue(queue!, e)]
                         } else sendPayload(request).catch(reject)
                         if (notify) return resolve()
                         requestContext.set(id, {
@@ -486,19 +500,6 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             },
         },
     ) as _AsyncVersionOf<OtherSideImplementedFunctions>
-    async function sendPayload(payload: unknown) {
-        const data = await serializer.serialization(payload)
-        return channel.send!(data)
-    }
-    function rejectsQueue(this: BatchQueue, error: unknown) {
-        for (const x of this) {
-            if (hasKey(x, 'id')) requestContext.get(x.id!)?.f[1](error)
-        }
-    }
-    async function handleSingleMessage(
-        data: SuccessResponse | ErrorResponse | Request,
-    ): Promise<SuccessResponse | ErrorResponse | undefined> {
-        if (hasKey(data, 'method')) return onRequest(data)
-        return onResponse(data)
-    }
 }
+// Assume a console object in global if there is no custom logger provided
+declare const console: Console

@@ -1,5 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`AsyncCall CallbackBased interface 1`] = `[Error: impl error]`;
+
+exports[`AsyncCall CallbackBased interface 2`] = `[Error: Method not found]`;
+
+exports[`AsyncCall basic test 1`] = `[Error: impl error]`;
+
+exports[`AsyncCall basic test 2`] = `[Error: Method not found]`;
+
 exports[`AsyncCall basic test: no logs console.debug 1`] = `Array []`;
 
 exports[`AsyncCall basic test: no logs console.error 1`] = `Array []`;
@@ -12,10 +20,18 @@ exports[`AsyncCall basic test: no logs console.log 1`] = `Array []`;
 
 exports[`AsyncCall basic test: no logs console.warn 1`] = `Array []`;
 
+exports[`AsyncCall batch test 1`] = `[Error: I prefer multiply than add]`;
+
+exports[`AsyncCall batch test 2`] = `[Error: I prefer multiply than add]`;
+
+exports[`AsyncCall internal JSON RPC methods: call internal directly 1`] = `[TypeError: No direct call to internal methods]`;
+
+exports[`AsyncCall internal JSON RPC methods: call internal with a non-rpc symbol 1`] = `"Not start with rpc."`;
+
 exports[`AsyncCall logs: normal log console.debug 1`] = `
 Array [
   Array [
-    "Receive remote call, but not implemented.",
+    "Missing method",
     "add2",
     Object {
       "id": 0.9601702866503661,
@@ -132,3 +148,5 @@ Array [
 `;
 
 exports[`AsyncCall logs: normal log console.warn 1`] = `Array []`;
+
+exports[`AsyncCall strict JSON RPC 1`] = `[Error: Method not found]`;

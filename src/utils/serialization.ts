@@ -1,6 +1,7 @@
 //#region Serialization
 
 import { isObject, hasKey } from './jsonrpc'
+import { undefined } from './constants'
 
 /**
  * Serialization and deserialization of the JSON RPC payload
@@ -59,7 +60,7 @@ export const JSONSerialization = (
 ): Serialization => ({
     serialization(from) {
         if (undefinedKeepingBehavior && isObject(from) && hasKey(from, 'result') && from.result === undefined) {
-            const alt = Object.assign({}, from)
+            const alt = { ...from }
             alt.result = null
             if (undefinedKeepingBehavior === 'keep') (alt as any).undef = true
             from = alt

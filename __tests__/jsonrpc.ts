@@ -6,6 +6,9 @@ import {
     isJSONRPCObject,
     isObject,
     ErrorResponseMapped,
+    ErrorResponseInvalidRequest,
+    ErrorResponseMethodNotFound,
+    ErrorResponseParseError,
 } from '../src/utils/jsonrpc'
 test('Request', () => {
     expect(Request('id', 'method', ['param1', 'param2'], 'stack')).toMatchSnapshot('req1')
@@ -23,10 +26,10 @@ test('ErrorResponse', () => {
     expect(ErrorResponse(undefined, 0, '')).toMatchSnapshot()
     expect(ErrorResponse('', -0, '')).toMatchSnapshot()
     expect(ErrorResponse('', NaN, '')).toMatchSnapshot()
-    expect(ErrorResponse.InvalidRequest('id')).toMatchSnapshot('invalid req')
-    expect(ErrorResponse.MethodNotFound('id')).toMatchSnapshot('method not found')
+    expect(ErrorResponseInvalidRequest('id')).toMatchSnapshot('invalid req')
+    expect(ErrorResponseMethodNotFound('id')).toMatchSnapshot('method not found')
     expect(
-        ErrorResponse.ParseError(new Error(), () => ({
+        ErrorResponseParseError(new Error(), () => ({
             code: 2345,
             message: 'My message',
             data: { my_data: true },

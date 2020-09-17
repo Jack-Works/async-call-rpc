@@ -9,19 +9,4 @@ export interface Console {
     groupCollapsed?(...args: unknown[]): void
     groupEnd?(...args: unknown[]): void
     error?(...args: unknown[]): void
-    warn?(...args: unknown[]): void
-}
-export function getConsole(_console?: Console): Required<Console> {
-    const console: Console = _console || (globalThis as any).console
-    const defaultLog = (...args: unknown[]) => console.log(...args)
-
-    const defaultConsole = {
-        debug: defaultLog,
-        error: defaultLog,
-        groupCollapsed: defaultLog,
-        groupEnd: defaultLog,
-        log: defaultLog,
-        warn: defaultLog,
-    }
-    return Object.assign({}, defaultConsole, console)
 }

@@ -1,3 +1,5 @@
-export const AsyncCallIgnoreResponse = Symbol.for('AsyncCall/ignored')
-export const AsyncCallNotify = Symbol.for('AsyncCall/notify')
-export const AsyncCallBatch = Symbol.for('AsyncCall/batch')
+const i = 'AsyncCall/'
+// ! side effect
+export const AsyncCallIgnoreResponse = Symbol.for(i + 'ignored')
+export const AsyncCallNotify = Symbol.for(i + 'notify')
+export const AsyncCallBatch = Symbol.for(i + 'batch')

@@ -1,3 +1,1 @@
-export function generateRandomID() {
-    return Math.random().toString(36).slice(2)
-}
+export const generateRandomID = () => Math.random().toString(36).slice(2)

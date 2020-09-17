@@ -5,8 +5,8 @@ class Exception extends Error {
 }
 test('DOMException', async () => {
     const { defaultErrorMapper, ErrorResponseMapped, Request } = await import('../src/utils/jsonrpc')
-    const { DOMException, DOMExceptionHeader, RecoverError } = await import('../src/utils/error')
-    expect(DOMException).not.toBeUndefined()
+    const { globalDOMException, DOMExceptionHeader, RecoverError } = await import('../src/utils/error')
+    expect(globalDOMException).not.toBeUndefined()
     const e = RecoverError(DOMExceptionHeader + 'MyError', 'Message', 0, '')
     expect(e).toMatchSnapshot()
     expect(e).toBeInstanceOf(Exception)

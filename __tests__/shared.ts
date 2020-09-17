@@ -81,6 +81,7 @@ export async function timeout<T>(x: Promise<T>): Promise<T> {
 }
 
 export function mockError() {
+    const orig = Error
     globalThis.Error = class E extends Error {
         constructor(msg: string) {
             super(msg)
@@ -95,5 +96,9 @@ export function mockError() {
             e.stack = '<mocked stack>'
             throw e
         }
+    }
+    return () => {
+        globalThis.Error = orig
+        JSON.parse = old
     }
 }

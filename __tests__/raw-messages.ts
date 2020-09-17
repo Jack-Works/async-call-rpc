@@ -24,7 +24,7 @@ test('Batch messages', async () => {
 })
 
 test('Bad messages', async () => {
-    mockError()
+    const done = mockError()
     const json = JSONSerialization()
     const invalidRequests = [
         // invalid request
@@ -53,6 +53,7 @@ test('Bad messages', async () => {
             ),
         invalidRequests,
     )
+    done()
 })
 
 test('AsyncGeneratorCall', async () => {

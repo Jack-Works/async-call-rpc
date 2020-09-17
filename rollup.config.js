@@ -53,11 +53,16 @@ function outputMatrix(name, format) {
                 compress: {
                     unsafe: true,
                     ecma: 2018,
+                    passes: 3,
                     unsafe_arrows: true,
-                    passes: 2,
                     unsafe_symbols: true,
+                    unsafe_undefined: true,
                     drop_debugger: false,
+                    pure_getters: true,
+                    keep_fargs: false,
+                    module: f === 'es',
                 },
+                // @ts-ignore
                 output: {
                     ecma: 2018,
                     comments: /reference types/,

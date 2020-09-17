@@ -10,7 +10,7 @@ Array [
 
 exports[`AsyncGeneratorCall: in 1`] = `
 Array [
-  "{\\"jsonrpc\\":\\"2.0\\",\\"id\\":1,\\"error\\":{\\"code\\":-1,\\"message\\":\\"Iterator non-exist not found, next() failed.\\",\\"data\\":{\\"type\\":\\"E\\"}}}",
+  "{\\"jsonrpc\\":\\"2.0\\",\\"id\\":1,\\"error\\":{\\"code\\":-1,\\"message\\":\\"Missing iter non-exist\\",\\"data\\":{\\"type\\":\\"Error\\"}}}",
 ]
 `;
 

@@ -6,8 +6,8 @@ test('AsyncCall basic test', async () => {
     const c = createServer()
     expect(await c.add(1, 3)).toBe(4)
     expect(await c.undef()).toBe(undefined)
-    await expect(c.throws()).rejects.toMatchInlineSnapshot(`[Error: impl error]`)
-    await expect(c[0]()).rejects.toMatchInlineSnapshot(`[Error: Method not found]`)
+    await expect(c.throws()).rejects.toMatchSnapshot()
+    await expect(c[0]()).rejects.toMatchSnapshot()
     snapshot()
 }, 2000)
 
@@ -15,8 +15,8 @@ test('AsyncCall CallbackBased interface', async () => {
     const c = createServer({}, undefined, JestChannelCallbackBased)
     expect(await c.add(1, 3)).toBe(4)
     expect(await c.undef()).toBe(undefined)
-    await expect(c.throws()).rejects.toMatchInlineSnapshot(`[Error: impl error]`)
-    await expect(c[0]()).rejects.toMatchInlineSnapshot(`[Error: Method not found]`)
+    await expect(c.throws()).rejects.toMatchSnapshot()
+    await expect(c[0]()).rejects.toMatchSnapshot()
 }, 2000)
 
 test('Should preserve this binding', async () => {
@@ -45,7 +45,7 @@ test('AsyncCall Call by structure', async () => {
 test('AsyncCall strict JSON RPC', async () => {
     const c = createServer({ strict: true })
     // @ts-expect-error
-    await expect(c.add2()).rejects.toMatchInlineSnapshot(`[Error: Method not found]`)
+    await expect(c.add2()).rejects.toMatchSnapshot()
     // TODO: test unknown message
 }, 2000)
 
@@ -102,12 +102,8 @@ test('AsyncCall logs', async () => {
 test('AsyncCall internal JSON RPC methods', async () => {
     // TODO
     const s = createServer()
-    await expect(s['rpc.internal']()).rejects.toMatchInlineSnapshot(
-        `[TypeError: [AsyncCall] Can't call internal methods directly]`,
-    )
-    await expect(s[Symbol.asyncIterator]()).rejects.toMatchInlineSnapshot(
-        `"[AsyncCall] An internal method must start with \\"rpc.\\""`,
-    )
+    await expect(s['rpc.internal']()).rejects.toMatchSnapshot('call internal directly')
+    await expect(s[Symbol.asyncIterator]()).rejects.toMatchSnapshot('call internal with a non-rpc symbol')
 }, 2000)
 
 test('AsyncCall notify test', async () => {
@@ -146,8 +142,8 @@ test('AsyncCall batch test', async () => {
         await sleep(200)
         expect(f).not.toBeCalled()
         drop(new Error('I prefer multiply than add'))
-        await expect(list[0]).rejects.toMatchInlineSnapshot(`[Error: I prefer multiply than add]`)
-        await expect(list[1]).rejects.toMatchInlineSnapshot(`[Error: I prefer multiply than add]`)
+        await expect(list[0]).rejects.toMatchSnapshot()
+        await expect(list[1]).rejects.toMatchSnapshot()
         await expect(list[2]).resolves.toBeUndefined()
         await expect(list[3]).resolves.toBeUndefined()
     }

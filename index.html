@@ -7,40 +7,25 @@
         <script src="./out/full.js"></script>
         <script>
             Object.assign(globalThis, AsyncCall)
-            class PlayGroundChannel {
-                static server = document.createElement('a')
-                static client = document.createElement('a')
-                // actor: 'server' | 'client'
-                constructor(actor) {
-                    this.actor = actor
-                    PlayGroundChannel[actor].addEventListener('targetEventChannel', (e) => {
-                        const detail = e.detail
-                        for (const f of this.listener) {
-                            try {
-                                f(detail)
-                            } catch {}
-                        }
-                    })
+            class BroadcastMessageChannel extends BroadcastChannel {
+                on(eventListener) {
+                    const f = (e) => eventListener(e.data)
+                    this.addEventListener('message', f)
+                    return () => this.removeEventListener('message', f)
                 }
-                listener = []
-                on(_, cb) {
-                    this.listener.push(cb)
-                }
-                emit(_, data) {
-                    PlayGroundChannel[this.actor === 'client' ? 'server' : 'client'].dispatchEvent(
-                        new CustomEvent('targetEventChannel', { detail: data }),
-                    )
+                send(data) {
+                    super.postMessage(data)
                 }
             }
-            const server = new PlayGroundChannel('server')
-            const client = new PlayGroundChannel('client')
+            const server = new BroadcastMessageChannel('rpc')
+            const client = new BroadcastMessageChannel('rpc')
             let count = 0
             function define(def, key = `server${count++}`) {
                 // define server
                 AsyncCall(def, {
                     channel: server,
                     key,
-                    log: {
+                    log: false && {
                         beCalled: true,
                         localError: true,
                         remoteError: true,
@@ -61,14 +46,10 @@
                     return a + b
                 },
                 async error() {
-                    await sleep(200)
-                    throws()
+                    debugger
+                    throw new SyntaxError()
                 },
             })
-            function throws(i = 0) {
-                if (i <= 0) return throws(++i)
-                throw new Error()
-            }
         </script>
     </body>
 </html>

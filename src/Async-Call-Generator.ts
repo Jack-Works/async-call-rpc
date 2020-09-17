@@ -5,11 +5,14 @@ import { AsyncCallOptions, AsyncCall } from './Async-Call'
 import { AsyncCallIgnoreResponse } from './utils/internalSymbol'
 import { normalizeStrictOptions } from './utils/normalizeOptions'
 import { generateRandomID } from './utils/generateRandomID'
+import { isFunction, isString, Object_setPrototypeOf, Promise_resolve } from './utils/constants'
 
-const AsyncIteratorStart = Symbol.for('rpc.async-iterator.start')
-const AsyncIteratorNext = Symbol.for('rpc.async-iterator.next')
-const AsyncIteratorReturn = Symbol.for('rpc.async-iterator.return')
-const AsyncIteratorThrow = Symbol.for('rpc.async-iterator.throw')
+const i = 'rpc.async-iterator.'
+// ! side effect
+const AsyncIteratorStart = Symbol.for(i + 'start')
+const AsyncIteratorNext = Symbol.for(i + 'next')
+const AsyncIteratorReturn = Symbol.for(i + 'return')
+const AsyncIteratorThrow = Symbol.for(i + 'throw')
 
 interface AsyncGeneratorInternalMethods {
     [AsyncIteratorStart](method: string, params: unknown[]): Promise<string>
@@ -79,21 +82,20 @@ type IterResult = IteratorResult<unknown> | Promise<IteratorResult<unknown>>
  * ```
  * @public
  */
-export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
+export const AsyncGeneratorCall = <OtherSideImplementedFunctions = {}>(
     thisSideImplementation: object | Promise<object> = {},
     options: AsyncCallOptions,
-): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions> {
+): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions> => {
     const iterators = new Map<string | number, Iter>()
-    const strict = normalizeStrictOptions(options.strict ?? true)
+    const [methodNotFound] = normalizeStrictOptions(options.strict ?? true)
     const { idGenerator = generateRandomID } = options
-    function findIterator(
+    const findIterator = (
         id: string,
-        label: keyof Iter,
-        next: (iterator: Iter) => IterResult | undefined,
-    ): undefined | IterResult | typeof AsyncCallIgnoreResponse {
+        next: (iterator: Iter) => IterResult | undefined | false,
+    ): false | undefined | IterResult | typeof AsyncCallIgnoreResponse => {
         const it = iterators.get(id)
         if (!it) {
-            if (strict.methodNotFound) throw new Error(`Iterator ${id} not found, ${label}() failed.`)
+            if (methodNotFound) throw new Error(`Missing iter ${id}`)
             else return AsyncCallIgnoreResponse
         }
         const result = next(it)
@@ -102,33 +104,33 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
     }
     const server = {
         async [AsyncIteratorStart](method, args) {
-            const iteratorGenerator: unknown = Reflect.get(await thisSideImplementation, method)
-            if (typeof iteratorGenerator !== 'function') {
-                if (strict.methodNotFound) throw new Error(method + ' is not a function')
+            const iteratorGenerator: unknown = ((await thisSideImplementation) as any)[method]
+            if (!isFunction(iteratorGenerator)) {
+                if (methodNotFound) throw new Error(method + ' is not a function')
                 else return AsyncCallIgnoreResponse
             }
             const iterator = iteratorGenerator(...args)
             const id = idGenerator()
             iterators.set(id, iterator)
-            return Promise.resolve(id)
+            return Promise_resolve(id)
         },
         [AsyncIteratorNext](id, val) {
-            return findIterator(id, 'next', (it) => it.next(val as any))
+            return findIterator(id, (it) => it.next(val as any))
         },
         [AsyncIteratorReturn](id, val) {
-            return findIterator(id, 'return', (it) => it.return?.(val))
+            return findIterator(id, (it) => isFunction(it.return) && it.return(val))
         },
         [AsyncIteratorThrow](id, val) {
-            return findIterator(id, 'throw', (it) => it.throw?.(val))
+            return findIterator(id, (it) => isFunction(it.throw) && it.throw(val))
         },
     } as AsyncGeneratorInternalMethods
     const remote = AsyncCall<AsyncGeneratorInternalMethods>(server, options)
-    function proxyTrap(
+    const proxyTrap = (
         _target: unknown,
         key: string | number | symbol,
-    ): (...args: unknown[]) => AsyncIterableIterator<unknown> {
-        if (typeof key !== 'string') throw new TypeError('[*AsyncCall] Only string can be the method name')
-        return function (...args: unknown[]) {
+    ): ((...args: unknown[]) => AsyncIterableIterator<unknown>) => {
+        if (!isString(key)) throw new TypeError("Can't call with non-string")
+        return (...args: unknown[]) => {
             const id = remote[AsyncIteratorStart](key, args)
             return new AsyncGenerator(remote, id)
         }
@@ -164,19 +166,21 @@ class AsyncGenerator implements AsyncIterableIterator<unknown>, AsyncIterator<un
     // Inherited from AsyncGeneratorPrototype
     declare [Symbol.asyncIterator]: () => this
 }
+// ! side effect
 const AsyncGeneratorConstructor = async function* () {}.constructor
 const AsyncGeneratorConstructorPrototype = AsyncGeneratorConstructor.prototype
-Object.setPrototypeOf(AsyncGenerator, AsyncGeneratorConstructorPrototype)
+Object_setPrototypeOf(AsyncGenerator, AsyncGeneratorConstructorPrototype)
 const AsyncGeneratorPrototype = Object.getPrototypeOf((async function* () {})())
-Object.setPrototypeOf(AsyncGenerator.prototype, AsyncGeneratorPrototype)
+Object_setPrototypeOf(AsyncGenerator.prototype, AsyncGeneratorPrototype)
 
-async function isFinished(result: IterResult | undefined, cb: () => void) {
+const isFinished = async (result: IterResult | undefined | false, cb: () => void) => {
     try {
         const x = await result
-        !!x?.done && cb()
+        if (x && x.done) cb()
     } catch {}
 }
 
-function makeIteratorResult(done: boolean, value: unknown = undefined): IteratorResult<unknown, unknown> {
-    return { done, value }
-}
+const makeIteratorResult = (done: boolean, value: unknown = undefined): IteratorResult<unknown, unknown> => ({
+    done,
+    value,
+})
