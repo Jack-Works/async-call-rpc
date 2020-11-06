@@ -8,7 +8,7 @@ import { Request } from '../utils/jsonrpc'
  * const [batched, send, drop] = batch(AsyncCall(...))
  * @public
  */
-export const batch = <T extends object>(asyncCallInstance: T): [T, () => void, (error?: unknown) => void] => {
+export function batch<T extends object>(asyncCallInstance: T): [T, () => void, (error?: unknown) => void] {
     let queue: BatchQueue = [] as any
     return [
         new Proxy({ __proto__: null } as any, {

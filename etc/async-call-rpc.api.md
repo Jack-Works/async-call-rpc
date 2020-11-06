@@ -78,8 +78,6 @@ export interface Console {
     groupEnd?(...args: unknown[]): void;
     // (undocumented)
     log(...args: unknown[]): void;
-    // (undocumented)
-    warn?(...args: unknown[]): void;
 }
 
 // @public (undocumented)

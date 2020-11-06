@@ -82,10 +82,10 @@ type IterResult = IteratorResult<unknown> | Promise<IteratorResult<unknown>>
  * ```
  * @public
  */
-export const AsyncGeneratorCall = <OtherSideImplementedFunctions = {}>(
+export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
     thisSideImplementation: object | Promise<object> = {},
     options: AsyncCallOptions,
-): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions> => {
+): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions> {
     const iterators = new Map<string | number, Iter>()
     const [methodNotFound] = normalizeStrictOptions(options.strict ?? true)
     const { idGenerator = generateRandomID } = options

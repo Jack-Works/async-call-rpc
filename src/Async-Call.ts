@@ -222,10 +222,10 @@ export type _IgnoreResponse<T> = T extends (...args: infer Args) => unknown
  * @returns Same as the `OtherSideImplementedFunctions` type parameter, but every function in that interface becomes async and non-function value is removed.
  * @public
  */
-export const AsyncCall = <OtherSideImplementedFunctions = {}>(
+export function AsyncCall<OtherSideImplementedFunctions = {}>(
     thisSideImplementation: object | Promise<object> = {},
     options: AsyncCallOptions,
-): _AsyncVersionOf<OtherSideImplementedFunctions> => {
+): _AsyncVersionOf<OtherSideImplementedFunctions> {
     let resolvedThisSideImplementation: object | undefined = undefined
     if (!(thisSideImplementation instanceof Promise)) resolvedThisSideImplementation = thisSideImplementation
     Promise_resolve(thisSideImplementation).then((x) => (resolvedThisSideImplementation = x))

@@ -9,7 +9,7 @@ import { isFunction } from '../utils/constants'
  * @public
  */
 
-export const notify = <T extends object>(instanceOrFnOnInstance: T): _IgnoreResponse<T> => {
+export function notify<T extends object>(instanceOrFnOnInstance: T): _IgnoreResponse<T> {
     if (isFunction(instanceOrFnOnInstance)) return (instanceOrFnOnInstance as any)[AsyncCallNotify]
     return new Proxy(instanceOrFnOnInstance, { get: notifyTrap }) as any
 }
