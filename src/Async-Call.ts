@@ -428,11 +428,12 @@ export const AsyncCall = <OtherSideImplementedFunctions = {}>(
                     .then((x) => x && m.send!(x)),
             )
     }
-    const sendPayload = async (payload: unknown) => {
+    async function sendPayload(payload: unknown, removeQueueR = false) {
+        if (removeQueueR) payload = [...(payload as BatchQueue)]
         const data = await serialization(payload)
         return channel.send!(data)
     }
-    const rejectsQueue = (queue: BatchQueue, error: unknown) => {
+    function rejectsQueue(queue: BatchQueue, error: unknown) {
         for (const x of queue) {
             if (hasKey(x, 'id')) {
                 const ctx = requestContext.get(x.id!)
@@ -482,7 +483,7 @@ export const AsyncCall = <OtherSideImplementedFunctions = {}>(
                         const request = Request(notify ? undefined : id, method as string, param, sendingStack)
                         if (queue) {
                             queue.push(request)
-                            if (!queue.r) queue.r = [() => sendPayload(queue), (e) => rejectsQueue(queue!, e)]
+                            if (!queue.r) queue.r = [() => sendPayload(queue, true), (e) => rejectsQueue(queue!, e)]
                         } else sendPayload(request).catch(reject)
                         if (notify) return resolve()
                         requestContext.set(id, {
