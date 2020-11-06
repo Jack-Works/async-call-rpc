@@ -227,8 +227,9 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     options: AsyncCallOptions,
 ): _AsyncVersionOf<OtherSideImplementedFunctions> {
     let resolvedThisSideImplementation: object | undefined = undefined
-    if (!(thisSideImplementation instanceof Promise)) resolvedThisSideImplementation = thisSideImplementation
-    Promise_resolve(thisSideImplementation).then((x) => (resolvedThisSideImplementation = x))
+    if (thisSideImplementation instanceof Promise)
+        Promise_resolve(thisSideImplementation).then((x) => (resolvedThisSideImplementation = x))
+    else resolvedThisSideImplementation = thisSideImplementation
 
     const {
         serializer = NoSerialization,

@@ -22,6 +22,12 @@ test('AsyncCall should keep function identity', () => {
     expect(g.gen).toBe(g.gen)
 })
 
+test('AsyncCall should not invoke then method on non Promise', () => {
+    const f = jest.fn((x: any) => x)
+    createServer(undefined, { then: f })
+    expect(f).not.toBeCalled()
+})
+
 test('AsyncCall CallbackBased interface', async () => {
     const c = createServer({}, undefined, JestChannelCallbackBased)
     expect(await c.add(1, 3)).toBe(4)
