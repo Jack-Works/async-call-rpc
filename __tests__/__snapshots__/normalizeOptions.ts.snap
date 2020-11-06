@@ -6,12 +6,23 @@ Array [
   true,
   true,
   true,
+  true,
+  true,
 ]
 `;
 
-exports[`normalize log options 2`] = `Array []`;
+exports[`normalize log options 2`] = `
+Array [
+  true,
+  true,
+  true,
+  true,
+]
+`;
 
-exports[`normalize log options 3`] = `
+exports[`normalize log options 3`] = `Array []`;
+
+exports[`normalize log options 4`] = `
 Array [
   true,
   false,

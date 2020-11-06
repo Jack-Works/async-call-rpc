@@ -1,6 +1,7 @@
-import { AsyncCallOptions, AsyncCallStrictJSONRPC } from '../Async-Call'
+import { AsyncCallOptions } from '../Async-Call'
 import { isBoolean } from './constants'
 export const normalizeLogOptions = (log: NonNullable<AsyncCallOptions['log']>) => {
+    if (log === 'all') return [true, true, true, true, true, true] as const
     if (!isBoolean(log)) {
         const { beCalled, localError, remoteError, type, requestReplay, sendLocalStack } = log
         return [beCalled, localError, remoteError, type !== 'basic', requestReplay, sendLocalStack] as const

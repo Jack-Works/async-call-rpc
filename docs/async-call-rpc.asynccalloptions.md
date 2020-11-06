@@ -18,7 +18,7 @@ export interface AsyncCallOptions
 |  --- | --- | --- |
 |  [channel](./async-call-rpc.asynccalloptions.channel.md) | [CallbackBasedChannel](./async-call-rpc.callbackbasedchannel.md) \| [EventBasedChannel](./async-call-rpc.eventbasedchannel.md) | The message channel can let you transport messages between server and client |
 |  [key](./async-call-rpc.asynccalloptions.key.md) | string | This option will only used for better logging. |
-|  [log](./async-call-rpc.asynccalloptions.log.md) | [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) \| boolean | Choose log level. See [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) |
+|  [log](./async-call-rpc.asynccalloptions.log.md) | [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) \| boolean \| 'all' | Choose log level. |
 |  [logger](./async-call-rpc.asynccalloptions.logger.md) | [Console](./async-call-rpc.console.md) | The logger of AsyncCall |
 |  [mapError](./async-call-rpc.asynccalloptions.maperror.md) | [ErrorMapFunction](./async-call-rpc.errormapfunction.md)<!-- -->&lt;unknown&gt; | Control the error response data |
 |  [parameterStructures](./async-call-rpc.asynccalloptions.parameterstructures.md) | 'by-position' \| 'by-name' | How parameters passed to remote |

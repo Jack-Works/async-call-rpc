@@ -126,10 +126,12 @@ export interface AsyncCallOptions {
      */
     channel: CallbackBasedChannel | EventBasedChannel
     /**
-     * Choose log level. See {@link AsyncCallLogLevel}
+     * Choose log level.
+     * @remarks
+     * See {@link AsyncCallLogLevel}. `true` is a reasonable default value, `false` is disable log, `"all"` is enable all logs (stronger than `true`).
      * @defaultValue true
      */
-    log?: AsyncCallLogLevel | boolean
+    log?: AsyncCallLogLevel | boolean | 'all'
     /**
      * Strict options. See {@link AsyncCallStrictJSONRPC}
      * @defaultValue false

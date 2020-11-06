@@ -24,7 +24,7 @@ export interface AsyncCallOptions {
     channel: CallbackBasedChannel | EventBasedChannel;
     idGenerator?(): string | number;
     key?: string;
-    log?: AsyncCallLogLevel | boolean;
+    log?: AsyncCallLogLevel | boolean | 'all';
     logger?: Console;
     mapError?: ErrorMapFunction<unknown>;
     parameterStructures?: 'by-position' | 'by-name';

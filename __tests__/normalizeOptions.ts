@@ -1,6 +1,7 @@
 import { normalizeLogOptions, normalizeStrictOptions } from '../src/utils/normalizeOptions'
 
 test('normalize log options', () => {
+    expect(normalizeLogOptions('all')).toMatchSnapshot()
     expect(normalizeLogOptions(true)).toMatchSnapshot()
     expect(normalizeLogOptions(false)).toMatchSnapshot()
     expect(normalizeLogOptions({ beCalled: true, localError: false })).toMatchSnapshot()

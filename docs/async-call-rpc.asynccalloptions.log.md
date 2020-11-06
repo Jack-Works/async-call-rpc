@@ -4,10 +4,15 @@
 
 ## AsyncCallOptions.log property
 
-Choose log level. See [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md)
+Choose log level.
 
 <b>Signature:</b>
 
 ```typescript
-log?: AsyncCallLogLevel | boolean;
+log?: AsyncCallLogLevel | boolean | 'all';
 ```
+
+## Remarks
+
+See [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md)<!-- -->. `true` is a reasonable default value, `false` is disable log, `"all"` is enable all logs (stronger than `true`<!-- -->).
+
