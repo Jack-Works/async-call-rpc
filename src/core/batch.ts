@@ -1,3 +1,4 @@
+import { isString } from '../utils/constants'
 import { AsyncCallBatch, AsyncCallNotify } from '../utils/internalSymbol'
 import { Request } from '../utils/jsonrpc'
 /**
@@ -10,13 +11,18 @@ import { Request } from '../utils/jsonrpc'
 export const batch = <T extends object>(asyncCallInstance: T): [T, () => void, (error?: unknown) => void] => {
     let queue: BatchQueue = [] as any
     return [
-        new Proxy(asyncCallInstance, {
-            get(target: any, p) {
-                const f = (...args: any) => target[AsyncCallBatch](queue, p, ...args)
+        new Proxy({ __proto__: null } as any, {
+            get(cache, p) {
+                if (isString(p) && cache[p]) return cache[p]
                 // @ts-ignore
-                f[AsyncCallNotify] = (...args: any) => target[AsyncCallBatch][AsyncCallNotify](queue, p, ...args)
+                const f = (...args: any) => asyncCallInstance[AsyncCallBatch](queue, p, ...args)
+                // @ts-ignore
+                f[AsyncCallNotify] = (...args: any) =>
+                    // @ts-ignore
+                    asyncCallInstance[AsyncCallBatch][AsyncCallNotify](queue, p, ...args)
                 // @ts-ignore
                 f[AsyncCallNotify][AsyncCallNotify] = f[AsyncCallNotify]
+                isString(p) && Object.defineProperty(cache, p, { value: f, configurable: true })
                 return f
             },
         }),

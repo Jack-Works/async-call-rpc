@@ -125,17 +125,17 @@ export const AsyncGeneratorCall = <OtherSideImplementedFunctions = {}>(
         },
     } as AsyncGeneratorInternalMethods
     const remote = AsyncCall<AsyncGeneratorInternalMethods>(server, options)
-    const proxyTrap = (
-        _target: unknown,
-        key: string | number | symbol,
-    ): ((...args: unknown[]) => AsyncIterableIterator<unknown>) => {
+    const proxyTrap = (cache: any, key: string): ((...args: unknown[]) => AsyncIterableIterator<unknown>) => {
         if (!isString(key)) throw new TypeError("Can't call with non-string")
-        return (...args: unknown[]) => {
+        if (cache[key]) return cache[key]
+        const f = (...args: unknown[]) => {
             const id = remote[AsyncIteratorStart](key, args)
             return new AsyncGenerator(remote, id)
         }
+        Object.defineProperty(cache, key, { value: f, configurable: true })
+        return f
     }
-    return new Proxy({}, { get: proxyTrap }) as _AsyncGeneratorVersionOf<OtherSideImplementedFunctions>
+    return new Proxy({ __proto__: null }, { get: proxyTrap }) as _AsyncGeneratorVersionOf<OtherSideImplementedFunctions>
 }
 class AsyncGenerator implements AsyncIterableIterator<unknown>, AsyncIterator<unknown, unknown, unknown> {
     /** done? */

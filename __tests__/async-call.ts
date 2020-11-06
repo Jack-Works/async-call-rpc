@@ -1,5 +1,5 @@
 import { NoSerialization, JSONSerialization, AsyncCall, notify, batch } from '../src/Async-Call'
-import { createServer, sleep, mockError, JestChannelCallbackBased } from './shared'
+import { createServer, sleep, mockError, JestChannelCallbackBased, createGeneratorServer } from './shared'
 
 test('AsyncCall basic test', async () => {
     const snapshot = mockConsoleLog('no logs')
@@ -14,6 +14,12 @@ test('AsyncCall basic test', async () => {
 test('AsyncCall should keep function identity', () => {
     const c = createServer()
     expect(c.add).toBe(c.add)
+    const [b] = batch(c)
+    expect(b.add).toBe(b.add)
+    const n = notify(c)
+    expect(n.add).toBe(n.add)
+    const g = createGeneratorServer()
+    expect(g.gen).toBe(g.gen)
 })
 
 test('AsyncCall CallbackBased interface', async () => {
