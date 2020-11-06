@@ -11,6 +11,11 @@ test('AsyncCall basic test', async () => {
     snapshot()
 }, 2000)
 
+test('AsyncCall should keep function identity', () => {
+    const c = createServer()
+    expect(c.add).toBe(c.add)
+})
+
 test('AsyncCall CallbackBased interface', async () => {
     const c = createServer({}, undefined, JestChannelCallbackBased)
     expect(await c.add(1, 3)).toBe(4)

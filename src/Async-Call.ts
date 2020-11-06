@@ -447,60 +447,57 @@ export const AsyncCall = <OtherSideImplementedFunctions = {}>(
         if (hasKey(data, 'method')) return onRequest(data)
         return onResponse(data) as Promise<undefined>
     }
-    return new Proxy(
-        {},
-        {
-            get(_target, method: string | symbol) {
+    return new Proxy({ __proto__: null } as any, {
+        get(cache, method: string | symbol) {
+            if (isString(method) && cache[method]) return cache[method]
+            const factory = (notify: boolean) => (...params: unknown[]) => {
                 let stack = removeStackHeader(new Error().stack)
-                const factory = (notify: boolean) => (...params: unknown[]) => {
-                    let queue: BatchQueue | undefined = undefined
-                    if (method === AsyncCallBatch) {
-                        queue = params.shift() as any
-                        method = params.shift() as any
-                    }
-                    if (typeof method === 'symbol') {
-                        const RPCInternalMethod = Symbol.keyFor(method) || (method as any).description
-                        if (RPCInternalMethod) {
-                            if (RPCInternalMethod.startsWith('rpc.')) method = RPCInternalMethod
-                            else return Promise_reject('Not start with rpc.')
-                        }
-                    } else if (method.startsWith('rpc.'))
-                        return Promise_reject(new TypeError('No direct call to internal methods'))
-                    if (preferLocalImplementation && resolvedThisSideImplementation && isString(method)) {
-                        const localImpl: unknown = resolvedThisSideImplementation[method as keyof object]
-                        if (localImpl && isFunction(localImpl)) {
-                            return new Promise((resolve) => resolve(localImpl(...params)))
-                        }
-                    }
-                    return new Promise<void>((resolve, reject) => {
-                        const id = idGenerator()
-                        const [param0] = params
-                        const sendingStack = log_sendLocalStack ? stack : ''
-                        const param =
-                            parameterStructures === 'by-name' && params.length === 1 && isObject(param0)
-                                ? param0
-                                : params
-                        const request = Request(notify ? undefined : id, method as string, param, sendingStack)
-                        if (queue) {
-                            queue.push(request)
-                            if (!queue.r) queue.r = [() => sendPayload(queue, true), (e) => rejectsQueue(queue!, e)]
-                        } else sendPayload(request).catch(reject)
-                        if (notify) return resolve()
-                        requestContext.set(id, {
-                            f: [resolve, reject],
-                            stack,
-                        })
-                    })
+                let queue: BatchQueue | undefined = undefined
+                if (method === AsyncCallBatch) {
+                    queue = params.shift() as any
+                    method = params.shift() as any
                 }
-                const f = factory(false)
-                // @ts-ignore
-                f[AsyncCallNotify] = factory(true)
-                // @ts-ignore
-                f[AsyncCallNotify][AsyncCallNotify] = f[AsyncCallNotify]
-                return f
-            },
+                if (typeof method === 'symbol') {
+                    const RPCInternalMethod = Symbol.keyFor(method) || (method as any).description
+                    if (RPCInternalMethod) {
+                        if (RPCInternalMethod.startsWith('rpc.')) method = RPCInternalMethod
+                        else return Promise_reject('Not start with rpc.')
+                    }
+                } else if (method.startsWith('rpc.'))
+                    return Promise_reject(new TypeError('No direct call to internal methods'))
+                if (preferLocalImplementation && resolvedThisSideImplementation && isString(method)) {
+                    const localImpl: unknown = resolvedThisSideImplementation[method as keyof object]
+                    if (localImpl && isFunction(localImpl)) {
+                        return new Promise((resolve) => resolve(localImpl(...params)))
+                    }
+                }
+                return new Promise<void>((resolve, reject) => {
+                    const id = idGenerator()
+                    const [param0] = params
+                    const sendingStack = log_sendLocalStack ? stack : ''
+                    const param =
+                        parameterStructures === 'by-name' && params.length === 1 && isObject(param0) ? param0 : params
+                    const request = Request(notify ? undefined : id, method as string, param, sendingStack)
+                    if (queue) {
+                        queue.push(request)
+                        if (!queue.r) queue.r = [() => sendPayload(queue, true), (e) => rejectsQueue(queue!, e)]
+                    } else sendPayload(request).catch(reject)
+                    if (notify) return resolve()
+                    requestContext.set(id, {
+                        f: [resolve, reject],
+                        stack,
+                    })
+                })
+            }
+            const f = factory(false)
+            // @ts-ignore
+            f[AsyncCallNotify] = factory(true)
+            // @ts-ignore
+            f[AsyncCallNotify][AsyncCallNotify] = f[AsyncCallNotify]
+            isString(method) && Object.defineProperty(cache, method, { value: f, configurable: true })
+            return f
         },
-    ) as _AsyncVersionOf<OtherSideImplementedFunctions>
+    }) as _AsyncVersionOf<OtherSideImplementedFunctions>
 }
 // Assume a console object in global if there is no custom logger provided
 declare const console: Console
