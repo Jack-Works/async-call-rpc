@@ -1,4 +1,4 @@
-import type { EventBasedChannel } from '../../src/Async-Call'
+import type { EventBasedChannel } from 'async-call-rpc'
 
 /**
  * BroadcastChannel support for AsyncCall.

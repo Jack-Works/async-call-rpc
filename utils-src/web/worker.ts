@@ -1,4 +1,4 @@
-import type { EventBasedChannel } from '../../src/Async-Call'
+import type { EventBasedChannel } from 'async-call-rpc'
 
 export class WorkerChannel implements EventBasedChannel {
     /**

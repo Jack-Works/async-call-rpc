@@ -1,4 +1,4 @@
-import type { Serialization } from '../../src/Async-Call'
+import type { Serialization } from 'async-call-rpc'
 
 export const BSON_Serialization = (bson: typeof import('bson')): Serialization => ({
     async deserialization(data: unknown) {

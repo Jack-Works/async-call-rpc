@@ -1,5 +1,5 @@
 import type bsonLib from 'bson'
-import type { Serialization } from '../../src/Async-Call'
+import type { Serialization } from 'async-call-rpc'
 
 export const BSON_Serialization = (bson: typeof bsonLib): Serialization => ({
     deserialization(data: Buffer) {

@@ -1,6 +1,6 @@
 import type { Server } from 'ws'
 import type WebSocket from 'ws'
-import type { CallbackBasedChannel } from '../../src/Async-Call'
+import type { CallbackBasedChannel } from 'async-call-rpc'
 type JSONRPCHandlerCallback = (data: unknown) => Promise<unknown>
 export class WebSocketChannel implements CallbackBasedChannel {
     constructor(public server: Server) {}
