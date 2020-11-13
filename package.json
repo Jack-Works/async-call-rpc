@@ -21,9 +21,9 @@
     "./utils/": "./utils/"
   },
   "scripts": {
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "npm run clean && npm run test && npm run build",
     "clean": "rimraf ./out ./utils/web ./utils/node ./es ./coverage ./temp",
-    "release": "npm run clean && npm run test && standard-version",
+    "release": "npm run clean && npm run test && npm run build && standard-version",
     "watch:tsc": "tsc -b ./tsconfig.es.json ./utils-src/tsconfig.es.json ./utils-src/tsconfig.node.json -w",
     "build:tsc": "tsc -b ./tsconfig.es.json ./utils-src/tsconfig.es.json ./utils-src/tsconfig.node.json",
     "watch:rollup": "rollup -c -w",
