@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.2.0](https://github.com/Jack-Works/async-call/compare/v4.1.0...v4.2.0) (2020-11-13)
+
+
+### Features
+
+* keep function identity between calls on AsyncCall ([0ba5ca6](https://github.com/Jack-Works/async-call/commit/0ba5ca6867bbdc9227e9e560916ad8d2a077e91e))
+* keep function identity between calls on batch and generator ([95450f4](https://github.com/Jack-Works/async-call/commit/95450f4ecefd288fa8e86a2190de27dc424dfd22))
+* new options for log "all", close [#23](https://github.com/Jack-Works/async-call/issues/23) ([38e3669](https://github.com/Jack-Works/async-call/commit/38e36692d3be660f2065861f47b26bb7d7c13f04))
+
+
+### Bug Fixes
+
+* batch will send functions into serialization ([e3136ac](https://github.com/Jack-Works/async-call/commit/e3136ac35e62588fbe556ff921f58258f3c04bdb))
+* not call then if impl is not Promise, close [#24](https://github.com/Jack-Works/async-call/issues/24) ([be8c8de](https://github.com/Jack-Works/async-call/commit/be8c8de5e9dddee635daebde666945e6da3e5511))
+* utils points to source leads to compilation in node_modules ([686f8e5](https://github.com/Jack-Works/async-call/commit/686f8e5442d2ab7c05714af49ebee5784490e15e))
+
 ## [4.1.0](https://github.com/Jack-Works/async-call/compare/v4.0.0...v4.1.0) (2020-08-23)
 
 
