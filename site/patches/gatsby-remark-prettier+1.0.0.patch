@@ -1,0 +1,13 @@
+diff --git a/node_modules/gatsby-remark-prettier/index.js b/node_modules/gatsby-remark-prettier/index.js
+index 7e75000..8db9848 100644
+--- a/node_modules/gatsby-remark-prettier/index.js
++++ b/node_modules/gatsby-remark-prettier/index.js
+@@ -20,7 +20,7 @@ module.exports = function (_ref) {
+           var formatted = prettier.format(node.value, config);
+           node.value = formatted;
+         } catch (err) {
+-          console.error("error formatting block", err);
++        //   console.error("error formatting block", err);
+         }
+       }
+     });

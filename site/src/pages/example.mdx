@@ -1,0 +1,57 @@
+# Example
+
+## Client
+
+```ts twoslash
+// @target: esnext
+// @lib: dom,es6
+// @filename: serializer.ts
+export default {} as import('async-call-rpc').Serialization
+// @filename: server.ts
+const api = { now: Date.now, echo: <T>(x: T) => x }
+export type API = typeof api
+// @filename: client.ts
+// ---cut---
+import { AsyncCall } from 'async-call-rpc'
+import { WebSocketMessageChannel } from 'async-call-rpc/utils/web/websocket.client'
+import type { API } from './server'
+import serializer from './serializer'
+const channel = new WebSocketMessageChannel('wss://api.example.com:3456/')
+
+const server = AsyncCall<API>({}, { channel, serializer })
+const result = await server.now()
+```
+
+## Server
+
+```ts twoslash
+// @target: esnext
+// @lib: es6
+// @filename: serializer.ts
+export default {} as import('async-call-rpc').Serialization
+// ---cut---
+// @filename: server.ts
+import { AsyncCall } from 'async-call-rpc'
+import { WebSocketChannel } from 'async-call-rpc/utils/node/websocket.server'
+import { Server } from 'ws'
+import serializer from './serializer'
+
+const channel = new WebSocketChannel(new Server({ port: 3456 }))
+const api = {
+    now: Date.now,
+    echo: <T>(x: T) => x,
+}
+export type API = typeof api
+// start server
+AsyncCall({}, { channel, serializer })
+```
+
+## Shared between server and client
+
+```ts twoslash
+// @target: esnext
+// @filename: serializer.ts
+import { BSON_Serialization } from 'async-call-rpc/utils/node/bson'
+import bson from 'bson'
+export default BSON_Serialization(bson)
+```

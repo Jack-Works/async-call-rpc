@@ -1,0 +1,12 @@
+diff --git a/node_modules/@typescript/twoslash/dist/twoslash.cjs.development.js b/node_modules/@typescript/twoslash/dist/twoslash.cjs.development.js
+index c113f8b..d6cf374 100644
+--- a/node_modules/@typescript/twoslash/dist/twoslash.cjs.development.js
++++ b/node_modules/@typescript/twoslash/dist/twoslash.cjs.development.js
+@@ -275,6 +275,7 @@ function setOption(name, value, opts, ts) {
+ 
+         case "list":
+           opts[opt.name] = value.split(",").map(function (v) {
++              if (opt.element.type instanceof Map) return opt.element.type.get(v);
+             return parsePrimitive(v, opt.element.type);
+           });
+           break;

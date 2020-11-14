@@ -1,0 +1,21 @@
+diff --git a/node_modules/gatsby-remark-shiki-twoslash/dist/gatsby-remark-shiki-twoslash.cjs.development.js b/node_modules/gatsby-remark-shiki-twoslash/dist/gatsby-remark-shiki-twoslash.cjs.development.js
+index 664cd01..023d03a 100644
+--- a/node_modules/gatsby-remark-shiki-twoslash/dist/gatsby-remark-shiki-twoslash.cjs.development.js
++++ b/node_modules/gatsby-remark-shiki-twoslash/dist/gatsby-remark-shiki-twoslash.cjs.development.js
+@@ -40,11 +40,15 @@ var visitor = function visitor(highlighter, twoslashSettings) {
+ 
+ var runTwoSlashOnNode = function runTwoSlashOnNode(settings) {
+   return function (node) {
+-    if (node.meta && node.meta.includes("twoslash")) {
++      if (node.meta && node.meta.includes("twoslash")) {
++      try {
+       var results = shikiTwoslash.runTwoSlash(node.value, node.lang, settings);
+       node.value = results.code;
+       node.lang = results.extension;
+       node.twoslash = results;
++      } catch (e) {
++        console.error(e.message)
++      }
+     }
+   };
+ };
