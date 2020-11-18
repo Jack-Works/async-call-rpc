@@ -6,6 +6,7 @@ import { AsyncCallIgnoreResponse } from './utils/internalSymbol'
 import { normalizeStrictOptions } from './utils/normalizeOptions'
 import { generateRandomID } from './utils/generateRandomID'
 import { isFunction, isString, Object_setPrototypeOf, Promise_resolve } from './utils/constants'
+import { HostedMessages, makeHostedMessage } from './utils/error'
 
 const i = 'rpc.async-iterator.'
 // ! side effect
@@ -95,7 +96,11 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
     ): false | undefined | IterResult | typeof AsyncCallIgnoreResponse => {
         const it = iterators.get(id)
         if (!it) {
-            if (methodNotFound) throw new Error(`Missing iter ${id}`)
+            if (methodNotFound)
+                throw makeHostedMessage(
+                    HostedMessages.AsyncCallGenerator_cannot_find_a_running_iterator_with_the_given_ID,
+                    new Error(`Iterator ${id}, `),
+                )
             else return AsyncCallIgnoreResponse
         }
         const result = next(it)
@@ -106,7 +111,7 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
         async [AsyncIteratorStart](method, args) {
             const iteratorGenerator: unknown = ((await thisSideImplementation) as any)[method]
             if (!isFunction(iteratorGenerator)) {
-                if (methodNotFound) throw new Error(method + ' is not a function')
+                if (methodNotFound) throw new TypeError(method + ' is not a function')
                 else return AsyncCallIgnoreResponse
             }
             const iterator = iteratorGenerator(...args)
@@ -126,7 +131,8 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
     } as AsyncGeneratorInternalMethods
     const remote = AsyncCall<AsyncGeneratorInternalMethods>(server, options)
     const proxyTrap = (cache: any, key: string): ((...args: unknown[]) => AsyncIterableIterator<unknown>) => {
-        if (!isString(key)) throw new TypeError("Can't call with non-string")
+        if (!isString(key))
+            throw makeHostedMessage(HostedMessages.Only_string_can_be_the_RPC_method_name, new TypeError(''))
         if (cache[key]) return cache[key]
         const f = (...args: unknown[]) => {
             const id = remote[AsyncIteratorStart](key, args)

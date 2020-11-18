@@ -3,6 +3,17 @@ class CustomError extends Error {
         super(message)
     }
 }
+// https://github.com/Jack-Works/async-call-rpc/wiki/Error-messages
+export const enum HostedMessages {
+    AsyncCallGenerator_cannot_find_a_running_iterator_with_the_given_ID,
+    Only_string_can_be_the_RPC_method_name,
+    Can_not_call_method_starts_with_rpc_dot_directly,
+    Instance_is_treated_as_Promise_please_explicitly_mark_if_it_is_thenable_or_not_via_the_options,
+}
+export function makeHostedMessage(id: HostedMessages, error: Error) {
+    error.message += `Error ${id}: https://github.com/Jack-Works/async-call-rpc/wiki/Errors#` + id
+    return error
+}
 // ! side effect
 /** These Error is defined in ECMAScript spec */
 const errors: Record<string, typeof EvalError> = {

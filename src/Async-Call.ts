@@ -22,7 +22,7 @@ import {
     ErrorResponseInvalidRequest,
     ErrorResponseParseError,
 } from './utils/jsonrpc'
-import { removeStackHeader, RecoverError } from './utils/error'
+import { removeStackHeader, RecoverError, makeHostedMessage, HostedMessages } from './utils/error'
 import { generateRandomID } from './utils/generateRandomID'
 import { normalizeStrictOptions, normalizeLogOptions } from './utils/normalizeOptions'
 import { AsyncCallIgnoreResponse, AsyncCallNotify, AsyncCallBatch } from './utils/internalSymbol'
@@ -167,6 +167,27 @@ export interface AsyncCallOptions {
      * @param request - The request object
      */
     mapError?: ErrorMapFunction<unknown>
+    /**
+     * If the instance should be "thenable".
+     * @defaultValue undefined
+     * @remarks
+     * If the value is *true*, it will return a *then* method normally (forwards the call to the remote).
+     * If the value is *false*, it will return *undefined* even the remote has a method called "then".
+     * If the value is *undefined*, it will return *undefined* and show a warning. You must explicity set this option to *true* or *false* to dismiss the warning.
+     *
+     * The motivation of this option is to resolve the problem caused by Promise auto-unwrapping.
+     *
+     * Consider this code:
+     *
+     * ```ts
+     * async function getRPC() {
+     *     return AsyncCall(...)
+     * }
+     * ```
+     *
+     * According to the JS semantics, it will invoke the "then" method immediately on the returning instance which is unwanted in most scenarios.
+     */
+    thenable?: boolean
 }
 
 /**
@@ -253,6 +274,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         mapError,
         logger,
         channel,
+        thenable,
     } = options
 
     if (thisSideImplementation instanceof Promise) awaitThisSideImplementation()
@@ -273,6 +295,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         debug: console_debug = console_log,
         groupCollapsed: console_groupCollapsed = console_log,
         groupEnd: console_groupEnd = console_log,
+        warn: console_warn = console_log,
     } = (logger || console) as Console
     type PromiseParam = [resolve: (value?: any) => void, reject: (reason?: any) => void]
     const requestContext = new Map<string | number, { f: PromiseParam; stack: string }>()
@@ -466,6 +489,17 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     }
     return new Proxy({ __proto__: null } as any, {
         get(cache, method: string | symbol) {
+            if (method === 'then') {
+                if (thenable === undefined) {
+                    console_warn(
+                        makeHostedMessage(
+                            HostedMessages.Instance_is_treated_as_Promise_please_explicitly_mark_if_it_is_thenable_or_not_via_the_options,
+                            new TypeError('RPC used as Promise: '),
+                        ),
+                    )
+                }
+                if (thenable !== true) return undefined
+            }
             if (isString(method) && cache[method]) return cache[method]
             const factory = (notify: boolean) => (...params: unknown[]) => {
                 let stack = removeStackHeader(new Error().stack)
@@ -481,7 +515,12 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                         else return Promise_reject('Not start with rpc.')
                     }
                 } else if (method.startsWith('rpc.'))
-                    return Promise_reject(new TypeError('No direct call to internal methods'))
+                    return Promise_reject(
+                        makeHostedMessage(
+                            HostedMessages.Can_not_call_method_starts_with_rpc_dot_directly,
+                            new TypeError(),
+                        ),
+                    )
                 if (preferLocalImplementation && resolvedThisSideImplementation && isString(method)) {
                     const localImpl: unknown = resolvedThisSideImplementation[method as keyof object]
                     if (localImpl && isFunction(localImpl)) {

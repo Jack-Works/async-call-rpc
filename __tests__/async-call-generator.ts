@@ -7,7 +7,7 @@ test('Async Generator Call', async () => {
     for await (const x of server.gen(...number)) i += x
     expect(i).toBe(3)
     // @ts-expect-error
-    await expect(server.gen2().next()).rejects.toMatchInlineSnapshot(`[Error: gen2 is not a function]`)
+    await expect(server.gen2().next()).rejects.toMatchInlineSnapshot(`[TypeError: gen2 is not a function]`)
     expect(() => server[Symbol.for('xyz')]).toThrow()
 
     const server2 = createGeneratorServer({ strict: false })

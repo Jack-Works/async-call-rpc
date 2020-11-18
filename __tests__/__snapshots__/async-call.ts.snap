@@ -24,7 +24,7 @@ exports[`AsyncCall batch test 1`] = `[Error: I prefer multiply than add]`;
 
 exports[`AsyncCall batch test 2`] = `[Error: I prefer multiply than add]`;
 
-exports[`AsyncCall internal JSON RPC methods: call internal directly 1`] = `[TypeError: No direct call to internal methods]`;
+exports[`AsyncCall internal JSON RPC methods: call internal directly 1`] = `[TypeError: Error 2: https://github.com/Jack-Works/async-call-rpc/wiki/Errors#2]`;
 
 exports[`AsyncCall internal JSON RPC methods: call internal with a non-rpc symbol 1`] = `"Not start with rpc."`;
 

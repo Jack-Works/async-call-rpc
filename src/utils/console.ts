@@ -4,6 +4,7 @@
  * @public
  */
 export interface Console {
+    warn?(...args: unknown[]): void
     debug?(...args: unknown[]): void
     log(...args: unknown[]): void
     groupCollapsed?(...args: unknown[]): void
