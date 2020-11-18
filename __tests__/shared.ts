@@ -48,7 +48,7 @@ export function createServer<T extends object = typeof impl>(
     ctor: ctor = JestChannel,
 ) {
     const { client, server } = createChannelPair(ctor)
-    AsyncCall(Math.random() > 0.5 ? _ : sleep(100).then(() => _), {
+    AsyncCall(_, {
         channel: server,
         log: false,
         ...opt,

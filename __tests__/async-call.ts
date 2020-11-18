@@ -11,6 +11,15 @@ test('AsyncCall basic test', async () => {
     snapshot()
 }, 2000)
 
+test('AsyncCall async initialization test', async () => {
+    const c = createServer({}, Promise.resolve({ add: (a: number, b: number) => a + b }))
+    expect(await c.add(1, 3)).toBe(4)
+
+    const error = new Error('oops')
+    const c2 = createServer({}, Promise.reject(error))
+    expect(c2.add(1, 3)).rejects.toThrowErrorMatchingInlineSnapshot(`"oops"`)
+})
+
 test('AsyncCall should keep function identity', () => {
     const c = createServer()
     expect(c.add).toBe(c.add)

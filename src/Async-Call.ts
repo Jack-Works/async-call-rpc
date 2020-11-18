@@ -229,9 +229,18 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     options: AsyncCallOptions,
 ): _AsyncVersionOf<OtherSideImplementedFunctions> {
     let resolvedThisSideImplementation: object | undefined = undefined
-    if (thisSideImplementation instanceof Promise)
-        Promise_resolve(thisSideImplementation).then((x) => (resolvedThisSideImplementation = x))
-    else resolvedThisSideImplementation = thisSideImplementation
+    let rejectedThisSideImplementation: Error | undefined = undefined
+    // This promise should never fail
+    const awaitThisSideImplementation = () => {
+        return Promise_resolve(thisSideImplementation).then(
+            (x) => (resolvedThisSideImplementation = x),
+            (e) => {
+                resolvedThisSideImplementation = {}
+                rejectedThisSideImplementation = e
+                console_error('AsyncCall server failed to start', e)
+            },
+        )
+    }
 
     const {
         serializer = NoSerialization,
@@ -245,6 +254,10 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         logger,
         channel,
     } = options
+
+    if (thisSideImplementation instanceof Promise) awaitThisSideImplementation()
+    else resolvedThisSideImplementation = thisSideImplementation
+
     const [banMethodNotFound, banUnknownMessage] = normalizeStrictOptions(strict)
     const [
         log_beCalled,
@@ -264,7 +277,8 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     type PromiseParam = [resolve: (value?: any) => void, reject: (reason?: any) => void]
     const requestContext = new Map<string | number, { f: PromiseParam; stack: string }>()
     const onRequest = async (data: Request): Promise<Response | undefined> => {
-        if (!resolvedThisSideImplementation) await thisSideImplementation
+        if (!resolvedThisSideImplementation) await awaitThisSideImplementation()
+        if (rejectedThisSideImplementation) return makeErrorObject(rejectedThisSideImplementation, '', data)
         let frameworkStack: string = ''
         try {
             const { params, method, id: req_id, remoteStack } = data
@@ -307,16 +321,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             if (result === AsyncCallIgnoreResponse) return
             return SuccessResponse(req_id, await promise)
         } catch (e) {
-            if (isObject(e) && hasKey(e, 'stack'))
-                e.stack = frameworkStack
-                    .split('\n')
-                    .reduce((stack, fstack) => stack.replace(fstack + '\n', ''), '' + e.stack || '')
-            if (log_localError) console_error(e)
-            return ErrorResponseMapped(
-                data,
-                e,
-                mapError || defaultErrorMapper(log_sendLocalStack ? e.stack : undefined),
-            )
+            return makeErrorObject(e, frameworkStack, data)
         }
     }
     const onResponse = async (data: Response): Promise<void> => {
@@ -431,6 +436,15 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                     .then((x) => x && m.send!(x)),
             )
     }
+    function makeErrorObject(e: any, frameworkStack: string, data: Request) {
+        if (isObject(e) && hasKey(e, 'stack'))
+            e.stack = frameworkStack
+                .split('\n')
+                .reduce((stack, fstack) => stack.replace(fstack + '\n', ''), '' + e.stack || '')
+        if (log_localError) console_error(e)
+        return ErrorResponseMapped(data, e, mapError || defaultErrorMapper(log_sendLocalStack ? e.stack : undefined))
+    }
+
     async function sendPayload(payload: unknown, removeQueueR = false) {
         if (removeQueueR) payload = [...(payload as BatchQueue)]
         const data = await serialization(payload)
