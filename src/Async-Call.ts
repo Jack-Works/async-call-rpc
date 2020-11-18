@@ -172,8 +172,10 @@ export interface AsyncCallOptions {
      * @defaultValue undefined
      * @remarks
      * If the value is *true*, it will return a *then* method normally (forwards the call to the remote).
+     *
      * If the value is *false*, it will return *undefined* even the remote has a method called "then".
-     * If the value is *undefined*, it will return *undefined* and show a warning. You must explicity set this option to *true* or *false* to dismiss the warning.
+     *
+     * If the value is *undefined*, it will return *undefined* and show a warning. You must explicitly set this option to *true* or *false* to dismiss the warning.
      *
      * The motivation of this option is to resolve the problem caused by Promise auto-unwrapping.
      *

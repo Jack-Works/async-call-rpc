@@ -26,6 +26,7 @@ export interface AsyncCallOptions
 |  [preservePauseOnException](./async-call-rpc.asynccalloptions.preservepauseonexception.md) | boolean |  |
 |  [serializer](./async-call-rpc.asynccalloptions.serializer.md) | [Serialization](./async-call-rpc.serialization.md) | How to serialization and deserialization JSON RPC payload |
 |  [strict](./async-call-rpc.asynccalloptions.strict.md) | [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) \| boolean | Strict options. See [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) |
+|  [thenable](./async-call-rpc.asynccalloptions.thenable.md) | boolean | If the instance should be "thenable". |
 
 ## Methods
 
