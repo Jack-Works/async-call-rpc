@@ -15,52 +15,47 @@
         <script type="module">
             import * as lib from 'https://cdn.jsdelivr.net/npm/async-call-rpc@latest/out/full.mjs'
             const { AsyncCall } = lib
-            class PlayGroundChannel {
-                static server = document.createElement('a')
-                static client = document.createElement('a')
-                // actor: 'server' | 'client'
-                constructor(actor) {
-                    this.actor = actor
-                    PlayGroundChannel[actor].addEventListener('targetEventChannel', (e) => {
-                        const detail = e.detail
-                        for (const f of this.listener) {
-                            try {
-                                f(detail)
-                            } catch {}
-                        }
-                    })
+            Object.assign(globalThis, AsyncCall)
+            class BroadcastMessageChannel extends BroadcastChannel {
+                on(eventListener) {
+                    const f = (e) => eventListener(e.data)
+                    this.addEventListener('message', f)
+                    return () => this.removeEventListener('message', f)
                 }
-                listener = []
-                on(_, cb) {
-                    this.listener.push(cb)
-                }
-                emit(_, data) {
-                    PlayGroundChannel[this.actor === 'client' ? 'server' : 'client'].dispatchEvent(
-                        new CustomEvent('targetEventChannel', { detail: data }),
-                    )
+                send(data) {
+                    super.postMessage(data)
                 }
             }
-            const server = new PlayGroundChannel('server')
-            const client = new PlayGroundChannel('client')
-            Object.assign(globalThis, lib)
-            Object.assign(globalThis, { server, client, define, sleep })
+            const server = new BroadcastMessageChannel('rpc')
+            const client = new BroadcastMessageChannel('rpc')
             let count = 0
             function define(def, key = `server${count++}`) {
                 // define server
-                AsyncCall(def, { channel: server, key })
+                AsyncCall(def, {
+                    channel: server,
+                    key,
+                    log: false && {
+                        beCalled: true,
+                        localError: true,
+                        remoteError: true,
+                        type: 'pretty',
+                        requestReplay: true,
+                        sendLocalStack: true,
+                    },
+                })
                 // define client
                 globalThis[key] = AsyncCall({}, { channel: client, key })
-                console.log('Server is available as global variable', key, globalThis[key])
+                console.log('Server is available as global variable', key, globalThis[key], def)
             }
             function sleep(ms) {
                 return new Promise((resolve) => setTimeout(resolve, ms))
             }
-            Object.assign(globalThis, AsyncCall)
-            console.log('Try to run: await server0.add(42, 0)')
             define({
                 async add(a, b) {
-                    await sleep(1000)
                     return a + b
+                },
+                async error() {
+                    throw new SyntaxError()
                 },
             })
         </script>
