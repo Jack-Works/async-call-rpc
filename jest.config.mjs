@@ -9,5 +9,6 @@ export default {
             module: 'ESNext',
         },
     },
-    testPathIgnorePatterns: ['shared.ts'],
+    testPathIgnorePatterns: ['utils', '__file_snapshots__'],
+    watchPathIgnorePatterns: ['__file_snapshots__'],
 }
