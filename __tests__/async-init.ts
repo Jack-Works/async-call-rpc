@@ -1,4 +1,4 @@
-import { defaultImpl, withSnapshotDefault } from './utils/test'
+import { DefaultImpl, defaultImpl, withSnapshotDefault } from './utils/test'
 
 withSnapshotDefault('AsyncCall launch with resolved implementation', 'async-call-impl-resolved', async (f) => {
     const server = f({ impl: Promise.resolve(defaultImpl) })
@@ -15,4 +15,14 @@ withSnapshotDefault('AsyncCall launch with promise-like', 'async-call-impl-promi
     const server = f({ impl: { then: () => 1, otherMethods: () => 1 } })
     expect(server).not.toHaveProperty('then')
     await expect(server.otherMethods()).resolves.toMatchInlineSnapshot(`1`)
+})
+
+withSnapshotDefault('AsyncCall launch with pending implementation', 'async-call-impl-pending', async (f, _, log) => {
+    let r: Function
+    const impl = new Promise<DefaultImpl>((resolve) => (r = resolve))
+    const server = f({ impl })
+    const pending = server.add(1, 2)
+    log('Request should not resolve before this line')
+    r!(defaultImpl)
+    expect(pending).resolves.toMatchInlineSnapshot()
 })

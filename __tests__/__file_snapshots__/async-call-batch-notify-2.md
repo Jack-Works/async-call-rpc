@@ -4,6 +4,6 @@
 
 ```php
 Array [
-    "No log before this line",
+    "No log in this file",
 ]
 ```

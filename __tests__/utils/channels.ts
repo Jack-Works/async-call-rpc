@@ -31,6 +31,11 @@ export class JestCallbackBasedChannel implements CallbackBasedChannel {
             this.otherSide.log.emit('message', payload)
         })
     }
+    async send(data: any) {
+        this.logger.send(data)
+        await delay(25)
+        this.otherSide.log.emit('message', data)
+    }
 }
 export function createChannelPair(
     logger: { server: Logger; client: Logger },

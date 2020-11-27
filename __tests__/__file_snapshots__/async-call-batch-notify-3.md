@@ -4,7 +4,7 @@
 
 ```php
 Array [
-    "No log before this line",
+    "No log before this file",
 ]
 ```
 
@@ -24,14 +24,6 @@ Array [
         "jsonrpc": "2.0",
         "method": "throws",
         "params": Array [],
-    },
-    Object {
-        "jsonrpc": "2.0",
-        "method": "add",
-        "params": Array [
-            3,
-            4,
-        ],
     },
 ]
 ```
@@ -67,22 +59,6 @@ Array [
 ```
 
 ## T=4 Log: server/log
-
-```php
-Array [
-    "jsonrpc.%cadd%c(%o, %o%c)
-%o %c@undefined",
-    "color: #d2c057",
-    "",
-    3,
-    4,
-    "",
-    Promise {},
-    "color: gray; font-style: italic;",
-]
-```
-
-## T=5 Log: server/log
 
 ```php
 Array [

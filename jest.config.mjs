@@ -9,6 +9,7 @@ export default {
             module: 'ESNext',
         },
     },
-    testPathIgnorePatterns: ['utils', '__file_snapshots__'],
+    testPathIgnorePatterns: ['__tests__/utils', '__file_snapshots__'],
     watchPathIgnorePatterns: ['__file_snapshots__'],
+    coveragePathIgnorePatterns: ['__tests__/utils', 'node_modules'],
 }

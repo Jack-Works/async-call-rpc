@@ -4,8 +4,8 @@
 
 import { Serialization, NoSerialization } from './utils/serialization'
 export { JSONSerialization, NoSerialization, Serialization } from './utils/serialization'
+export type { Console } from './utils/console'
 import type { Console } from './utils/console'
-export { Console } from './utils/console'
 export { notify } from './core/notify'
 export { batch } from './core/batch'
 import {
@@ -493,14 +493,13 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             }
         }
     }
-    const handleSingleMessage = async (
+    const handleSingleMessage = (
         data: SuccessResponse | ErrorResponse | Request,
-    ): Promise<SuccessResponse | ErrorResponse | undefined> => {
+    ): Promise<SuccessResponse | ErrorResponse | undefined> | undefined => {
         if (hasKey(data, 'method')) {
             const r = onRequest(data)
             if (hasKey(data, 'id')) return r
-            await r
-            return
+            return undefined // Does not care about return result for notifications
         }
         return onResponse(data) as Promise<undefined>
     }
@@ -529,7 +528,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                     const RPCInternalMethod = Symbol.keyFor(method) || (method as any).description
                     if (RPCInternalMethod) {
                         if (RPCInternalMethod.startsWith('rpc.')) method = RPCInternalMethod
-                        else return Promise_reject('Not start with rpc.')
+                        else return Promise_reject(new TypeError('Not start with rpc.'))
                     }
                 } else if (method.startsWith('rpc.'))
                     return Promise_reject(

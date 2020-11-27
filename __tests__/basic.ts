@@ -16,3 +16,82 @@ withSnapshotDefault('basic use case of Async Call should work', 'async-call-basi
     // Keep identity
     expect(server.add).toBe(server.add)
 })
+
+withSnapshotDefault(
+    'basic use case of Async Call Generator should work',
+    'async-call-generator-basic',
+    async (_, call) => {
+        const server = call()
+        // Normal call
+        {
+            const iter = server.echo([1, 2, 3])
+            expect(await iter.next()).toMatchInlineSnapshot(`
+                Object {
+                  "done": false,
+                  "value": 1,
+                }
+            `)
+            expect(await iter.next()).toMatchInlineSnapshot(`
+                Object {
+                  "done": false,
+                  "value": 2,
+                }
+            `)
+            expect(await iter.next()).toMatchInlineSnapshot(`
+                Object {
+                  "done": false,
+                  "value": 3,
+                }
+            `)
+            expect(await iter.next()).toMatchInlineSnapshot(`
+                Object {
+                  "done": true,
+                  "value": undefined,
+                }
+            `)
+        }
+        // Abort
+        {
+            const iter = server.magic()
+            expect(await iter.next(0)).toMatchInlineSnapshot(`
+                Object {
+                  "done": false,
+                  "value": undefined,
+                }
+            `)
+            expect(await iter.next(1)).toMatchInlineSnapshot(`
+                Object {
+                  "done": false,
+                  "value": 1,
+                }
+            `)
+            expect(await iter.throw(new Error('2'))).toMatchInlineSnapshot(`
+                Object {
+                  "done": false,
+                  "value": [Error: 2],
+                }
+            `)
+            expect(await iter.next('well')).toMatchInlineSnapshot(`
+                Object {
+                  "done": false,
+                  "value": "well",
+                }
+            `)
+            // @ts-expect-error ts cannot get this type correctly.
+            expect(await iter.return('bye')).toMatchInlineSnapshot(`
+                Object {
+                  "done": true,
+                  "value": "bye",
+                }
+            `)
+            expect(await iter.next(3)).toMatchInlineSnapshot(`
+                Object {
+                  "done": true,
+                  "value": undefined,
+                }
+            `)
+        }
+        // Keep identity
+        expect(server.echo).toBe(server.echo)
+    },
+)
