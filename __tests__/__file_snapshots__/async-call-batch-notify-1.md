@@ -65,21 +65,3 @@ Array [
     [Error: impl error],
 ]
 ```
-
-## T=5 Message: server sent
-
-```php
-Array [
-    Object {
-        "error": Object {
-            "code": -1,
-            "data": Object {
-                "type": "Error",
-            },
-            "message": "impl error",
-        },
-        "id": null,
-        "jsonrpc": "2.0",
-    },
-]
-```

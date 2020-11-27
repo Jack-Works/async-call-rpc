@@ -418,10 +418,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             if (isJSONRPCObject(data)) {
                 return (result = await handleSingleMessage(data))
             } else if (isArray(data) && data.every(isJSONRPCObject) && data.length !== 0) {
-                const result = await Promise.all(data.map(handleSingleMessage))
-                // ? Response
-                if (data.every((x) => x === undefined)) return
-                return result.filter((x) => x)
+                return Promise.all(data.map(handleSingleMessage))
             } else {
                 if (banUnknownMessage) {
                     let id = (data as any).id
@@ -440,7 +437,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     const rawMessageSender = async (res: undefined | Response | (Response | undefined)[]) => {
         if (!res) return
         if (isArray(res)) {
-            const reply = res.filter((x) => hasKey(x, 'id'))
+            const reply = res.filter((x) => x && hasKey(x, 'id'))
             if (reply.length === 0) return
             return serialization(reply)
         } else {
@@ -496,10 +493,15 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             }
         }
     }
-    const handleSingleMessage = (
+    const handleSingleMessage = async (
         data: SuccessResponse | ErrorResponse | Request,
     ): Promise<SuccessResponse | ErrorResponse | undefined> => {
-        if (hasKey(data, 'method')) return onRequest(data)
+        if (hasKey(data, 'method')) {
+            const r = onRequest(data)
+            if (hasKey(data, 'id')) return r
+            await r
+            return
+        }
         return onResponse(data) as Promise<undefined>
     }
     return new Proxy({ __proto__: null } as any, {
