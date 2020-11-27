@@ -22,9 +22,11 @@ interface AsyncGeneratorInternalMethods {
     [AsyncIteratorThrow](id: string, value: unknown): Promise<IteratorResult<unknown>>
 }
 
+/** @internal */
 export type _IteratorOrIterableFunction = (
     ...args: any
 ) => Iterator<any, any, any> | Iterable<any> | AsyncIterator<any, any, any> | AsyncIterable<any>
+/** @internal */
 export type _IteratorLikeToAsyncGenerator<T extends _IteratorOrIterableFunction> = T extends (
     ...args: any
 ) => AsyncGenerator<any>
@@ -103,7 +105,7 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
     options: AsyncCallOptions,
 ): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions> {
     const iterators = new Map<string | number, Iter>()
-    const [methodNotFound] = normalizeStrictOptions(options.strict ?? true)
+    const [methodNotFound] = normalizeStrictOptions(options.strict || true)
     const { idGenerator = generateRandomID } = options
     const findIterator = (
         id: string,

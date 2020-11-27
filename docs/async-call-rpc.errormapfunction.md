@@ -4,6 +4,7 @@
 
 ## ErrorMapFunction type
 
+Map an exception to a JSON RPC error response
 
 <b>Signature:</b>
 

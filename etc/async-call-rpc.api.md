@@ -29,8 +29,6 @@ export interface AsyncCallOptions {
     mapError?: ErrorMapFunction<unknown>;
     parameterStructures?: 'by-position' | 'by-name';
     preferLocalImplementation?: boolean;
-    // @deprecated (undocumented)
-    preservePauseOnException?: boolean;
     serializer?: Serialization;
     strict?: AsyncCallStrictJSONRPC | boolean;
     thenable?: boolean;
@@ -79,7 +77,7 @@ export interface Console {
     warn?(...args: unknown[]): void;
 }
 
-// @public (undocumented)
+// @public
 export type ErrorMapFunction<T = unknown> = (error: unknown, request: Readonly<{
     jsonrpc: '2.0';
     id?: string | number | null;
@@ -101,10 +99,10 @@ export interface EventBasedChannel<Data = unknown> {
 export type _IgnoreResponse<T> = T extends (...args: infer Args) => unknown ? (...args: Args) => Promise<void> : {
     [key in keyof T
 
-// @public (undocumented)
+// @internal (undocumented)
 export type _IteratorLikeToAsyncGenerator<T extends _IteratorOrIterableFunction> = T extends (...args: any) => AsyncGenerator<any> ? T : T extends (...args: infer Args) => Iterator<infer Yield, infer Return, infer Next> | Iterable<infer Yield> | AsyncIterator<infer Yield, infer Return, infer Next> | AsyncIterable<infer Yield> ? (...args: Args) => AsyncGenerator<Yield, Return, Next> : never;
 
-// @public (undocumented)
+// @internal (undocumented)
 export type _IteratorOrIterableFunction = (...args: any) => Iterator<any, any, any> | Iterable<any> | AsyncIterator<any, any, any> | AsyncIterable<any>;
 
 // @public

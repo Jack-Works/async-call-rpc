@@ -42,7 +42,5 @@ See the introduction at [Github](https://github.com/Jack-Works/async-call)
 
 |  Type Alias | Description |
 |  --- | --- |
-|  [\_IteratorLikeToAsyncGenerator](./async-call-rpc._iteratorliketoasyncgenerator.md) |  |
-|  [\_IteratorOrIterableFunction](./async-call-rpc._iteratororiterablefunction.md) |  |
-|  [ErrorMapFunction](./async-call-rpc.errormapfunction.md) |  |
+|  [ErrorMapFunction](./async-call-rpc.errormapfunction.md) | Map an exception to a JSON RPC error response |
 
