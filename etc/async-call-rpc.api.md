@@ -49,15 +49,11 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(thisSideI
 
 // @internal
 export type _AsyncGeneratorVersionOf<T> = {
-    [key in keyof T]: T[key] extends (...args: infer Args) => Iterator<infer Yield, infer Return, infer Next> | AsyncIterator<infer Yield, infer Return, infer Next> ? (...args: Args) => AsyncIterator<_UnboxPromise<Yield>, _UnboxPromise<Return>, _UnboxPromise<Next>> & {
-        [Symbol.asyncIterator](): AsyncIterator<_UnboxPromise<Yield>, _UnboxPromise<Return>, _UnboxPromise<Next>>;
-    } : T[key];
-};
+    [key in keyof T
 
 // @internal
 export type _AsyncVersionOf<T> = {
-    [key in keyof T]: T[key] extends (...args: infer Args) => infer Return ? Return extends PromiseLike<infer U> ? (...args: Args) => Promise<U> : (...args: Args) => Promise<Return> : never;
-};
+    readonly [key in keyof T
 
 // @public
 export function batch<T extends object>(asyncCallInstance: T): [T, () => void, (error?: unknown) => void];
@@ -103,8 +99,13 @@ export interface EventBasedChannel<Data = unknown> {
 
 // @internal (undocumented)
 export type _IgnoreResponse<T> = T extends (...args: infer Args) => unknown ? (...args: Args) => Promise<void> : {
-    [key in keyof T]: T[key] extends (...args: infer Args) => unknown ? (...args: Args) => Promise<void> : never;
-};
+    [key in keyof T
+
+// @public (undocumented)
+export type _IteratorLikeToAsyncGenerator<T extends _IteratorOrIterableFunction> = T extends (...args: any) => AsyncGenerator<any> ? T : T extends (...args: infer Args) => Iterator<infer Yield, infer Return, infer Next> | Iterable<infer Yield> | AsyncIterator<infer Yield, infer Return, infer Next> | AsyncIterable<infer Yield> ? (...args: Args) => AsyncGenerator<Yield, Return, Next> : never;
+
+// @public (undocumented)
+export type _IteratorOrIterableFunction = (...args: any) => Iterator<any, any, any> | Iterable<any> | AsyncIterator<any, any, any> | AsyncIterable<any>;
 
 // @public
 export const JSONSerialization: (replacerAndReceiver?: [(((key: string, value: any) => any) | undefined)?, (((key: string, value: any) => any) | undefined)?], space?: string | number | undefined, undefinedKeepingBehavior?: 'keep' | 'null' | false) => Serialization;
@@ -122,9 +123,6 @@ export interface Serialization {
     deserialization(serialized: unknown): unknown | PromiseLike<unknown>;
     serialization(from: any): unknown | PromiseLike<unknown>;
 }
-
-// @internal
-export type _UnboxPromise<T> = T extends PromiseLike<infer U> ? U : T;
 
 
 ```

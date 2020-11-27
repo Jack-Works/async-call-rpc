@@ -188,6 +188,8 @@ export interface AsyncCallOptions {
      * ```
      *
      * According to the JS semantics, it will invoke the "then" method immediately on the returning instance which is unwanted in most scenarios.
+     *
+     * To avoid this problem, methods called "then" are omitted from the type signatures. Strongly suggest to not use "then" as your RPC method name.
      */
     thenable?: boolean
 }
@@ -210,23 +212,34 @@ export type ErrorMapFunction<T = unknown> = (
 }
 
 /**
- * Make all function in the type T Async
+ * Make all function in the type T becomes async functions and filtering non-Functions out.
+ *
+ * @remarks
+ * Only generics signatures on function that returning an Promise<T> will be preserved due to the limitation of TypeScript.
+ *
+ * Method called `then` are intentionally removed because it is very likely to be a foot gun in promise auto-unwrap.
  * @internal
  */
 export type _AsyncVersionOf<T> = {
-    [key in keyof T]: T[key] extends (...args: infer Args) => infer Return
-        ? Return extends PromiseLike<infer U>
-            ? (...args: Args) => Promise<U>
-            : (...args: Args) => Promise<Return>
+    readonly // Explicitly exclude key called "then" because it will cause problem in promise auto-unwrap.
+    [key in keyof T as key extends 'then' ? never : T[key] extends Function ? key : never]: T[key] extends (
+        ...args: any
+    ) => Promise<any>
+        ? T[key] // If it is returning Promise<any>, we use T[key] to preserve generics on function signatures
+        : T[key] extends (...args: infer Args) => infer Return // otherwise we convert it to async functions
+        ? (...args: Args) => Promise<Return extends PromiseLike<infer U> ? U : Return>
         : never
 }
+
 /**
  * @internal
  */
 export type _IgnoreResponse<T> = T extends (...args: infer Args) => unknown
     ? (...args: Args) => Promise<void>
     : {
-          [key in keyof T]: T[key] extends (...args: infer Args) => unknown ? (...args: Args) => Promise<void> : never
+          [key in keyof T as T[key] extends Function ? key : never]: T[key] extends (...args: infer Args) => unknown
+              ? (...args: Args) => Promise<void>
+              : never
       }
 
 /**

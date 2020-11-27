@@ -1,24 +1,24 @@
 devDependencies:
-  '@microsoft/api-documenter': 7.10.1
-  '@microsoft/api-extractor': 7.11.5
-  '@rollup/plugin-typescript': 6.1.0_b2582867c79df015635a20c559cc138d
+  '@microsoft/api-documenter': 7.11.0
+  '@microsoft/api-extractor': 7.12.0
+  '@rollup/plugin-typescript': 6.1.0_7acd921d0b3b835553b7f513891ce3ca
   '@types/bson': 4.0.3
   '@types/jest': 26.0.15
-  '@types/node': 14.14.8
+  '@types/node': 14.14.10
   '@types/ws': 7.4.0
   async-call-rpc: 'link:'
   bson: 4.2.0
   jest: 26.6.3
   npm-run-all: 4.1.5
-  prettier: 2.1.2
+  prettier: 2.2.0
   rimraf: 3.0.2
   rollup: 2.33.3
-  rollup-plugin-dts: 1.4.14_rollup@2.33.3+typescript@4.0.5
+  rollup-plugin-dts: 2.0.0_rollup@2.33.3+typescript@4.1.2
   rollup-plugin-terser: 7.0.2_rollup@2.33.3
   standard-version: 9.0.0
-  ts-jest: 26.4.4_jest@26.6.3+typescript@4.0.5
+  ts-jest: 26.4.4_jest@26.6.3+typescript@4.1.2
   tslib: 2.0.3
-  typescript: 4.0.5
+  typescript: 4.1.2
   ws: 7.4.0
 lockfileVersion: 5.2
 packages:
@@ -509,9 +509,9 @@ packages:
       node: '>= 10.14.2'
     resolution:
       integrity: sha512-fC6QCp7Sc5sX6g8Tvbmj4XUTbyrik0akgRy03yjXbQaBWWNWGE7SGtJk98m0N8nzegD/7SggrUlivxo5ax4KWQ==
-  /@microsoft/api-documenter/7.10.1:
+  /@microsoft/api-documenter/7.11.0:
     dependencies:
-      '@microsoft/api-extractor-model': 7.11.0
+      '@microsoft/api-extractor-model': 7.12.0
       '@microsoft/tsdoc': 0.12.19
       '@rushstack/node-core-library': 3.35.1
       '@rushstack/ts-command-line': 4.7.7
@@ -521,17 +521,17 @@ packages:
     dev: true
     hasBin: true
     resolution:
-      integrity: sha512-03bb8MYFLeIA7kCQnJ+GugnW9rMUDhTO2EHVVsAGWdSlF3cgoCUy21JYQSZz1jYZY5N12Kq+2WkNK4tRoWo00Q==
-  /@microsoft/api-extractor-model/7.11.0:
+      integrity: sha512-PT2cg5Lii7v7WJC/Xlm+4onpwT5NL2rj6dXuBOJzDLd5YO6QvEEoFZWPkdrMfcR3OWwrRZ9PaCxQ/nF3SSkaIA==
+  /@microsoft/api-extractor-model/7.12.0:
     dependencies:
       '@microsoft/tsdoc': 0.12.19
       '@rushstack/node-core-library': 3.35.1
     dev: true
     resolution:
-      integrity: sha512-DV5rewugfqhdptob5X4Pd4VMPpzxDZTvPdziM6P5JMWGMn8tvF2PGd88nzsatbCXQXgkM8EQCYPMGDclZY39tQ==
-  /@microsoft/api-extractor/7.11.5:
+      integrity: sha512-TxoAbL/lauS3k/brBWVsiQTnyHBwHrAGJhTuiD0tWS/eu4dLNULchcSQfcOaFS91OgDEz4lMMbClgChFuo+53Q==
+  /@microsoft/api-extractor/7.12.0:
     dependencies:
-      '@microsoft/api-extractor-model': 7.11.0
+      '@microsoft/api-extractor-model': 7.12.0
       '@microsoft/tsdoc': 0.12.19
       '@rushstack/node-core-library': 3.35.1
       '@rushstack/rig-package': 0.2.8
@@ -545,18 +545,18 @@ packages:
     dev: true
     hasBin: true
     resolution:
-      integrity: sha512-m2JRenJ56MjPSqxDr9ytxxWXs5d6NT9PKlb8G8239VybEGNk+PWkQlm0usV88Lm+hFW1805KEOPcFAZhol/p9A==
+      integrity: sha512-YDd7AUkIayPLooMasDyV4vle1TLUQhFp2v/tGdRU+WAVbnyVUDXXa20WEfbPEZ4QVlgN+77EX6f2K6GyKd713A==
   /@microsoft/tsdoc/0.12.19:
     dev: true
     resolution:
       integrity: sha512-IpgPxHrNxZiMNUSXqR1l/gePKPkfAmIKoDRP9hp7OwjU29ZR8WCJsOJ8iBKgw0Qk+pFwR+8Y1cy8ImLY6e9m4A==
-  /@rollup/plugin-typescript/6.1.0_b2582867c79df015635a20c559cc138d:
+  /@rollup/plugin-typescript/6.1.0_7acd921d0b3b835553b7f513891ce3ca:
     dependencies:
       '@rollup/pluginutils': 3.1.0_rollup@2.33.3
       resolve: 1.19.0
       rollup: 2.33.3
       tslib: 2.0.3
-      typescript: 4.0.5
+      typescript: 4.1.2
     dev: true
     engines:
       node: '>=8.0.0'
@@ -702,6 +702,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-pMCcqU2zT4TjqYFrWtYHKal7Sl30Ims6ulZ4UFXxI4xbtQqK/qqKwkDoBFCfooRqqmRu9vY3xaJRwxSh673aYg==
+  /@types/node/14.14.10:
+    dev: true
+    resolution:
+      integrity: sha512-J32dgx2hw8vXrSbu4ZlVhn1Nm3GbeCFNw2FWL8S5QKucHGY0cyNwjdQdO+KMBZ4wpmC7KhLCiNsdk1RFRIYUQQ==
   /@types/node/14.14.8:
     dev: true
     resolution:
@@ -3462,6 +3466,12 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==
+  /magic-string/0.25.7:
+    dependencies:
+      sourcemap-codec: 1.4.8
+    dev: true
+    resolution:
+      integrity: sha512-4CrMT5DOHTDk4HYDlzmwu4FVCcIYI8gauveasrdCu2IKIFOJ3f0v/8MDGJCDL9oD2ppz/Av1b0Nj345H9M+XIA==
   /make-dir/3.1.0:
     dependencies:
       semver: 6.3.0
@@ -4161,13 +4171,13 @@ packages:
       node: '>= 0.8.0'
     resolution:
       integrity: sha1-IZMqVJ9eUv/ZqCf1cOBL5iqX2lQ=
-  /prettier/2.1.2:
+  /prettier/2.2.0:
     dev: true
     engines:
       node: '>=10.13.0'
     hasBin: true
     resolution:
-      integrity: sha512-16c7K+x4qVlJg9rEbXl7HEGmQyZlG4R9AgP+oHKRMsMsuk8s+ATStlf1NpDqyBI1HpVyfjLOeMhH2LvuNvV5Vg==
+      integrity: sha512-yYerpkvseM4iKD/BXLYUkQV5aKt4tQPqaGW6EsZjzyu0r7sVZZNPJW4Y8MyKmicp6t42XUPcBVA+H6sB3gqndw==
   /pretty-format/26.6.2:
     dependencies:
       '@jest/types': 26.6.2
@@ -4501,18 +4511,19 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==
-  /rollup-plugin-dts/1.4.14_rollup@2.33.3+typescript@4.0.5:
+  /rollup-plugin-dts/2.0.0_rollup@2.33.3+typescript@4.1.2:
     dependencies:
+      magic-string: 0.25.7
       rollup: 2.33.3
-      typescript: 4.0.5
+      typescript: 4.1.2
     dev: true
     optionalDependencies:
       '@babel/code-frame': 7.10.4
     peerDependencies:
-      rollup: ^2.33.1
-      typescript: ^4.0.5
+      rollup: ^2.33.3
+      typescript: ^4.1.2
     resolution:
-      integrity: sha512-H33aGCUbp/Lm+tbkG5gZePnuWvvaafkwh7Uh4RYJs0/ChOfWlENCby1wOn+xBVsCzpV/g/+OVYqgzVjT80dNJg==
+      integrity: sha512-kDicSNT9m2z6swvJVqYnkgcVBusnlRD5qCtloqWlalmi4T/gS6mQqICYAEs+YzeBw0sn+9ZIrwu2UeDpV3uyLQ==
   /rollup-plugin-terser/7.0.2_rollup@2.33.3:
     dependencies:
       '@babel/code-frame': 7.10.4
@@ -4755,6 +4766,10 @@ packages:
       node: '>= 8'
     resolution:
       integrity: sha512-CkCj6giN3S+n9qrYiBTX5gystlENnRW5jZeNLHpe6aue+SrHcG5VYwujhW9s4dY31mEGsxBDrHR6oI69fTXsaQ==
+  /sourcemap-codec/1.4.8:
+    dev: true
+    resolution:
+      integrity: sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==
   /spdx-correct/3.1.1:
     dependencies:
       spdx-expression-parse: 3.0.1
@@ -5184,7 +5199,7 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-n5up2e+odkw4dpi8v+sshI8RrbM=
-  /ts-jest/26.4.4_jest@26.6.3+typescript@4.0.5:
+  /ts-jest/26.4.4_jest@26.6.3+typescript@4.1.2:
     dependencies:
       '@types/jest': 26.0.15
       bs-logger: 0.2.6
@@ -5197,7 +5212,7 @@ packages:
       make-error: 1.3.6
       mkdirp: 1.0.4
       semver: 7.3.2
-      typescript: 4.0.5
+      typescript: 4.1.2
       yargs-parser: 20.2.4
     dev: true
     engines:
@@ -5283,6 +5298,13 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-ywmr/VrTVCmNTJ6iV2LwIrfG1P+lv6luD8sUJs+2eI9NLGigaN+nUQc13iHqisq7bra9lnmUSYqbJvegraBOPQ==
+  /typescript/4.1.2:
+    dev: true
+    engines:
+      node: '>=4.2.0'
+    hasBin: true
+    resolution:
+      integrity: sha512-thGloWsGH3SOxv1SoY7QojKi0tc+8FnOmiarEGMbd/lar7QOEd3hvlx3Fp5y6FlDUGl9L+pd4n2e+oToGMmhRQ==
   /uglify-js/3.11.6:
     dev: true
     engines:
@@ -5568,24 +5590,24 @@ packages:
     resolution:
       integrity: sha512-DUOKC/IhbkdLKKiV89gw9DUauTV8U/8yJl1sjf6MtDmzevLKOF2duNJ495S3MFVjqZarr+qNGCPbkg4mu4PpLw==
 specifiers:
-  '@microsoft/api-documenter': ^7.10.1
-  '@microsoft/api-extractor': ^7.11.5
+  '@microsoft/api-documenter': ^7.11.0
+  '@microsoft/api-extractor': ^7.12.0
   '@rollup/plugin-typescript': ^6.1.0
   '@types/bson': ^4.0.3
   '@types/jest': ^26.0.15
-  '@types/node': ^14.14.8
+  '@types/node': ^14.14.10
   '@types/ws': ^7.4.0
   async-call-rpc: 'link:'
   bson: ^4.2.0
   jest: ^26.6.3
   npm-run-all: ^4.1.5
-  prettier: ^2.1.2
+  prettier: ^2.2.0
   rimraf: ^3.0.2
   rollup: ^2.33.3
-  rollup-plugin-dts: ^1.4.14
+  rollup-plugin-dts: ^2.0.0
   rollup-plugin-terser: ^7.0.2
   standard-version: ^9.0.0
   ts-jest: ^26.4.4
   tslib: ^2.0.3
-  typescript: ^4.0.5
+  typescript: ^4.1.2
   ws: ^7.4.0

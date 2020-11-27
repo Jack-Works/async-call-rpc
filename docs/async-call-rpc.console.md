@@ -16,10 +16,10 @@ export interface Console
 
 |  Method | Description |
 |  --- | --- |
-|  [debug(args)](./async-call-rpc.console.debug.md) |  |
-|  [error(args)](./async-call-rpc.console.error.md) |  |
-|  [groupCollapsed(args)](./async-call-rpc.console.groupcollapsed.md) |  |
-|  [groupEnd(args)](./async-call-rpc.console.groupend.md) |  |
+|  [debug(args)?](./async-call-rpc.console.debug.md) | <i>(Optional)</i> |
+|  [error(args)?](./async-call-rpc.console.error.md) | <i>(Optional)</i> |
+|  [groupCollapsed(args)?](./async-call-rpc.console.groupcollapsed.md) | <i>(Optional)</i> |
+|  [groupEnd(args)?](./async-call-rpc.console.groupend.md) | <i>(Optional)</i> |
 |  [log(args)](./async-call-rpc.console.log.md) |  |
-|  [warn(args)](./async-call-rpc.console.warn.md) |  |
+|  [warn(args)?](./async-call-rpc.console.warn.md) | <i>(Optional)</i> |
 

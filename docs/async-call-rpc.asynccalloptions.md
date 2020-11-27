@@ -17,20 +17,20 @@ export interface AsyncCallOptions
 |  Property | Type | Description |
 |  --- | --- | --- |
 |  [channel](./async-call-rpc.asynccalloptions.channel.md) | [CallbackBasedChannel](./async-call-rpc.callbackbasedchannel.md) \| [EventBasedChannel](./async-call-rpc.eventbasedchannel.md) | The message channel can let you transport messages between server and client |
-|  [key](./async-call-rpc.asynccalloptions.key.md) | string | This option will only used for better logging. |
-|  [log](./async-call-rpc.asynccalloptions.log.md) | [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) \| boolean \| 'all' | Choose log level. |
-|  [logger](./async-call-rpc.asynccalloptions.logger.md) | [Console](./async-call-rpc.console.md) | The logger of AsyncCall |
-|  [mapError](./async-call-rpc.asynccalloptions.maperror.md) | [ErrorMapFunction](./async-call-rpc.errormapfunction.md)<!-- -->&lt;unknown&gt; | Control the error response data |
-|  [parameterStructures](./async-call-rpc.asynccalloptions.parameterstructures.md) | 'by-position' \| 'by-name' | How parameters passed to remote |
-|  [preferLocalImplementation](./async-call-rpc.asynccalloptions.preferlocalimplementation.md) | boolean | Prefer local implementation than remote. |
-|  [preservePauseOnException](./async-call-rpc.asynccalloptions.preservepauseonexception.md) | boolean |  |
-|  [serializer](./async-call-rpc.asynccalloptions.serializer.md) | [Serialization](./async-call-rpc.serialization.md) | How to serialization and deserialization JSON RPC payload |
-|  [strict](./async-call-rpc.asynccalloptions.strict.md) | [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) \| boolean | Strict options. See [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) |
-|  [thenable](./async-call-rpc.asynccalloptions.thenable.md) | boolean | If the instance should be "thenable". |
+|  [key?](./async-call-rpc.asynccalloptions.key.md) | string | <i>(Optional)</i> This option will only used for better logging. |
+|  [log?](./async-call-rpc.asynccalloptions.log.md) | [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) \| boolean \| 'all' | <i>(Optional)</i> Choose log level. |
+|  [logger?](./async-call-rpc.asynccalloptions.logger.md) | [Console](./async-call-rpc.console.md) | <i>(Optional)</i> The logger of AsyncCall |
+|  [mapError?](./async-call-rpc.asynccalloptions.maperror.md) | [ErrorMapFunction](./async-call-rpc.errormapfunction.md)<!-- -->&lt;unknown&gt; | <i>(Optional)</i> Control the error response data |
+|  [parameterStructures?](./async-call-rpc.asynccalloptions.parameterstructures.md) | 'by-position' \| 'by-name' | <i>(Optional)</i> How parameters passed to remote |
+|  [preferLocalImplementation?](./async-call-rpc.asynccalloptions.preferlocalimplementation.md) | boolean | <i>(Optional)</i> Prefer local implementation than remote. |
+|  [preservePauseOnException?](./async-call-rpc.asynccalloptions.preservepauseonexception.md) | boolean | <i>(Optional)</i> |
+|  [serializer?](./async-call-rpc.asynccalloptions.serializer.md) | [Serialization](./async-call-rpc.serialization.md) | <i>(Optional)</i> How to serialization and deserialization JSON RPC payload |
+|  [strict?](./async-call-rpc.asynccalloptions.strict.md) | [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) \| boolean | <i>(Optional)</i> Strict options. See [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) |
+|  [thenable?](./async-call-rpc.asynccalloptions.thenable.md) | boolean | <i>(Optional)</i> If the instance should be "thenable". |
 
 ## Methods
 
 |  Method | Description |
 |  --- | --- |
-|  [idGenerator()](./async-call-rpc.asynccalloptions.idgenerator.md) | The ID generator of each JSON RPC request |
+|  [idGenerator()?](./async-call-rpc.asynccalloptions.idgenerator.md) | <i>(Optional)</i> The ID generator of each JSON RPC request |
 

@@ -21,26 +21,41 @@ interface AsyncGeneratorInternalMethods {
     [AsyncIteratorReturn](id: string, value: unknown): Promise<IteratorResult<unknown>>
     [AsyncIteratorThrow](id: string, value: unknown): Promise<IteratorResult<unknown>>
 }
-/**
- * Unbox the Promise<T> into T if possible
- * @internal
- */
-export type _UnboxPromise<T> = T extends PromiseLike<infer U> ? U : T
+
+export type _IteratorOrIterableFunction = (
+    ...args: any
+) => Iterator<any, any, any> | Iterable<any> | AsyncIterator<any, any, any> | AsyncIterable<any>
+export type _IteratorLikeToAsyncGenerator<T extends _IteratorOrIterableFunction> = T extends (
+    ...args: any
+) => AsyncGenerator<any>
+    ? T // return async generator as-is so generics can be preserved
+    : T extends (
+          ...args: infer Args
+      ) =>
+          | Iterator<infer Yield, infer Return, infer Next>
+          | Iterable<infer Yield>
+          | AsyncIterator<infer Yield, infer Return, infer Next>
+          | AsyncIterable<infer Yield>
+    ? (...args: Args) => AsyncGenerator<Yield, Return, Next>
+    : never
 
 /**
  * Make all generator in the type T becomes AsyncGenerator
+ *
+ * @remarks
+ * Only generics signatures on function that returning an AsyncGenerator<T> will be preserved due to the limitation of TypeScript.
+ *
+ * Method called `then` are intentionally removed because it is very likely to be a foot gun in promise auto-unwrap.
  * @internal
  */
 export type _AsyncGeneratorVersionOf<T> = {
-    [key in keyof T]: T[key] extends (
-        ...args: infer Args
-    ) => Iterator<infer Yield, infer Return, infer Next> | AsyncIterator<infer Yield, infer Return, infer Next>
-        ? (
-              ...args: Args
-          ) => AsyncIterator<_UnboxPromise<Yield>, _UnboxPromise<Return>, _UnboxPromise<Next>> & {
-              [Symbol.asyncIterator](): AsyncIterator<_UnboxPromise<Yield>, _UnboxPromise<Return>, _UnboxPromise<Next>>
-          }
-        : T[key]
+    // Omit 'then'
+    [key in keyof T as key extends 'then'
+        ? never
+        : // Omit non-iterator/iterable
+        T[key] extends _IteratorOrIterableFunction
+        ? key
+        : never]: T[key] extends _IteratorOrIterableFunction ? _IteratorLikeToAsyncGenerator<T[key]> : never
 }
 
 type Iter = Iterator<unknown, unknown, unknown> | AsyncIterator<unknown>
@@ -136,14 +151,14 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
         if (cache[key]) return cache[key]
         const f = (...args: unknown[]) => {
             const id = remote[AsyncIteratorStart](key, args)
-            return new AsyncGenerator(remote, id)
+            return new _AsyncGenerator(remote, id)
         }
         Object.defineProperty(cache, key, { value: f, configurable: true })
         return f
     }
     return new Proxy({ __proto__: null }, { get: proxyTrap }) as _AsyncGeneratorVersionOf<OtherSideImplementedFunctions>
 }
-class AsyncGenerator implements AsyncIterableIterator<unknown>, AsyncIterator<unknown, unknown, unknown> {
+class _AsyncGenerator implements AsyncIterableIterator<unknown>, AsyncIterator<unknown, unknown, unknown> {
     /** done? */
     private d: boolean = false
     /** check */
@@ -175,9 +190,9 @@ class AsyncGenerator implements AsyncIterableIterator<unknown>, AsyncIterator<un
 // ! side effect
 const AsyncGeneratorConstructor = async function* () {}.constructor
 const AsyncGeneratorConstructorPrototype = AsyncGeneratorConstructor.prototype
-Object_setPrototypeOf(AsyncGenerator, AsyncGeneratorConstructorPrototype)
+Object_setPrototypeOf(_AsyncGenerator, AsyncGeneratorConstructorPrototype)
 const AsyncGeneratorPrototype = Object.getPrototypeOf((async function* () {})())
-Object_setPrototypeOf(AsyncGenerator.prototype, AsyncGeneratorPrototype)
+Object_setPrototypeOf(_AsyncGenerator.prototype, AsyncGeneratorPrototype)
 
 const isFinished = async (result: IterResult | undefined | false, cb: () => void) => {
     try {

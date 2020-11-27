@@ -32,3 +32,5 @@ async function getRPC() {
 ```
 According to the JS semantics, it will invoke the "then" method immediately on the returning instance which is unwanted in most scenarios.
 
+To avoid this problem, methods called "then" are omitted from the type signatures. Strongly suggest to not use "then" as your RPC method name.
+
