@@ -105,7 +105,7 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
     options: AsyncCallOptions,
 ): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions> {
     const iterators = new Map<string | number, Iter>()
-    const [methodNotFound] = normalizeStrictOptions(options.strict || true)
+    const [methodNotFound] = normalizeStrictOptions(options.strict ?? true)
     const { idGenerator = generateRandomID } = options
     const findIterator = (
         id: string,

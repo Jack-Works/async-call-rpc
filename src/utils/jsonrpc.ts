@@ -87,7 +87,8 @@ export const defaultErrorMapper = (stack = '', code = -1): ErrorMapFunction<Asyn
     let message = ''
     if (isObject(e) && hasKey(e, 'message') && isString(e.message)) message = e.message
     let type = toString(ERROR, (ctor = (e as any).constructor) => isFunction(ctor) && ctor.name)
-    if (DOMException && e instanceof DOMException) type = DOMExceptionHeader + e.name
+    const E = DOMException()
+    if (E && e instanceof E) type = DOMExceptionHeader + e.name
     if (isString(e) || typeof e === 'number' || isBoolean(e) || typeof e === 'bigint') {
         type = ERROR
         message = String(e)

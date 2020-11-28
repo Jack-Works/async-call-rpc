@@ -3,7 +3,8 @@
  */
 
 import { Serialization, NoSerialization } from './utils/serialization'
-export { JSONSerialization, NoSerialization, Serialization } from './utils/serialization'
+export { JSONSerialization, NoSerialization } from './utils/serialization'
+export type { Serialization } from './utils/serialization'
 export type { Console } from './utils/console'
 import type { Console } from './utils/console'
 export { notify } from './core/notify'
@@ -134,7 +135,7 @@ export interface AsyncCallOptions {
     log?: AsyncCallLogLevel | boolean | 'all'
     /**
      * Strict options. See {@link AsyncCallStrictJSONRPC}
-     * @defaultValue false
+     * @defaultValue true
      */
     strict?: AsyncCallStrictJSONRPC | boolean
     /**
@@ -389,11 +390,8 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                     : console_error(`${errorType}: ${errorMessage}(${errorCode}) @${data.id}\n${remoteErrorStack}`)
         }
         if (data.id === null || data.id === undefined) return
-        const {
-            f: [resolve, reject],
-            stack: localErrorStack,
-        } = requestContext.get(data.id) || { stack: '', f: ([null, null] as any) as PromiseParam }
-        if (!resolve) return // drop this response
+        const { f: [resolve, reject] = [null, null], stack: localErrorStack = '' } = requestContext.get(data.id) || {}
+        if (!resolve || !reject) return // drop this response
         requestContext.delete(data.id)
         if (hasKey(data, 'error')) {
             reject(

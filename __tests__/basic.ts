@@ -1,3 +1,5 @@
+import { JestCallbackBasedChannel } from './utils/channels'
+import { reproduceRandomID } from './utils/reproduce'
 import { withSnapshotDefault } from './utils/test'
 
 withSnapshotDefault('basic use case of Async Call should work', 'async-call-basic', async (call) => {
@@ -7,6 +9,7 @@ withSnapshotDefault('basic use case of Async Call should work', 'async-call-basi
         expect(server.add(1, 2)).resolves.toMatchInlineSnapshot(`3`),
         expect(server.echo('string')).resolves.toMatchInlineSnapshot(`"string"`),
         expect(server.throws()).rejects.toThrowErrorMatchingInlineSnapshot(`"impl error"`),
+        expect(server.throwString()).rejects.toThrowErrorMatchingInlineSnapshot(`"1"`),
         // Unknown methods
         expect((server as any).not_found()).rejects.toThrowErrorMatchingInlineSnapshot(`"Method not found"`),
         // Keep this reference
@@ -94,4 +97,22 @@ withSnapshotDefault(
         // Keep identity
         expect(server.echo).toBe(server.echo)
     },
+)
+
+withSnapshotDefault('default generateRandomID', 'generateRandomID', async (f) => {
+    await reproduceRandomID(async () => {
+        const server = f({ opts: { idGenerator: undefined } })
+        await server.add(1, 2)
+    })
+})
+
+withSnapshotDefault(
+    'CallbackBasedChannel',
+    'CallbackBasedChannel',
+    async (f) => {
+        const server = f({})
+        await server.add(1, 2)
+    },
+    800,
+    JestCallbackBasedChannel,
 )

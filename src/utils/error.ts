@@ -31,9 +31,10 @@ export const DOMExceptionHeader = 'DOMException:'
  */
 export const RecoverError = (type: string, message: string, code: number, stack: string): Error => {
     try {
-        if (type.startsWith(DOMExceptionHeader) && globalDOMException) {
+        const E = globalDOMException()
+        if (type.startsWith(DOMExceptionHeader) && E) {
             const [, name] = type.split(DOMExceptionHeader)
-            return new globalDOMException(message, name)
+            return new E(message, name)
         } else if (type in errors) {
             const e = new errors[type](message)
             e.stack = stack
@@ -54,5 +55,5 @@ export const globalDOMException = (() => {
         // @ts-ignore
         return DOMException
     } catch {}
-})() as DOMException | undefined
+}) as () => DOMException | undefined
 type DOMException = { new (message: string, name: string): any }

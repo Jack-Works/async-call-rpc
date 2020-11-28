@@ -1,14 +1,6 @@
 # Timeline
 
-## T=0 Log: jest/log
-
-```php
-Array [
-    "Request should not resolve before this line",
-]
-```
-
-## T=1 Message: client => server
+## T=0 Message: client => server
 
 ```php
 Object {
@@ -22,7 +14,7 @@ Object {
 }
 ```
 
-## T=2 Log: server/log
+## T=1 Log: server/log
 
 ```php
 Array [
@@ -38,7 +30,7 @@ Array [
 ]
 ```
 
-## T=3 Message: server => client
+## T=2 Message: server => client
 
 ```php
 Object {

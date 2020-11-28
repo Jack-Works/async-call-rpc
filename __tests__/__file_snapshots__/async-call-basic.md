@@ -44,7 +44,7 @@ Object {
 Object {
     "id": 3,
     "jsonrpc": "2.0",
-    "method": "not_found",
+    "method": "throwString",
     "params": Array [],
 }
 ```
@@ -55,12 +55,23 @@ Object {
 Object {
     "id": 4,
     "jsonrpc": "2.0",
+    "method": "not_found",
+    "params": Array [],
+}
+```
+
+## T=5 Message: client sent
+
+```php
+Object {
+    "id": 5,
+    "jsonrpc": "2.0",
     "method": "withThisRef",
     "params": Array [],
 }
 ```
 
-## T=5 Message: server received
+## T=6 Message: server received
 
 ```php
 Object {
@@ -74,7 +85,7 @@ Object {
 }
 ```
 
-## T=6 Log: server/log
+## T=7 Log: server/log
 
 ```php
 Array [
@@ -90,7 +101,7 @@ Array [
 ]
 ```
 
-## T=7 Message: server sent
+## T=8 Message: server sent
 
 ```php
 Object {
@@ -100,7 +111,7 @@ Object {
 }
 ```
 
-## T=8 Message: server received
+## T=9 Message: server received
 
 ```php
 Object {
@@ -113,7 +124,7 @@ Object {
 }
 ```
 
-## T=9 Log: server/log
+## T=10 Log: server/log
 
 ```php
 Array [
@@ -128,7 +139,7 @@ Array [
 ]
 ```
 
-## T=10 Message: server sent
+## T=11 Message: server sent
 
 ```php
 Object {
@@ -138,7 +149,7 @@ Object {
 }
 ```
 
-## T=11 Message: server received
+## T=12 Message: server received
 
 ```php
 Object {
@@ -149,7 +160,7 @@ Object {
 }
 ```
 
-## T=12 Log: server/log
+## T=13 Log: server/log
 
 ```php
 Array [
@@ -163,7 +174,7 @@ Array [
 ]
 ```
 
-## T=13 Log: server/log
+## T=14 Log: server/log
 
 ```php
 Array [
@@ -171,7 +182,7 @@ Array [
 ]
 ```
 
-## T=14 Message: server sent
+## T=15 Message: server sent
 
 ```php
 Object {
@@ -187,47 +198,23 @@ Object {
 }
 ```
 
-## T=15 Message: server received
+## T=16 Message: server received
 
 ```php
 Object {
     "id": 3,
     "jsonrpc": "2.0",
-    "method": "not_found",
+    "method": "throwString",
     "params": Array [],
 }
 ```
 
-## T=16 Message: server sent
-
-```php
-Object {
-    "error": Object {
-        "code": -32601,
-        "message": "Method not found",
-    },
-    "id": 3,
-    "jsonrpc": "2.0",
-}
-```
-
-## T=17 Message: server received
-
-```php
-Object {
-    "id": 4,
-    "jsonrpc": "2.0",
-    "method": "withThisRef",
-    "params": Array [],
-}
-```
-
-## T=18 Log: server/log
+## T=17 Log: server/log
 
 ```php
 Array [
-    "jsonrpc.%cwithThisRef%c(%c)
-%o %c@4",
+    "jsonrpc.%cthrowString%c(%c)
+%o %c@3",
     "color: #d2c057",
     "",
     "",
@@ -236,17 +223,90 @@ Array [
 ]
 ```
 
+## T=18 Log: server/log
+
+```php
+Array [
+    1,
+]
+```
+
 ## T=19 Message: server sent
+
+```php
+Object {
+    "error": Object {
+        "code": -1,
+        "data": Object {
+            "type": "Error",
+        },
+        "message": "1",
+    },
+    "id": 3,
+    "jsonrpc": "2.0",
+}
+```
+
+## T=20 Message: server received
 
 ```php
 Object {
     "id": 4,
     "jsonrpc": "2.0",
+    "method": "not_found",
+    "params": Array [],
+}
+```
+
+## T=21 Message: server sent
+
+```php
+Object {
+    "error": Object {
+        "code": -32601,
+        "message": "Method not found",
+    },
+    "id": 4,
+    "jsonrpc": "2.0",
+}
+```
+
+## T=22 Message: server received
+
+```php
+Object {
+    "id": 5,
+    "jsonrpc": "2.0",
+    "method": "withThisRef",
+    "params": Array [],
+}
+```
+
+## T=23 Log: server/log
+
+```php
+Array [
+    "jsonrpc.%cwithThisRef%c(%c)
+%o %c@5",
+    "color: #d2c057",
+    "",
+    "",
+    Promise {},
+    "color: gray; font-style: italic;",
+]
+```
+
+## T=24 Message: server sent
+
+```php
+Object {
+    "id": 5,
+    "jsonrpc": "2.0",
     "result": 3,
 }
 ```
 
-## T=20 Message: client received
+## T=25 Message: client received
 
 ```php
 Object {
@@ -256,7 +316,7 @@ Object {
 }
 ```
 
-## T=21 Message: client received
+## T=26 Message: client received
 
 ```php
 Object {
@@ -266,7 +326,7 @@ Object {
 }
 ```
 
-## T=22 Message: client received
+## T=27 Message: client received
 
 ```php
 Object {
@@ -282,7 +342,7 @@ Object {
 }
 ```
 
-## T=23 Log: client/log
+## T=28 Log: client/log
 
 ```php
 Array [
@@ -293,7 +353,34 @@ Array [
 ]
 ```
 
-## T=24 Message: client received
+## T=29 Message: client received
+
+```php
+Object {
+    "error": Object {
+        "code": -1,
+        "data": Object {
+            "type": "Error",
+        },
+        "message": "1",
+    },
+    "id": 3,
+    "jsonrpc": "2.0",
+}
+```
+
+## T=30 Log: client/log
+
+```php
+Array [
+    "Error: 1(-1) %c@3
+%c<remote stack not available>",
+    "color: gray",
+    "",
+]
+```
+
+## T=31 Message: client received
 
 ```php
 Object {
@@ -301,27 +388,27 @@ Object {
         "code": -32601,
         "message": "Method not found",
     },
-    "id": 3,
+    "id": 4,
     "jsonrpc": "2.0",
 }
 ```
 
-## T=25 Log: client/log
+## T=32 Log: client/log
 
 ```php
 Array [
-    "Error: Method not found(-32601) %c@3
+    "Error: Method not found(-32601) %c@4
 %c<remote stack not available>",
     "color: gray",
     "",
 ]
 ```
 
-## T=26 Message: client received
+## T=33 Message: client received
 
 ```php
 Object {
-    "id": 4,
+    "id": 5,
     "jsonrpc": "2.0",
     "result": 3,
 }

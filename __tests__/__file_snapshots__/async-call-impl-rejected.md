@@ -9,7 +9,16 @@ Array [
 ]
 ```
 
-## T=1 Message: client => server
+## T=1 Log: client/log
+
+```php
+Array [
+    "AsyncCall server failed to start",
+    [TypeError: Import failed],
+]
+```
+
+## T=2 Message: client => server
 
 ```php
 Object {
@@ -23,7 +32,7 @@ Object {
 }
 ```
 
-## T=2 Log: server/log
+## T=3 Log: server/log
 
 ```php
 Array [
@@ -31,7 +40,7 @@ Array [
 ]
 ```
 
-## T=3 Message: server => client
+## T=4 Message: server => client
 
 ```php
 Object {
@@ -47,7 +56,7 @@ Object {
 }
 ```
 
-## T=4 Log: client/log
+## T=5 Log: client/log
 
 ```php
 Array [

@@ -1,4 +1,4 @@
-import { DefaultImpl, defaultImpl, withSnapshotDefault } from './utils/test'
+import { DefaultImpl, defaultImpl, delay, withSnapshotDefault } from './utils/test'
 
 withSnapshotDefault('AsyncCall launch with resolved implementation', 'async-call-impl-resolved', async (f) => {
     const server = f({ impl: Promise.resolve(defaultImpl) })
@@ -23,6 +23,7 @@ withSnapshotDefault('AsyncCall launch with pending implementation', 'async-call-
     const server = f({ impl })
     const pending = server.add(1, 2)
     log('Request should not resolve before this line')
+    await delay(200)
     r!(defaultImpl)
-    expect(pending).resolves.toMatchInlineSnapshot()
+    await expect(pending).resolves.toMatchInlineSnapshot(`3`)
 })

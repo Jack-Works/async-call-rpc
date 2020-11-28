@@ -12,3 +12,10 @@ withSnapshotDefault('AsyncCall with rpc.* methods', 'async-call-preserved-names'
     )
     expect(() => server.then()).toThrowErrorMatchingInlineSnapshot(`"server.then is not a function"`)
 })
+
+withSnapshotDefault('AsyncCallGenerator with symbol methods', 'async-call-generator-symbols', async (_, f) => {
+    const server: any = f()
+    expect(() => server[Symbol.toStringTag]()).toThrowErrorMatchingInlineSnapshot(
+        `"Error 1: https://github.com/Jack-Works/async-call-rpc/wiki/Errors#1"`,
+    )
+})

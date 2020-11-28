@@ -14,6 +14,15 @@ export const defaultImpl = {
     withThisRef() {
         return this.add(1, 2)
     },
+    DOMException() {
+        throw new DOMException('message', 'name')
+    },
+    throwString() {
+        throw 1
+    },
+    byPos(opt: { a: number; b: number }) {
+        return opt.a + opt.b
+    },
 }
 const defaultImplGenerator = {
     async *echo(arr: number[]) {
@@ -26,6 +35,17 @@ const defaultImplGenerator = {
                 last = yield last
             } catch (e) {
                 last = e
+            }
+        }
+    },
+    *endless() {
+        while (true) {
+            try {
+                yield 1
+            } catch {
+                yield 2
+            } finally {
+                continue
             }
         }
     },
@@ -46,10 +66,11 @@ export function withSnapshotDefault(
         rawChannel: Record<'server' | 'client', JestCallbackBasedChannel | JestEventBasedChannel>,
     ) => Promise<void>,
     timeout = 800,
+    C: typeof JestCallbackBasedChannel | typeof JestEventBasedChannel = JestEventBasedChannel,
 ) {
     test(name, async () => {
         const { emit, log } = createLogger(['server', 'client', 'jest'] as const)
-        const { client, server } = createChannelPair(log)
+        const { client, server } = createChannelPair(log, C)
         const idGenerator = reproduceIDGenerator()
 
         const serverShared = { channel: server, logger: log.server.log, idGenerator }
@@ -57,12 +78,12 @@ export function withSnapshotDefault(
         function setup<T extends object = DefaultImpl>(opt: Options<T> = {}): _AsyncVersionOf<T> {
             const { client, server, impl, opts } = opt
             AsyncCall(impl || defaultImpl, { ...serverShared, ...opts, ...server })
-            return AsyncCall<T>({}, { ...clientShared, ...opts, ...client })
+            return AsyncCall<T>(impl || defaultImpl, { ...clientShared, ...opts, ...client })
         }
         function setupGenerator<T extends object = DefaultImplG>(opt: Options<T> = {}): _AsyncGeneratorVersionOf<T> {
-            const { client, server, impl } = opt
-            AsyncGeneratorCall(impl || defaultImplGenerator, { ...serverShared, ...server })
-            return AsyncGeneratorCall<T>({}, { ...clientShared, ...client })
+            const { client, server, impl, opts } = opt
+            AsyncGeneratorCall(impl || defaultImplGenerator, { ...serverShared, ...opts, ...server })
+            return AsyncGeneratorCall<T>(impl || defaultImplGenerator, { ...clientShared, ...opts, ...client })
         }
         await race(f(setup, setupGenerator, log.jest.log.log, { client, server }), timeout)
         expect(emit()).toMatchFile(join(__dirname, '../__file_snapshots__/', snapshot + '.md'))
