@@ -436,7 +436,7 @@ Object {
 }
 ```
 
-## T=30 Message: client sent
+## T=30 Message: client => server
 
 ```php
 Object {
@@ -447,5 +447,34 @@ Object {
         7,
         "bye",
     ],
+}
+```
+
+## T=31 Log: server/log
+
+```php
+Array [
+    "jsonrpc.%crpc.async-iterator.return%c(%o, %o%c)
+%o %c@12",
+    "color: #d2c057",
+    "",
+    7,
+    "bye",
+    "",
+    Promise {},
+    "color: gray; font-style: italic;",
+]
+```
+
+## T=32 Message: server => client
+
+```php
+Object {
+    "id": 12,
+    "jsonrpc": "2.0",
+    "result": Object {
+        "done": true,
+        "value": "bye",
+    },
 }
 ```

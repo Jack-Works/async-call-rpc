@@ -174,16 +174,15 @@ class _AsyncGenerator implements AsyncIterableIterator<unknown>, AsyncIterator<u
      */
     constructor(private r: AsyncGeneratorInternalMethods, private i: Promise<string>) {}
     async return(val: unknown) {
-        if (!this.d) this.c(this.r[AsyncIteratorReturn](await this.i, val)).catch(() => {})
-        this.d = true
-        return makeIteratorResult(true, val)
+        if (this.d) return makeIteratorResult(true, val)
+        return this.c(this.r[AsyncIteratorReturn](await this.i, val))
     }
     async next(val?: unknown) {
         if (this.d) return makeIteratorResult(true)
-        return await this.c(this.r[AsyncIteratorNext](await this.i, val))
+        return this.c(this.r[AsyncIteratorNext](await this.i, val))
     }
     async throw(val?: unknown) {
-        if (!this.d) return await this.c(this.r[AsyncIteratorThrow](await this.i, val))
+        if (!this.d) return this.c(this.r[AsyncIteratorThrow](await this.i, val))
         throw val
     }
     // Inherited from AsyncGeneratorPrototype
@@ -199,8 +198,9 @@ Object_setPrototypeOf(_AsyncGenerator.prototype, AsyncGeneratorPrototype)
 const isFinished = async (result: IterResult | undefined | false, cb: () => void) => {
     try {
         const x = await result
-        if (x && x.done) cb()
-    } catch {}
+        x && x.done && cb()
+    } finally {
+    }
 }
 
 const makeIteratorResult = (done: boolean, value: unknown = undefined): IteratorResult<unknown, unknown> => ({
