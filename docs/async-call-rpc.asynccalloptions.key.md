@@ -4,7 +4,7 @@
 
 ## AsyncCallOptions.key property
 
-This option will only used for better logging.
+This option is used for better log print.
 
 <b>Signature:</b>
 

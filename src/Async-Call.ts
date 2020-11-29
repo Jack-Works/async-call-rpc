@@ -5,6 +5,7 @@
 export type { CallbackBasedChannel, EventBasedChannel } from './types'
 export type { Serialization } from './utils/serialization'
 export type { Console } from './utils/console'
+export type { _IgnoreResponse } from './core/notify'
 export { JSONSerialization, NoSerialization } from './utils/serialization'
 export { notify } from './core/notify'
 export { batch } from './core/batch'
@@ -34,37 +35,44 @@ import { CallbackBasedChannel, EventBasedChannel } from './index'
 import { ERROR, isArray, isFunction, isString, Promise_reject, Promise_resolve, undefined } from './utils/constants'
 
 /**
- * What should AsyncCall log to console.
+ * Log options of AsyncCall
+ * @remarks
+ * This option controls how AsyncCall should log RPC calls to the console.
  * @public
  */
 export interface AsyncCallLogLevel {
     /**
-     * Print the log from the client when act as server
+     * Log all requests to this instance
      * @defaultValue true
      */
     beCalled?: boolean
     /**
-     * Print errors of self when act as a server
+     * Log all errors produced when responding requests
      * @defaultValue true
      */
     localError?: boolean
     /**
-     * Print remote errors when act as a client
+     * Log remote errors
      * @defaultValue true
      */
     remoteError?: boolean
     /**
-     * Send the local call stack to remote when act as a client
+     * Send the call stack to the remote when making requests
      * @defaultValue false
      */
     sendLocalStack?: boolean
     /**
-     * How to print the log, 'pretty' is recommended in browser.
+     * Control if AsyncCall should make the log better
+     * @remarks
+     * If use "pretty", it will call the logger with some CSS to make the log easier to read.
+     * Check out this article to know more about it: {@link https://dev.to/annlin/consolelog-with-css-style-1mmp | Console.log with CSS Style}
      * @defaultValue 'pretty'
      */
     type?: 'basic' | 'pretty'
     /**
-     * Log a function that allows to execute the request again.
+     * Log a function that allows to execute the request with same arguments again
+     * @remarks
+     * Do not use this options in the production environment because it will log a closure that captures the arguments of requests. This may cause memory leak.
      * @defaultValue false
      */
     requestReplay?: boolean
@@ -76,12 +84,16 @@ export interface AsyncCallLogLevel {
  */
 export interface AsyncCallStrictJSONRPC {
     /**
-     * Return an error when the requested method is not defined, otherwise, ignore the request.
+     * Controls if AsyncCall send an ErrorResponse when the requested method is not defined.
+     * @remarks
+     * Set this options to false, AsyncCall will ignore the request (but print a log) if the method is not defined.
      * @defaultValue true
      */
     methodNotFound?: boolean
     /**
-     * send an error when receive invalid JSON RPC payload
+     * Controls if AsyncCall send an ErrorResponse when the message is not valid.
+     * @remarks
+     * Set this options to false, AsyncCall will ignore the request that cannot be parsed as a valid JSON RPC payload. This is useful when the message channel is also used to transfer other kinds of messages.
      * @defaultValue true
      */
     unknownMessage?: boolean
@@ -93,56 +105,68 @@ export interface AsyncCallStrictJSONRPC {
  */
 export interface AsyncCallOptions {
     /**
-     * This option will only used for better logging.
+     * This option is used for better log print.
      * @defaultValue `rpc`
      */
     key?: string
     /**
-     * How to serialization and deserialization JSON RPC payload
+     * How to serialize and deserialize the JSON RPC payload
      *
      * @remarks
      * See {@link Serialization}.
      * There is some built-in serializer:
      *
-     * - {@link NoSerialization} (Do not do any serialization)
+     * - {@link NoSerialization} (Not doing anything to the message)
      *
-     * - {@link JSONSerialization} (Use JSON.parse/stringify)
+     * - {@link JSONSerialization} (Using JSON.parse/stringify in the backend)
+     *
+     * - {@link https://github.com/jack-works/async-call-rpc#web-deno-and-node-bson BSONSerialization} (use the {@link https://npmjs.org/bson | bson} as the serializer)
      *
      * @defaultValue {@link NoSerialization}
      */
     serializer?: Serialization
     /**
-     * The logger of AsyncCall
+     * Provide the logger of AsyncCall
      * @remarks
      * See {@link Console}
      * @defaultValue globalThis.console
      */
     logger?: Console
     /**
-     * The message channel can let you transport messages between server and client
+     * The message channel to exchange messages between server and client
      * @example
-     * [Example for CallbackBasedChannel](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/websocket.client.ts).
-     * [Example for EventBasedChannel](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/node/websocket.server.ts).
-     * @remarks
-     * If you're using this new property, you can use "" to disable the type system error.
+     * {@link https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/websocket.client.ts | Example for CallbackBasedChannel} or {@link https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/node/websocket.server.ts | Example for EventBasedChannel}
      */
     channel: CallbackBasedChannel | EventBasedChannel
     /**
      * Choose log level.
      * @remarks
-     * See {@link AsyncCallLogLevel}. `true` is a reasonable default value, `false` is disable log, `"all"` is enable all logs (stronger than `true`).
+     * - `true` is a reasonable default value, which means all options are the default options in the {@link AsyncCallLogLevel}
+     *
+     * - `false` is disable all logs
+     *
+     * - `"all"` is enable all logs (stronger than `true`).
      * @defaultValue true
      */
     log?: AsyncCallLogLevel | boolean | 'all'
     /**
-     * Strict options. See {@link AsyncCallStrictJSONRPC}
+     * Control the behavior that different from the JSON RPC spec. See {@link AsyncCallStrictJSONRPC}
+     * @remarks
+     * - `true` is to enable all strict options
+     * - `false` is to disable all strict options
      * @defaultValue true
      */
     strict?: AsyncCallStrictJSONRPC | boolean
     /**
-     * How parameters passed to remote
+     * Choose flavor of parameter structures defined in the spec
      * @remarks
+     *
      * See {@link https://www.jsonrpc.org/specification#parameter_structures}
+     *
+     * When using `by-name`, only first parameter of the requests are sent to the remote and it must be an object.
+     *
+     * @privateRemarks
+     * TODO: review the edge cases when using "by-name".
      * @defaultValue "by-position"
      */
     parameterStructures?: 'by-position' | 'by-name'
@@ -154,30 +178,23 @@ export interface AsyncCallOptions {
      */
     preferLocalImplementation?: boolean
     /**
-     * @deprecated Cause it doesn't work well
-     * @defaultValue false
-     */
-    preservePauseOnException?: boolean
-    /**
      * The ID generator of each JSON RPC request
      * @defaultValue () =\> Math.random().toString(36).slice(2)
      */
     idGenerator?(): string | number
     /**
-     * Control the error response data
-     * @param error - The happened Error
-     * @param request - The request object
+     * Control how to report error response according to the exception
      */
     mapError?: ErrorMapFunction<unknown>
     /**
      * If the instance should be "thenable".
      * @defaultValue undefined
      * @remarks
-     * If the value is *true*, it will return a *then* method normally (forwards the call to the remote).
+     * If this options is set to `true`, it will return a `then` method normally (forwards the call to the remote).
      *
-     * If the value is *false*, it will return *undefined* even the remote has a method called "then".
+     * If this options is set to `false`, it will return `undefined` even the remote has a method called "then".
      *
-     * If the value is *undefined*, it will return *undefined* and show a warning. You must explicitly set this option to *true* or *false* to dismiss the warning.
+     * If this options is set to `undefined`, it will return `undefined` and show a warning. You must explicitly set this option to `true` or `false` to dismiss the warning.
      *
      * The motivation of this option is to resolve the problem caused by Promise auto-unwrapping.
      *
@@ -197,10 +214,10 @@ export interface AsyncCallOptions {
 }
 
 /**
- * JSON RPC payload
+ * JSON RPC Request object
  * @public
  */
-export type JSONRpcPayload = {
+export type JSONRPCRequest = {
     jsonrpc: '2.0'
     id?: string | number | null
     method: string
@@ -208,10 +225,12 @@ export type JSONRpcPayload = {
 }
 /**
  * @public
+ * @param error - The exception
+ * @param request - The request object
  */
 export type ErrorMapFunction<T = unknown> = (
     error: unknown,
-    request: Readonly<JSONRpcPayload>,
+    request: Readonly<JSONRPCRequest>,
 ) => {
     code: number
     message: string
@@ -239,17 +258,6 @@ export type _AsyncVersionOf<T> = {
 }
 
 /**
- * @internal
- */
-export type _IgnoreResponse<T> = T extends (...args: infer Args) => unknown
-    ? (...args: Args) => Promise<void>
-    : {
-          [key in keyof T as T[key] extends Function ? key : never]: T[key] extends (...args: infer Args) => unknown
-              ? (...args: Args) => Promise<void>
-              : never
-      }
-
-/**
  * Create a RPC server & client.
  *
  * @remarks
@@ -263,8 +271,8 @@ export type _IgnoreResponse<T> = T extends (...args: infer Args) => unknown
  *
  * @param thisSideImplementation - The implementation when this AsyncCall acts as a JSON RPC server. Can be a Promise.
  * @param options - {@link AsyncCallOptions}
- * @typeParam OtherSideImplementedFunctions - The type of the API that server expose. For any function on this interface, AsyncCall will convert it to the Promised type.
- * @returns Same as the `OtherSideImplementedFunctions` type parameter, but every function in that interface becomes async and non-function value is removed.
+ * @typeParam OtherSideImplementedFunctions - The type of the API that server expose. For any function on this interface, it will be converted to the async version.
+ * @returns Same as the `OtherSideImplementedFunctions` type parameter, but every function in that interface becomes async and non-function value is removed. Method called "then" are also removed.
  * @public
  */
 export function AsyncCall<OtherSideImplementedFunctions = {}>(

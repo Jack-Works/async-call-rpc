@@ -4,19 +4,14 @@
 
 ## ErrorMapFunction type
 
-Map an exception to a JSON RPC error response
-
 <b>Signature:</b>
 
 ```typescript
-export declare type ErrorMapFunction<T = unknown> = (error: unknown, request: Readonly<{
-    jsonrpc: '2.0';
-    id?: string | number | null;
-    method: string;
-    params: readonly unknown[] | object;
-}>) => {
+export declare type ErrorMapFunction<T = unknown> = (error: unknown, request: Readonly<JSONRPCRequest>) => {
     code: number;
     message: string;
     data?: T;
 };
 ```
+<b>References:</b> [JSONRPCRequest](./async-call-rpc.jsonrpcrequest.md)
+

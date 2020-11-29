@@ -77,13 +77,8 @@ export interface Console {
     warn?(...args: unknown[]): void;
 }
 
-// @public
-export type ErrorMapFunction<T = unknown> = (error: unknown, request: Readonly<{
-    jsonrpc: '2.0';
-    id?: string | number | null;
-    method: string;
-    params: readonly unknown[] | object;
-}>) => {
+// @public (undocumented)
+export type ErrorMapFunction<T = unknown> = (error: unknown, request: Readonly<JSONRPCRequest>) => {
     code: number;
     message: string;
     data?: T;
@@ -95,7 +90,7 @@ export interface EventBasedChannel<Data = unknown> {
     send(data: Data): void;
 }
 
-// @internal (undocumented)
+// @internal
 export type _IgnoreResponse<T> = T extends (...args: infer Args) => unknown ? (...args: Args) => Promise<void> : {
     [key in keyof T
 
@@ -104,6 +99,14 @@ export type _IteratorLikeToAsyncGenerator<T extends _IteratorOrIterableFunction>
 
 // @internal (undocumented)
 export type _IteratorOrIterableFunction = (...args: any) => Iterator<any, any, any> | Iterable<any> | AsyncIterator<any, any, any> | AsyncIterable<any>;
+
+// @public
+export type JSONRPCRequest = {
+    jsonrpc: '2.0';
+    id?: string | number | null;
+    method: string;
+    params: readonly unknown[] | object;
+};
 
 // @public
 export const JSONSerialization: (replacerAndReceiver?: [(((key: string, value: any) => any) | undefined)?, (((key: string, value: any) => any) | undefined)?], space?: string | number | undefined, undefinedKeepingBehavior?: 'keep' | 'null' | false) => Serialization;

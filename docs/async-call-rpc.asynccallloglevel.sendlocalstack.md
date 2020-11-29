@@ -4,7 +4,7 @@
 
 ## AsyncCallLogLevel.sendLocalStack property
 
-Send the local call stack to remote when act as a client
+Send the call stack to the remote when making requests
 
 <b>Signature:</b>
 

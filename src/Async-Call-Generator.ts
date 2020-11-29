@@ -68,11 +68,9 @@ type IterResult = IteratorResult<unknown> | Promise<IteratorResult<unknown>>
  * @param options - {@link AsyncCallOptions}
  * @typeParam OtherSideImplementedFunctions - The type of the API that server expose. For any function on this interface, AsyncCall will convert it to the Promised type.
  * @remarks
+ * Warning: Due to technical limitation, AsyncGeneratorCall will leak memory. Use it at your own risk.
  *
- * To use AsyncGeneratorCall, the server and the client MUST support the following JSON RPC internal methods:
- *
- * Warning: Due to technical limitation, AsyncGeneratorCall will leak memory before
- * {@link https://github.com/tc39/proposal-weakrefs | the ECMAScript WeakRef proposal} shipped.
+ * To use AsyncGeneratorCall, the server and the client MUST support the following JSON RPC internal methods which is pre ECMAScript async generator semantics:
  *
  * - `rpc.async-iterator.start`
  *

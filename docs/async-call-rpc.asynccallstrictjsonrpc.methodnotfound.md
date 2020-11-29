@@ -4,10 +4,15 @@
 
 ## AsyncCallStrictJSONRPC.methodNotFound property
 
-Return an error when the requested method is not defined, otherwise, ignore the request.
+Controls if AsyncCall send an ErrorResponse when the requested method is not defined.
 
 <b>Signature:</b>
 
 ```typescript
 methodNotFound?: boolean;
 ```
+
+## Remarks
+
+Set this options to false, AsyncCall will ignore the request (but print a log) if the method is not defined.
+

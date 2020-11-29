@@ -4,7 +4,7 @@
 
 ## AsyncCallLogLevel.remoteError property
 
-Print remote errors when act as a client
+Log remote errors
 
 <b>Signature:</b>
 

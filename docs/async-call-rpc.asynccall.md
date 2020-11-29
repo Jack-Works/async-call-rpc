@@ -23,7 +23,7 @@ export declare function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideIm
 
 \_AsyncVersionOf&lt;OtherSideImplementedFunctions&gt;
 
-Same as the `OtherSideImplementedFunctions` type parameter, but every function in that interface becomes async and non-function value is removed.
+Same as the `OtherSideImplementedFunctions` type parameter, but every function in that interface becomes async and non-function value is removed. Method called "then" are also removed.
 
 ## Remarks
 

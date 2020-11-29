@@ -4,7 +4,7 @@
 
 ## AsyncCallLogLevel interface
 
-What should AsyncCall log to console.
+Log options of AsyncCall
 
 <b>Signature:</b>
 
@@ -12,14 +12,18 @@ What should AsyncCall log to console.
 export interface AsyncCallLogLevel 
 ```
 
+## Remarks
+
+This option controls how AsyncCall should log RPC calls to the console.
+
 ## Properties
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [beCalled?](./async-call-rpc.asynccallloglevel.becalled.md) | boolean | <i>(Optional)</i> Print the log from the client when act as server |
-|  [localError?](./async-call-rpc.asynccallloglevel.localerror.md) | boolean | <i>(Optional)</i> Print errors of self when act as a server |
-|  [remoteError?](./async-call-rpc.asynccallloglevel.remoteerror.md) | boolean | <i>(Optional)</i> Print remote errors when act as a client |
-|  [requestReplay?](./async-call-rpc.asynccallloglevel.requestreplay.md) | boolean | <i>(Optional)</i> Log a function that allows to execute the request again. |
-|  [sendLocalStack?](./async-call-rpc.asynccallloglevel.sendlocalstack.md) | boolean | <i>(Optional)</i> Send the local call stack to remote when act as a client |
-|  [type?](./async-call-rpc.asynccallloglevel.type.md) | 'basic' \| 'pretty' | <i>(Optional)</i> How to print the log, 'pretty' is recommended in browser. |
+|  [beCalled?](./async-call-rpc.asynccallloglevel.becalled.md) | boolean | <i>(Optional)</i> Log all requests to this instance |
+|  [localError?](./async-call-rpc.asynccallloglevel.localerror.md) | boolean | <i>(Optional)</i> Log all errors produced when responding requests |
+|  [remoteError?](./async-call-rpc.asynccallloglevel.remoteerror.md) | boolean | <i>(Optional)</i> Log remote errors |
+|  [requestReplay?](./async-call-rpc.asynccallloglevel.requestreplay.md) | boolean | <i>(Optional)</i> Log a function that allows to execute the request with same arguments again |
+|  [sendLocalStack?](./async-call-rpc.asynccallloglevel.sendlocalstack.md) | boolean | <i>(Optional)</i> Send the call stack to the remote when making requests |
+|  [type?](./async-call-rpc.asynccallloglevel.type.md) | 'basic' \| 'pretty' | <i>(Optional)</i> Control if AsyncCall should make the log better |
 

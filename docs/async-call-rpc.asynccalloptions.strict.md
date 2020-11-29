@@ -4,10 +4,15 @@
 
 ## AsyncCallOptions.strict property
 
-Strict options. See [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md)
+Control the behavior that different from the JSON RPC spec. See [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md)
 
 <b>Signature:</b>
 
 ```typescript
 strict?: AsyncCallStrictJSONRPC | boolean;
 ```
+
+## Remarks
+
+- `true` is to enable all strict options - `false` is to disable all strict options
+

@@ -2,6 +2,8 @@
 /**
  * The minimal Console interface that AsyncCall needs.
  * @public
+ * @remarks
+ * The method not provided will use "log" as it's fallback.
  */
 export interface Console {
     warn?(...args: unknown[]): void

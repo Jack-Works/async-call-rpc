@@ -4,10 +4,15 @@
 
 ## AsyncCallStrictJSONRPC.unknownMessage property
 
-send an error when receive invalid JSON RPC payload
+Controls if AsyncCall send an ErrorResponse when the message is not valid.
 
 <b>Signature:</b>
 
 ```typescript
 unknownMessage?: boolean;
 ```
+
+## Remarks
+
+Set this options to false, AsyncCall will ignore the request that cannot be parsed as a valid JSON RPC payload. This is useful when the message channel is also used to transfer other kinds of messages.
+

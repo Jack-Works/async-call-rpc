@@ -22,7 +22,15 @@ export declare function batch<T extends object>(asyncCallInstance: T): [T, () =>
 
 \[T, () =&gt; void, (error?: unknown) =&gt; void\]
 
+It will return a tuple.
+
+The first item is the batched version of AsyncCall instance passed in.
+
+The second item is a function to send all pending requests.
+
+The third item is a function to drop and reject all pending requests.
+
 ## Example
 
-const \[batched, send, drop\] = batch(AsyncCall(...))
+const \[batched, send, drop\] = batch(AsyncCall(...)) batched.call1() // pending batched.call2() // pending send() // send all pending requests drop() // drop all pending requests
 

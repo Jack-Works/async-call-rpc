@@ -12,6 +12,10 @@ The minimal Console interface that AsyncCall needs.
 export interface Console 
 ```
 
+## Remarks
+
+The method not provided will use "log" as it's fallback.
+
 ## Methods
 
 |  Method | Description |

@@ -4,7 +4,7 @@
 
 ## Serialization.deserialization() method
 
-Do deserialization
+Deserialize data
 
 <b>Signature:</b>
 

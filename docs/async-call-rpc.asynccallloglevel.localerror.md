@@ -4,7 +4,7 @@
 
 ## AsyncCallLogLevel.localError property
 
-Print errors of self when act as a server
+Log all errors produced when responding requests
 
 <b>Signature:</b>
 

@@ -23,13 +23,13 @@ See the introduction at [Github](https://github.com/Jack-Works/async-call)
 
 |  Interface | Description |
 |  --- | --- |
-|  [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) | What should AsyncCall log to console. |
+|  [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) | Log options of AsyncCall |
 |  [AsyncCallOptions](./async-call-rpc.asynccalloptions.md) | Options for [AsyncCall()](./async-call-rpc.asynccall.md) |
 |  [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) | Control the behavior that different from the JSON RPC spec. |
 |  [CallbackBasedChannel](./async-call-rpc.callbackbasedchannel.md) | This interface represents a "callback" model. |
 |  [Console](./async-call-rpc.console.md) | The minimal Console interface that AsyncCall needs. |
-|  [EventBasedChannel](./async-call-rpc.eventbasedchannel.md) | This interface represents a "on message"-"send response" model. |
-|  [Serialization](./async-call-rpc.serialization.md) | Serialization and deserialization of the JSON RPC payload |
+|  [EventBasedChannel](./async-call-rpc.eventbasedchannel.md) | This interface represents a "on message" - "send response" model. |
+|  [Serialization](./async-call-rpc.serialization.md) | Serialize and deserialize of the JSON RPC payload |
 
 ## Variables
 
@@ -42,5 +42,6 @@ See the introduction at [Github](https://github.com/Jack-Works/async-call)
 
 |  Type Alias | Description |
 |  --- | --- |
-|  [ErrorMapFunction](./async-call-rpc.errormapfunction.md) | Map an exception to a JSON RPC error response |
+|  [ErrorMapFunction](./async-call-rpc.errormapfunction.md) |  |
+|  [JSONRPCRequest](./async-call-rpc.jsonrpcrequest.md) | JSON RPC Request object |
 

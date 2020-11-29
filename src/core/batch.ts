@@ -6,6 +6,17 @@ import { Request } from '../utils/jsonrpc'
  * @param asyncCallInstance - The AsyncCall instance
  * @example
  * const [batched, send, drop] = batch(AsyncCall(...))
+ * batched.call1() // pending
+ * batched.call2() // pending
+ * send() // send all pending requests
+ * drop() // drop all pending requests
+ * @returns It will return a tuple.
+ *
+ * The first item is the batched version of AsyncCall instance passed in.
+ *
+ * The second item is a function to send all pending requests.
+ *
+ * The third item is a function to drop and reject all pending requests.
  * @public
  */
 export function batch<T extends object>(asyncCallInstance: T): [T, () => void, (error?: unknown) => void] {

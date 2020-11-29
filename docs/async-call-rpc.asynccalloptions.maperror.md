@@ -4,7 +4,7 @@
 
 ## AsyncCallOptions.mapError property
 
-Control the error response data
+Control how to report error response according to the exception
 
 <b>Signature:</b>
 

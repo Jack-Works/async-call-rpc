@@ -4,7 +4,7 @@
 
 ## Serialization interface
 
-Serialization and deserialization of the JSON RPC payload
+Serialize and deserialize of the JSON RPC payload
 
 <b>Signature:</b>
 
@@ -16,6 +16,6 @@ export interface Serialization
 
 |  Method | Description |
 |  --- | --- |
-|  [deserialization(serialized)](./async-call-rpc.serialization.deserialization.md) | Do deserialization |
-|  [serialization(from)](./async-call-rpc.serialization.serialization.md) | Do serialization |
+|  [deserialization(serialized)](./async-call-rpc.serialization.deserialization.md) | Deserialize data |
+|  [serialization(from)](./async-call-rpc.serialization.serialization.md) | Serialize data |
 

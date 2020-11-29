@@ -25,9 +25,9 @@ export declare function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(t
 
 ## Remarks
 
-To use AsyncGeneratorCall, the server and the client MUST support the following JSON RPC internal methods:
+Warning: Due to technical limitation, AsyncGeneratorCall will leak memory. Use it at your own risk.
 
-Warning: Due to technical limitation, AsyncGeneratorCall will leak memory before [the ECMAScript WeakRef proposal](https://github.com/tc39/proposal-weakrefs) shipped.
+To use AsyncGeneratorCall, the server and the client MUST support the following JSON RPC internal methods which is pre ECMAScript async generator semantics:
 
 - `rpc.async-iterator.start`
 

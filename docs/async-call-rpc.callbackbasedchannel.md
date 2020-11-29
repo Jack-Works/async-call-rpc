@@ -15,15 +15,11 @@ export interface CallbackBasedChannel<Data = unknown> extends Partial<EventBased
 
 ## Remarks
 
-Usually used for there are many remotes (act like a server).
-
-## Example
-
-\[Example for CallbackBasedChannel\](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/websocket.client.ts).
+Usually used for there are many remotes (act like a server). Example: [Example for CallbackBasedChannel](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/websocket.client.ts)
 
 ## Methods
 
 |  Method | Description |
 |  --- | --- |
-|  [setup(jsonRPCHandlerCallback, isValidJSONRPCPayload)](./async-call-rpc.callbackbasedchannel.setup.md) | Setup the CallbackBasedChannel.. |
+|  [setup(jsonRPCHandlerCallback, isValidJSONRPCPayload)](./async-call-rpc.callbackbasedchannel.setup.md) | Setup the CallbackBasedChannel. |
 

@@ -4,7 +4,7 @@
 
 ## AsyncCallOptions.parameterStructures property
 
-How parameters passed to remote
+Choose flavor of parameter structures defined in the spec
 
 <b>Signature:</b>
 
@@ -15,4 +15,6 @@ parameterStructures?: 'by-position' | 'by-name';
 ## Remarks
 
 See [https://www.jsonrpc.org/specification\#parameter\_structures](https://www.jsonrpc.org/specification#parameter_structures)
+
+When using `by-name`<!-- -->, only first parameter of the requests are sent to the remote and it must be an object.
 

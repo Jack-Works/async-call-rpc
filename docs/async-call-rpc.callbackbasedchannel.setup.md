@@ -4,7 +4,7 @@
 
 ## CallbackBasedChannel.setup() method
 
-Setup the CallbackBasedChannel..
+Setup the CallbackBasedChannel.
 
 <b>Signature:</b>
 
@@ -22,4 +22,6 @@ setup(jsonRPCHandlerCallback: (jsonRPCPayload: unknown) => Promise<unknown | und
 <b>Returns:</b>
 
 (() =&gt; void) \| void
+
+a function that unregister the setup.
 

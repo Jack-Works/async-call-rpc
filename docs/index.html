@@ -1,0 +1,63 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Playground</title>
+    </head>
+    <body>
+        <a href="./async-call-rpc.html">See document</a>
+        <hr />
+        The <code>AsyncCall, AsyncGeneratorCall, JSONSerialization, NoSerialization</code> is available in globalThis
+        are available as the global variable
+        <hr />
+        Call <code>define(fns)</code> to define a new demo JSON RPC server. Call <code>await sleep(ms)</code> to slow
+        down the server.
+        <script type="module">
+            import * as lib from 'https://cdn.jsdelivr.net/npm/async-call-rpc@latest/out/full.mjs'
+            const { AsyncCall } = lib
+            Object.assign(globalThis, AsyncCall)
+            class BroadcastMessageChannel extends BroadcastChannel {
+                on(eventListener) {
+                    const f = (e) => eventListener(e.data)
+                    this.addEventListener('message', f)
+                    return () => this.removeEventListener('message', f)
+                }
+                send(data) {
+                    super.postMessage(data)
+                }
+            }
+            const server = new BroadcastMessageChannel('rpc')
+            const client = new BroadcastMessageChannel('rpc')
+            let count = 0
+            function define(def, key = `server${count++}`) {
+                // define server
+                AsyncCall(def, {
+                    channel: server,
+                    key,
+                    log: false && {
+                        beCalled: true,
+                        localError: true,
+                        remoteError: true,
+                        type: 'pretty',
+                        requestReplay: true,
+                        sendLocalStack: true,
+                    },
+                })
+                // define client
+                globalThis[key] = AsyncCall({}, { channel: client, key })
+                console.log('Server is available as global variable', key, globalThis[key], def)
+            }
+            function sleep(ms) {
+                return new Promise((resolve) => setTimeout(resolve, ms))
+            }
+            define({
+                async add(a, b) {
+                    return a + b
+                },
+                async error() {
+                    throw new SyntaxError()
+                },
+            })
+        </script>
+    </body>
+</html>

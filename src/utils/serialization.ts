@@ -4,17 +4,17 @@ import { isObject, hasKey } from './jsonrpc'
 import { undefined } from './constants'
 
 /**
- * Serialization and deserialization of the JSON RPC payload
+ * Serialize and deserialize of the JSON RPC payload
  * @public
  */
 export interface Serialization {
     /**
-     * Do serialization
+     * Serialize data
      * @param from - original data
      */
     serialization(from: any): unknown | PromiseLike<unknown>
     /**
-     * Do deserialization
+     * Deserialize data
      * @param serialized - Serialized data
      */
     deserialization(serialized: unknown): unknown | PromiseLike<unknown>

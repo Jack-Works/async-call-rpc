@@ -4,7 +4,7 @@
 
 ## AsyncCallOptions.logger property
 
-The logger of AsyncCall
+Provide the logger of AsyncCall
 
 <b>Signature:</b>
 

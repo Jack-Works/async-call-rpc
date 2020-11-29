@@ -4,7 +4,7 @@
 
 ## AsyncCallLogLevel.beCalled property
 
-Print the log from the client when act as server
+Log all requests to this instance
 
 <b>Signature:</b>
 

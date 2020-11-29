@@ -4,7 +4,7 @@
 
 ## Serialization.serialization() method
 
-Do serialization
+Serialize data
 
 <b>Signature:</b>
 

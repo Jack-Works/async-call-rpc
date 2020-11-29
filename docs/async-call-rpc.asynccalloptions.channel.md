@@ -4,7 +4,7 @@
 
 ## AsyncCallOptions.channel property
 
-The message channel can let you transport messages between server and client
+The message channel to exchange messages between server and client
 
 <b>Signature:</b>
 
@@ -12,11 +12,7 @@ The message channel can let you transport messages between server and client
 channel: CallbackBasedChannel | EventBasedChannel;
 ```
 
-## Remarks
-
-If you're using this new property, you can use "" to disable the type system error.
-
 ## Example
 
-\[Example for CallbackBasedChannel\](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/websocket.client.ts). \[Example for EventBasedChannel\](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/node/websocket.server.ts).
+[Example for CallbackBasedChannel](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/websocket.client.ts) or [Example for EventBasedChannel](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/node/websocket.server.ts)
 

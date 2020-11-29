@@ -4,10 +4,15 @@
 
 ## AsyncCallLogLevel.requestReplay property
 
-Log a function that allows to execute the request again.
+Log a function that allows to execute the request with same arguments again
 
 <b>Signature:</b>
 
 ```typescript
 requestReplay?: boolean;
 ```
+
+## Remarks
+
+Do not use this options in the production environment because it will log a closure that captures the arguments of requests. This may cause memory leak.
+

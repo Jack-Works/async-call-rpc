@@ -4,10 +4,15 @@
 
 ## AsyncCallLogLevel.type property
 
-How to print the log, 'pretty' is recommended in browser.
+Control if AsyncCall should make the log better
 
 <b>Signature:</b>
 
 ```typescript
 type?: 'basic' | 'pretty';
 ```
+
+## Remarks
+
+If use "pretty", it will call the logger with some CSS to make the log easier to read. Check out this article to know more about it: [Console.log with CSS Style](https://dev.to/annlin/consolelog-with-css-style-1mmp)
+

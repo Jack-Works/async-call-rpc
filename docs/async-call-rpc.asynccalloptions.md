@@ -16,15 +16,15 @@ export interface AsyncCallOptions
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [channel](./async-call-rpc.asynccalloptions.channel.md) | [CallbackBasedChannel](./async-call-rpc.callbackbasedchannel.md) \| [EventBasedChannel](./async-call-rpc.eventbasedchannel.md) | The message channel can let you transport messages between server and client |
-|  [key?](./async-call-rpc.asynccalloptions.key.md) | string | <i>(Optional)</i> This option will only used for better logging. |
+|  [channel](./async-call-rpc.asynccalloptions.channel.md) | [CallbackBasedChannel](./async-call-rpc.callbackbasedchannel.md) \| [EventBasedChannel](./async-call-rpc.eventbasedchannel.md) | The message channel to exchange messages between server and client |
+|  [key?](./async-call-rpc.asynccalloptions.key.md) | string | <i>(Optional)</i> This option is used for better log print. |
 |  [log?](./async-call-rpc.asynccalloptions.log.md) | [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) \| boolean \| 'all' | <i>(Optional)</i> Choose log level. |
-|  [logger?](./async-call-rpc.asynccalloptions.logger.md) | [Console](./async-call-rpc.console.md) | <i>(Optional)</i> The logger of AsyncCall |
-|  [mapError?](./async-call-rpc.asynccalloptions.maperror.md) | [ErrorMapFunction](./async-call-rpc.errormapfunction.md)<!-- -->&lt;unknown&gt; | <i>(Optional)</i> Control the error response data |
-|  [parameterStructures?](./async-call-rpc.asynccalloptions.parameterstructures.md) | 'by-position' \| 'by-name' | <i>(Optional)</i> How parameters passed to remote |
+|  [logger?](./async-call-rpc.asynccalloptions.logger.md) | [Console](./async-call-rpc.console.md) | <i>(Optional)</i> Provide the logger of AsyncCall |
+|  [mapError?](./async-call-rpc.asynccalloptions.maperror.md) | [ErrorMapFunction](./async-call-rpc.errormapfunction.md)<!-- -->&lt;unknown&gt; | <i>(Optional)</i> Control how to report error response according to the exception |
+|  [parameterStructures?](./async-call-rpc.asynccalloptions.parameterstructures.md) | 'by-position' \| 'by-name' | <i>(Optional)</i> Choose flavor of parameter structures defined in the spec |
 |  [preferLocalImplementation?](./async-call-rpc.asynccalloptions.preferlocalimplementation.md) | boolean | <i>(Optional)</i> Prefer local implementation than remote. |
-|  [serializer?](./async-call-rpc.asynccalloptions.serializer.md) | [Serialization](./async-call-rpc.serialization.md) | <i>(Optional)</i> How to serialization and deserialization JSON RPC payload |
-|  [strict?](./async-call-rpc.asynccalloptions.strict.md) | [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) \| boolean | <i>(Optional)</i> Strict options. See [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) |
+|  [serializer?](./async-call-rpc.asynccalloptions.serializer.md) | [Serialization](./async-call-rpc.serialization.md) | <i>(Optional)</i> How to serialize and deserialize the JSON RPC payload |
+|  [strict?](./async-call-rpc.asynccalloptions.strict.md) | [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) \| boolean | <i>(Optional)</i> Control the behavior that different from the JSON RPC spec. See [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) |
 |  [thenable?](./async-call-rpc.asynccalloptions.thenable.md) | boolean | <i>(Optional)</i> If the instance should be "thenable". |
 
 ## Methods
