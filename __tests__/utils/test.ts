@@ -68,7 +68,8 @@ export function withSnapshotDefault(
     timeout = 800,
     C: typeof JestCallbackBasedChannel | typeof JestEventBasedChannel = JestEventBasedChannel,
 ) {
-    test(name, async () => {
+    async function testImpl() {
+        if (name.includes('DBG')) debugger
         const { emit, log } = createLogger(['server', 'client', 'jest'] as const)
         const { client, server } = createChannelPair(log, C)
         const idGenerator = reproduceIDGenerator()
@@ -87,7 +88,9 @@ export function withSnapshotDefault(
         }
         await race(f(setup, setupGenerator, log.jest.log.log, { client, server }), timeout)
         expect(emit()).toMatchFile(join(__dirname, '../__file_snapshots__/', snapshot + '.md'))
-    })
+    }
+    if (name.startsWith('ONLY')) test.only(name, testImpl)
+    else test(name, testImpl)
 }
 export type DefaultImpl = typeof defaultImpl
 type DefaultImplG = typeof defaultImplGenerator

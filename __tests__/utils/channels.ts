@@ -26,6 +26,7 @@ export class JestCallbackBasedChannel implements CallbackBasedChannel {
     setup(jsonRPCHandlerCallback: Function) {
         this.log.addListener('message', async (msg) => {
             const payload = await jsonRPCHandlerCallback(msg)
+            if (!payload) return
             this.logger.send(payload)
             await delay(25)
             this.otherSide.log.emit('message', payload)

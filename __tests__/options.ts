@@ -46,7 +46,6 @@ withSnapshotDefault('AsyncCall options requestReplay', 'async-call-log-requestRe
         },
         impl: { twice: fn },
     })
-    debugger
     await server.twice()
     const replay = logs.find((x: any) => typeof x === 'function')
     if (!replay) throw new Error('No requestReplay function is logged')
