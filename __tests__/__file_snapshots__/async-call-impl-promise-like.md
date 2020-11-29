@@ -23,7 +23,7 @@ Object {
 
 ```php
 Array [
-    "jsonrpc.%cotherMethods%c(%c)
+    "rpc.%cotherMethods%c(%c)
 %o %c@0",
     "color: #d2c057",
     "",

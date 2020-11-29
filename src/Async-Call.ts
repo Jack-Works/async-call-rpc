@@ -94,7 +94,7 @@ export interface AsyncCallStrictJSONRPC {
 export interface AsyncCallOptions {
     /**
      * This option will only used for better logging.
-     * @defaultValue `jsonrpc`
+     * @defaultValue `rpc`
      */
     key?: string
     /**
@@ -286,7 +286,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
 
     const {
         serializer = NoSerialization,
-        key: logKey = 'jsonrpc',
+        key: logKey = 'rpc',
         strict = true,
         log = true,
         parameterStructures = 'by-position',

@@ -18,7 +18,7 @@ Object {
 
 ```php
 Array [
-    "jsonrpc.%cbyPos%c(%o%c)
+    "rpc.%cbyPos%c(%o%c)
 %o %c@0",
     "color: #d2c057",
     "",

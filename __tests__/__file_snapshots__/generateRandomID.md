@@ -18,7 +18,7 @@ Object {
 
 ```php
 Array [
-    "jsonrpc.%cadd%c(%o, %o%c)
+    "rpc.%cadd%c(%o, %o%c)
 %o %c@ndom-id-1",
     "color: #d2c057",
     "",

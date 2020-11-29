@@ -18,7 +18,7 @@ Object {
 
 ```php
 Array [
-    "jsonrpc.%cadd%c(%o, %o%c)
+    "rpc.%cadd%c(%o, %o%c)
 %o %c@0",
     "color: #d2c057",
     "",
@@ -55,7 +55,7 @@ Object {
 
 ```php
 Array [
-    "jsonrpc.%cundefined%c(%c)
+    "rpc.%cundefined%c(%c)
 %o %c@1",
     "color: #d2c057",
     "",
@@ -90,7 +90,7 @@ Object {
 
 ```php
 Array [
-    "jsonrpc.%cthrows%c(%c)
+    "rpc.%cthrows%c(%c)
 %o %c@2",
     "color: #d2c057",
     "",

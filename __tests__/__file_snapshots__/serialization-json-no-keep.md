@@ -10,7 +10,7 @@
 
 ```php
 Array [
-    "jsonrpc.%cundefined%c(%c)
+    "rpc.%cundefined%c(%c)
 %o %c@0",
     "color: #d2c057",
     "",

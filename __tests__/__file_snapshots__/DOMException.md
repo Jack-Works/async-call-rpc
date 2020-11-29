@@ -15,7 +15,7 @@ Object {
 
 ```php
 Array [
-    "jsonrpc.%cDOMException%c(%c)
+    "rpc.%cDOMException%c(%c)
 %o %c@0",
     "color: #d2c057",
     "",

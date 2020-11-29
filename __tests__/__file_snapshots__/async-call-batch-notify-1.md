@@ -40,7 +40,7 @@ Array [
 
 ```php
 Array [
-    "jsonrpc.%cadd%c(%o, %o%c)
+    "rpc.%cadd%c(%o, %o%c)
 %o %c@undefined",
     "color: #d2c057",
     "",
@@ -56,7 +56,7 @@ Array [
 
 ```php
 Array [
-    "jsonrpc.%cthrows%c(%c)
+    "rpc.%cthrows%c(%c)
 %o %c@undefined",
     "color: #d2c057",
     "",
@@ -70,7 +70,7 @@ Array [
 
 ```php
 Array [
-    "jsonrpc.%cadd%c(%o, %o%c)
+    "rpc.%cadd%c(%o, %o%c)
 %o %c@undefined",
     "color: #d2c057",
     "",

@@ -18,7 +18,7 @@ Object {
 
 ```php
 Array [
-    "jsonrpc.add(1,2) @0",
+    "rpc.add(1,2) @0",
 ]
 ```
 
@@ -47,7 +47,7 @@ Object {
 
 ```php
 Array [
-    "jsonrpc.throws() @1",
+    "rpc.throws() @1",
 ]
 ```
 

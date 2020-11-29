@@ -24,7 +24,7 @@ Object {
 
 ```php
 Array [
-    "jsonrpc.%crpc.async-iterator.start%c(%o, %o%c)
+    "rpc.%crpc.async-iterator.start%c(%o, %o%c)
 %o %c@0",
     "color: #d2c057",
     "",
@@ -70,7 +70,7 @@ Object {
 
 ```php
 Array [
-    "jsonrpc.%crpc.async-iterator.next%c(%o, %o%c)
+    "rpc.%crpc.async-iterator.next%c(%o, %o%c)
 %o %c@2",
     "color: #d2c057",
     "",
@@ -113,7 +113,7 @@ Object {
 
 ```php
 Array [
-    "jsonrpc.%crpc.async-iterator.next%c(%o, %o%c)
+    "rpc.%crpc.async-iterator.next%c(%o, %o%c)
 %o %c@3",
     "color: #d2c057",
     "",
@@ -156,7 +156,7 @@ Object {
 
 ```php
 Array [
-    "jsonrpc.%crpc.async-iterator.next%c(%o, %o%c)
+    "rpc.%crpc.async-iterator.next%c(%o, %o%c)
 %o %c@4",
     "color: #d2c057",
     "",
@@ -199,7 +199,7 @@ Object {
 
 ```php
 Array [
-    "jsonrpc.%crpc.async-iterator.next%c(%o, %o%c)
+    "rpc.%crpc.async-iterator.next%c(%o, %o%c)
 %o %c@5",
     "color: #d2c057",
     "",
@@ -242,7 +242,7 @@ Object {
 
 ```php
 Array [
-    "jsonrpc.%crpc.async-iterator.start%c(%o, %o%c)
+    "rpc.%crpc.async-iterator.start%c(%o, %o%c)
 %o %c@6",
     "color: #d2c057",
     "",
@@ -282,7 +282,7 @@ Object {
 
 ```php
 Array [
-    "jsonrpc.%crpc.async-iterator.next%c(%o, %o%c)
+    "rpc.%crpc.async-iterator.next%c(%o, %o%c)
 %o %c@8",
     "color: #d2c057",
     "",
@@ -325,7 +325,7 @@ Object {
 
 ```php
 Array [
-    "jsonrpc.%crpc.async-iterator.next%c(%o, %o%c)
+    "rpc.%crpc.async-iterator.next%c(%o, %o%c)
 %o %c@9",
     "color: #d2c057",
     "",
@@ -368,7 +368,7 @@ Object {
 
 ```php
 Array [
-    "jsonrpc.%crpc.async-iterator.throw%c(%o, %o%c)
+    "rpc.%crpc.async-iterator.throw%c(%o, %o%c)
 %o %c@10",
     "color: #d2c057",
     "",
@@ -411,7 +411,7 @@ Object {
 
 ```php
 Array [
-    "jsonrpc.%crpc.async-iterator.next%c(%o, %o%c)
+    "rpc.%crpc.async-iterator.next%c(%o, %o%c)
 %o %c@11",
     "color: #d2c057",
     "",
@@ -454,7 +454,7 @@ Object {
 
 ```php
 Array [
-    "jsonrpc.%crpc.async-iterator.return%c(%o, %o%c)
+    "rpc.%crpc.async-iterator.return%c(%o, %o%c)
 %o %c@12",
     "color: #d2c057",
     "",

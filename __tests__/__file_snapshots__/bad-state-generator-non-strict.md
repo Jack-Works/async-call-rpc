@@ -18,7 +18,7 @@ Object {
 
 ```php
 Array [
-    "jsonrpc.%crpc.async-iterator.next%c(%o, %o%c)
+    "rpc.%crpc.async-iterator.next%c(%o, %o%c)
 %o %c@a",
     "color: #d2c057",
     "",
@@ -48,7 +48,7 @@ Object {
 
 ```php
 Array [
-    "jsonrpc.%crpc.async-iterator.start%c(%o, %o%c)
+    "rpc.%crpc.async-iterator.start%c(%o, %o%c)
 %o %c@0",
     "color: #d2c057",
     "",
