@@ -33,7 +33,7 @@
     "doc:md": "api-documenter markdown -o docs -i temp",
     "doc": "run-s doc:api doc:md",
     "start": "run-p watch:rollup watch:tsc watch:test",
-    "test": "jest --coverage --coverage-provider=v8",
+    "test": "jest --coverage",
     "watch:test": "jest --watch"
   },
   "repository": {
