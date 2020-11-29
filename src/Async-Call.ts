@@ -2,13 +2,15 @@
  * See the document at https://github.com/Jack-Works/async-call/
  */
 
-import { Serialization, NoSerialization } from './utils/serialization'
-export { JSONSerialization, NoSerialization } from './utils/serialization'
+export type { CallbackBasedChannel, EventBasedChannel } from './types'
 export type { Serialization } from './utils/serialization'
 export type { Console } from './utils/console'
-import type { Console } from './utils/console'
+export { JSONSerialization, NoSerialization } from './utils/serialization'
 export { notify } from './core/notify'
 export { batch } from './core/batch'
+
+import { Serialization, NoSerialization } from './utils/serialization'
+import type { Console } from './utils/console'
 import {
     Request,
     Response,
@@ -85,7 +87,6 @@ export interface AsyncCallStrictJSONRPC {
     unknownMessage?: boolean
 }
 
-export type { CallbackBasedChannel, EventBasedChannel } from './types'
 /**
  * Options for {@link AsyncCall}
  * @public
@@ -196,16 +197,21 @@ export interface AsyncCallOptions {
 }
 
 /**
+ * JSON RPC payload
+ * @public
+ */
+export type JSONRpcPayload = {
+    jsonrpc: '2.0'
+    id?: string | number | null
+    method: string
+    params: readonly unknown[] | object
+}
+/**
  * @public
  */
 export type ErrorMapFunction<T = unknown> = (
     error: unknown,
-    request: Readonly<{
-        jsonrpc: '2.0'
-        id?: string | number | null
-        method: string
-        params: readonly unknown[] | object
-    }>,
+    request: Readonly<JSONRpcPayload>,
 ) => {
     code: number
     message: string
@@ -268,15 +274,14 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     let resolvedThisSideImplementation: object | undefined = undefined
     let rejectedThisSideImplementation: Error | undefined = undefined
     // This promise should never fail
-    const awaitThisSideImplementation = () => {
-        return Promise_resolve(thisSideImplementation).then(
-            (x) => (resolvedThisSideImplementation = x),
-            (e) => {
-                resolvedThisSideImplementation = {}
-                rejectedThisSideImplementation = e
-                console_error('AsyncCall server failed to start', e)
-            },
-        )
+    const awaitThisSideImplementation = async () => {
+        try {
+            resolvedThisSideImplementation = await thisSideImplementation
+        } catch (e) {
+            resolvedThisSideImplementation = {}
+            rejectedThisSideImplementation = e
+            console_error('AsyncCall failed to start', e)
+        }
     }
 
     const {
@@ -491,12 +496,15 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             }
         }
     }
-    const handleSingleMessage = (
+    const handleSingleMessage = async (
         data: SuccessResponse | ErrorResponse | Request,
-    ): Promise<SuccessResponse | ErrorResponse | undefined> | undefined => {
+    ): Promise<SuccessResponse | ErrorResponse | undefined> => {
         if (hasKey(data, 'method')) {
             const r = onRequest(data)
             if (hasKey(data, 'id')) return r
+            try {
+                await r
+            } catch {}
             return undefined // Does not care about return result for notifications
         }
         return onResponse(data) as Promise<undefined>

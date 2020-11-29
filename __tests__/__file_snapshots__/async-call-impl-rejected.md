@@ -4,7 +4,7 @@
 
 ```php
 Array [
-    "AsyncCall server failed to start",
+    "AsyncCall failed to start",
     [TypeError: Import failed],
 ]
 ```
@@ -13,7 +13,7 @@ Array [
 
 ```php
 Array [
-    "AsyncCall server failed to start",
+    "AsyncCall failed to start",
     [TypeError: Import failed],
 ]
 ```

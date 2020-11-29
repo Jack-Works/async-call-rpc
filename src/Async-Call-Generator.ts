@@ -199,8 +199,7 @@ const isFinished = async (result: IterResult | undefined | false, cb: () => void
     try {
         const x = await result
         x && x.done && cb()
-    } finally {
-    }
+    } catch {}
 }
 
 const makeIteratorResult = (done: boolean, value: unknown = undefined): IteratorResult<unknown, unknown> => ({
