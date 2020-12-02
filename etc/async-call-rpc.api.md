@@ -7,7 +7,7 @@
 // Warning: (ae-incompatible-release-tags) The symbol "AsyncCall" is marked as @public, but its signature references "_AsyncVersionOf" which is marked as @internal
 //
 // @public
-export function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: object | Promise<object> | undefined, options: AsyncCallOptions): _AsyncVersionOf<OtherSideImplementedFunctions>;
+export function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: null | undefined | object | Promise<object>, options: AsyncCallOptions): _AsyncVersionOf<OtherSideImplementedFunctions>;
 
 // @public
 export interface AsyncCallLogLevel {

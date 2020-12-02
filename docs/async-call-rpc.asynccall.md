@@ -9,14 +9,14 @@ Create a RPC server &amp; client.
 <b>Signature:</b>
 
 ```typescript
-export declare function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: object | Promise<object> | undefined, options: AsyncCallOptions): _AsyncVersionOf<OtherSideImplementedFunctions>;
+export declare function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: null | undefined | object | Promise<object>, options: AsyncCallOptions): _AsyncVersionOf<OtherSideImplementedFunctions>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  thisSideImplementation | object \| Promise&lt;object&gt; \| undefined | The implementation when this AsyncCall acts as a JSON RPC server. Can be a Promise. |
+|  thisSideImplementation | null \| undefined \| object \| Promise&lt;object&gt; | The implementation when this AsyncCall acts as a JSON RPC server. Can be a Promise. |
 |  options | [AsyncCallOptions](./async-call-rpc.asynccalloptions.md) | [AsyncCallOptions](./async-call-rpc.asynccalloptions.md) |
 
 <b>Returns:</b>

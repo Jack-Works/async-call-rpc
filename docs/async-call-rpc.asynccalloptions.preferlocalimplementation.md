@@ -14,5 +14,5 @@ preferLocalImplementation?: boolean;
 
 ## Remarks
 
-If you call a RPC method and it is also defined in the local, open this flag will call the local implementation directly instead of send a RPC request.
+If you call a RPC method and it is also defined in the local, open this flag will call the local implementation directly instead of send a RPC request. No logs / serialization will be performed if a local implementation is used.
 

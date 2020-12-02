@@ -173,7 +173,7 @@ export interface AsyncCallOptions {
     /**
      * Prefer local implementation than remote.
      * @remarks
-     * If you call a RPC method and it is also defined in the local, open this flag will call the local implementation directly instead of send a RPC request.
+     * If you call a RPC method and it is also defined in the local, open this flag will call the local implementation directly instead of send a RPC request. No logs / serialization will be performed if a local implementation is used.
      * @defaultValue false
      */
     preferLocalImplementation?: boolean
@@ -276,19 +276,21 @@ export type _AsyncVersionOf<T> = {
  * @public
  */
 export function AsyncCall<OtherSideImplementedFunctions = {}>(
-    thisSideImplementation: object | Promise<object> = {},
+    thisSideImplementation: null | undefined | object | Promise<object>,
     options: AsyncCallOptions,
 ): _AsyncVersionOf<OtherSideImplementedFunctions> {
-    let resolvedThisSideImplementation: object | undefined = undefined
-    let rejectedThisSideImplementation: Error | undefined = undefined
+    let isThisSideImplementationPending = true
+    let resolvedThisSideImplementationValue: unknown = undefined
+    let rejectedThisSideImplementation: unknown = undefined
     // This promise should never fail
     const awaitThisSideImplementation = async () => {
         try {
-            resolvedThisSideImplementation = await thisSideImplementation
+            resolvedThisSideImplementationValue = await thisSideImplementation
         } catch (e) {
-            resolvedThisSideImplementation = {}
             rejectedThisSideImplementation = e
             console_error('AsyncCall failed to start', e)
+        } finally {
+            isThisSideImplementationPending = false
         }
     }
 
@@ -307,7 +309,10 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     } = options
 
     if (thisSideImplementation instanceof Promise) awaitThisSideImplementation()
-    else resolvedThisSideImplementation = thisSideImplementation
+    else {
+        resolvedThisSideImplementationValue = thisSideImplementation
+        isThisSideImplementationPending = false
+    }
 
     const [banMethodNotFound, banUnknownMessage] = normalizeStrictOptions(strict)
     const [
@@ -329,14 +334,17 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     type PromiseParam = [resolve: (value?: any) => void, reject: (reason?: any) => void]
     const requestContext = new Map<string | number, { f: PromiseParam; stack: string }>()
     const onRequest = async (data: Request): Promise<Response | undefined> => {
-        if (!resolvedThisSideImplementation) await awaitThisSideImplementation()
-        if (rejectedThisSideImplementation) return makeErrorObject(rejectedThisSideImplementation, '', data)
+        if (isThisSideImplementationPending) await awaitThisSideImplementation()
+        else {
+            // not pending
+            if (rejectedThisSideImplementation) return makeErrorObject(rejectedThisSideImplementation, '', data)
+        }
         let frameworkStack: string = ''
         try {
             const { params, method, id: req_id, remoteStack } = data
             // ? We're mapping any method starts with 'rpc.' to a Symbol.for
             const key = (method.startsWith('rpc.') ? Symbol.for(method) : method) as keyof object
-            const executor: unknown = resolvedThisSideImplementation![key]
+            const executor: unknown = (resolvedThisSideImplementationValue as any)?.[key]
             if (!isFunction(executor)) {
                 if (!banMethodNotFound) {
                     if (log_localError) console_debug('Missing method', key, data)
@@ -345,7 +353,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             }
             const args = isArray(params) ? params : [params]
             frameworkStack = removeStackHeader(new Error().stack)
-            const promise = new Promise((resolve) => resolve(executor.apply(resolvedThisSideImplementation, args)))
+            const promise = new Promise((resolve) => resolve(executor.apply(resolvedThisSideImplementationValue, args)))
             if (log_beCalled) {
                 if (log_pretty) {
                     const logArgs: unknown[] = [
@@ -360,7 +368,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                     if (log_requestReplay)
                         logArgs.push(() => {
                             debugger
-                            return executor.apply(resolvedThisSideImplementation, args)
+                            return executor.apply(resolvedThisSideImplementationValue, args)
                         })
                     if (remoteStack) {
                         console_groupCollapsed(...logArgs)
@@ -551,13 +559,11 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                             new TypeError(),
                         ),
                     )
-                if (preferLocalImplementation && resolvedThisSideImplementation && isString(method)) {
-                    const localImpl: unknown = resolvedThisSideImplementation[method as keyof object]
-                    if (localImpl && isFunction(localImpl)) {
-                        return new Promise((resolve) => resolve(localImpl(...params)))
-                    }
-                }
                 return new Promise<void>((resolve, reject) => {
+                    if (preferLocalImplementation && !isThisSideImplementationPending && isString(method)) {
+                        const localImpl: unknown = (resolvedThisSideImplementationValue as any)?.[method]
+                        if (isFunction(localImpl)) return resolve(localImpl(...params))
+                    }
                     const id = idGenerator()
                     const [param0] = params
                     const sendingStack = log_sendLocalStack ? stack : ''
