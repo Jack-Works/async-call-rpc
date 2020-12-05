@@ -1,6 +1,6 @@
 import { JestCallbackBasedChannel } from './utils/channels'
 import { reproduceRandomID } from './utils/reproduce'
-import { withSnapshotDefault } from './utils/test'
+import { delay, withSnapshotDefault } from './utils/test'
 
 withSnapshotDefault('basic use case of Async Call should work', 'async-call-basic', async (call) => {
     const server = call()
@@ -106,12 +106,32 @@ withSnapshotDefault('default generateRandomID', 'generateRandomID', async (f) =>
     })
 })
 
+withSnapshotDefault('default generateRandomID', 'generateRandomID-2', async (_, f) => {
+    await reproduceRandomID(async () => {
+        const server = f({ opts: { idGenerator: undefined } })
+        for await (const x of server.echo([])) {
+        }
+    })
+})
+
 withSnapshotDefault(
     'CallbackBasedChannel',
     'CallbackBasedChannel',
     async (f) => {
         const server = f({})
         await server.add(1, 2)
+    },
+    800,
+    JestCallbackBasedChannel,
+)
+
+withSnapshotDefault(
+    'CallbackBasedChannel JSON-RPC invalid ignore (by 2nd parameter of setup function)',
+    'CallbackBasedChannel-2',
+    async (f, _, __, raw) => {
+        const server = f({})
+        await raw.client.send({ invalid: true })
+        await delay(40)
     },
     800,
     JestCallbackBasedChannel,

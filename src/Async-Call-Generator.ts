@@ -99,7 +99,7 @@ type IterResult = IteratorResult<unknown> | Promise<IteratorResult<unknown>>
  * @public
  */
 export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
-    thisSideImplementation: object | Promise<object> = {},
+    thisSideImplementation: null | undefined | object | Promise<object>,
     options: AsyncCallOptions,
 ): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions> {
     const iterators = new Map<string | number, Iter>()
@@ -187,10 +187,11 @@ class _AsyncGenerator implements AsyncIterableIterator<unknown>, AsyncIterator<u
     declare [Symbol.asyncIterator]: () => this
 }
 // ! side effect
-const AsyncGeneratorConstructor = async function* () {}.constructor
+const EmptyAsyncGenerator = async function* () {}
+const AsyncGeneratorConstructor = EmptyAsyncGenerator.constructor
 const AsyncGeneratorConstructorPrototype = AsyncGeneratorConstructor.prototype
 Object_setPrototypeOf(_AsyncGenerator, AsyncGeneratorConstructorPrototype)
-const AsyncGeneratorPrototype = Object.getPrototypeOf((async function* () {})())
+const AsyncGeneratorPrototype = Object.getPrototypeOf(EmptyAsyncGenerator())
 Object_setPrototypeOf(_AsyncGenerator.prototype, AsyncGeneratorPrototype)
 
 const isFinished = async (result: IterResult | undefined | false, cb: () => void) => {

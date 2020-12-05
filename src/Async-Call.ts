@@ -344,7 +344,8 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             const { params, method, id: req_id, remoteStack } = data
             // ? We're mapping any method starts with 'rpc.' to a Symbol.for
             const key = (method.startsWith('rpc.') ? Symbol.for(method) : method) as keyof object
-            const executor: unknown = (resolvedThisSideImplementationValue as any)?.[key]
+            const executor: unknown =
+                resolvedThisSideImplementationValue && (resolvedThisSideImplementationValue as any)[key]
             if (!isFunction(executor)) {
                 if (!banMethodNotFound) {
                     if (log_localError) console_debug('Missing method', key, data)
@@ -460,8 +461,6 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             if (reply.length === 0) return
             return serialization(reply)
         } else {
-            // ? This is a Notification, we MUST not return it.
-            if (!hasKey(res, 'id')) return
             return serialization(res)
         }
     }
@@ -494,7 +493,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         if (isObject(e) && hasKey(e, 'stack'))
             e.stack = frameworkStack
                 .split('\n')
-                .reduce((stack, fstack) => stack.replace(fstack + '\n', ''), '' + e.stack || '')
+                .reduce((stack, fstack) => stack.replace(fstack + '\n', ''), '' + e.stack)
         if (log_localError) console_error(e)
         return ErrorResponseMapped(data, e, mapError || defaultErrorMapper(log_sendLocalStack ? e.stack : undefined))
     }
@@ -561,7 +560,8 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                     )
                 return new Promise<void>((resolve, reject) => {
                     if (preferLocalImplementation && !isThisSideImplementationPending && isString(method)) {
-                        const localImpl: unknown = (resolvedThisSideImplementationValue as any)?.[method]
+                        const localImpl: unknown =
+                            resolvedThisSideImplementationValue && (resolvedThisSideImplementationValue as any)[method]
                         if (isFunction(localImpl)) return resolve(localImpl(...params))
                     }
                     const id = idGenerator()

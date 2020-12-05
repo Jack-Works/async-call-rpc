@@ -50,7 +50,7 @@ export const RecoverError = (type: string, message: string, code: number, stack:
         return new Error(`E${code} ${type}: ${message}\n${stack}`)
     }
 }
-export const removeStackHeader = (stack = '') => stack.replace(/^.+\n.+\n/, '')
+export const removeStackHeader = (stack: unknown) => String(stack).replace(/^.+\n.+\n/, '')
 // ! side effect
 export const globalDOMException = (() => {
     try {
