@@ -43,7 +43,7 @@ export interface AsyncCallStrictJSONRPC {
 // Warning: (ae-incompatible-release-tags) The symbol "AsyncGeneratorCall" is marked as @public, but its signature references "_AsyncGeneratorVersionOf" which is marked as @internal
 //
 // @public
-export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: object | Promise<object> | undefined, options: AsyncCallOptions): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions>;
+export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: null | undefined | object | Promise<object>, options: AsyncCallOptions): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions>;
 
 // @internal
 export type _AsyncGeneratorVersionOf<T> = {
