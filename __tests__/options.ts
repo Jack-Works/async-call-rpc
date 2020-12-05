@@ -63,3 +63,10 @@ withSnapshotDefault('AsyncCall preferLocalImplementation', 'async-call-preferLoc
     const server = f({ opts: { preferLocalImplementation: true } })
     await expect(server.add(1, 2)).resolves.toMatchInlineSnapshot(`3`)
 })
+
+withSnapshotDefault('AsyncCall custom error mapper', 'async-call-custom-error-mapper', async (f) => {
+    const server = f({
+        opts: { mapError: (e) => ({ code: -233, message: 'Oh my message', data: { custom_data: true } }) },
+    })
+    await expect(server.throws()).rejects.toThrowErrorMatchingInlineSnapshot(`"Oh my message"`)
+})

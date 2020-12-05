@@ -1,8 +1,17 @@
 import { AsyncCallOptions } from '../Async-Call'
 import { isBoolean } from './constants'
 const undefinedToTrue = (x: undefined | boolean) => (x === void 0 ? true : x)
-export const normalizeLogOptions = (log: NonNullable<AsyncCallOptions['log']>) => {
-    if (log === 'all') return [true, true, true, true, true, true] as const
+type NormalizedLogOptions = readonly [
+    beCalled: boolean,
+    localError: boolean,
+    remoteError: boolean,
+    isPretty?: boolean,
+    requestReplay?: boolean,
+    sendLocalStack?: boolean,
+]
+
+export const normalizeLogOptions = (log: NonNullable<AsyncCallOptions['log']>): NormalizedLogOptions | [] => {
+    if (log === 'all') return [true, true, true, true, true, true]
     if (!isBoolean(log)) {
         const { beCalled, localError, remoteError, type, requestReplay, sendLocalStack } = log
         return [
@@ -12,10 +21,10 @@ export const normalizeLogOptions = (log: NonNullable<AsyncCallOptions['log']>) =
             type !== 'basic',
             requestReplay,
             sendLocalStack,
-        ] as const
+        ]
     }
     if (log) return [true, true, true, true] as const
-    return [] as const
+    return []
 }
 
 export const normalizeStrictOptions = (strict: NonNullable<AsyncCallOptions['strict']>) => {

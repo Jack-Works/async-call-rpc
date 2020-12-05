@@ -1,5 +1,68 @@
 import { delay, withSnapshotDefault } from './utils/test'
-import { ErrorResponse, Request, SuccessResponse } from '../src/utils/jsonrpc'
+import { defaultErrorMapper, ErrorResponse, Request, SuccessResponse } from '../src/utils/jsonrpc'
+import { JSONSerialization } from '../src'
+import { reproduceError } from './utils/reproduce'
+
+withSnapshotDefault('deserialize failed', 'deserialize-failed', async (f, _, log, raw) => {
+    await reproduceError(async () => {
+        const server = f({ opts: { serializer: JSONSerialization() } })
+        await raw.client.send('invalid JSON')
+        await delay(50)
+    })
+})
+
+test('bad exception', () => {
+    const f = defaultErrorMapper('', 0)
+    const r = Request(0, '1', [])
+    const bad1 = {
+        get message() {
+            throw 1
+        },
+    }
+    const bad2 = {
+        message: 'normal',
+        get constructor() {
+            throw 2
+        },
+    }
+    function _() {
+        // @ts-ignore
+        this.message = 'normal message'
+    }
+    Object.defineProperty(_, 'name', {
+        get() {
+            throw 3
+        },
+    })
+    const bad3 = new (_ as any)()
+    expect(f(bad1, r)).toMatchInlineSnapshot(`
+        Object {
+          "code": 0,
+          "data": Object {
+            "type": "Object",
+          },
+          "message": "",
+        }
+    `)
+    expect(f(bad2, r)).toMatchInlineSnapshot(`
+        Object {
+          "code": 0,
+          "data": Object {
+            "type": "Error",
+          },
+          "message": "normal",
+        }
+    `)
+    expect(f(bad3, r)).toMatchInlineSnapshot(`
+        Object {
+          "code": 0,
+          "data": Object {
+            "type": "Error",
+          },
+          "message": "normal message",
+        }
+    `)
+})
 
 withSnapshotDefault('bad data', 'bad-data', async (f, _, log, raw) => {
     const server = f({ opts: { strict: false } })

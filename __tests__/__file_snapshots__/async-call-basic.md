@@ -44,8 +44,10 @@ Object {
 Object {
     "id": 3,
     "jsonrpc": "2.0",
-    "method": "throwString",
-    "params": Array [],
+    "method": "throwEcho",
+    "params": Array [
+        "1",
+    ],
 }
 ```
 
@@ -204,8 +206,10 @@ Object {
 Object {
     "id": 3,
     "jsonrpc": "2.0",
-    "method": "throwString",
-    "params": Array [],
+    "method": "throwEcho",
+    "params": Array [
+        "1",
+    ],
 }
 ```
 
@@ -213,10 +217,11 @@ Object {
 
 ```php
 Array [
-    "rpc.%cthrowString%c(%c)
+    "rpc.%cthrowEcho%c(%o%c)
 %o %c@3",
     "color: #d2c057",
     "",
+    "1",
     "",
     Promise {},
     "color: gray; font-style: italic;",
@@ -227,7 +232,7 @@ Array [
 
 ```php
 Array [
-    1,
+    "1",
 ]
 ```
 

@@ -17,8 +17,35 @@ export const defaultImpl = {
     DOMException() {
         throw new DOMException('message', 'name')
     },
-    throwString() {
-        throw 1
+    throwEcho(val: unknown) {
+        throw val
+    },
+    throwBadException(type: 'm' | 'c' | 'cn') {
+        if (type === 'm') {
+            throw {
+                get message() {
+                    throw 1
+                },
+            }
+        } else if (type === 'c') {
+            throw {
+                message: 'normal',
+                get constructor() {
+                    throw 2
+                },
+            }
+        } else if (type === 'cn') {
+            function f() {
+                // @ts-ignore
+                this.message = 'normal message'
+            }
+            Object.defineProperty(f, 'name', {
+                get() {
+                    throw 3
+                },
+            })
+            throw new (f as any)()
+        }
     },
     byPos(opt: { a: number; b: number }) {
         return opt.a + opt.b
@@ -89,8 +116,11 @@ export function withSnapshotDefault(
         await race(f(setup, setupGenerator, log.jest.log.log, { client, server }), timeout)
         expect(emit()).toMatchFile(join(__dirname, '../__file_snapshots__/', snapshot + '.md'))
     }
-    if (name.startsWith('ONLY')) test.only(name, testImpl)
+    if (name.includes('ONLY')) test.only(name, testImpl)
     else test(name, testImpl)
+}
+withSnapshotDefault.debugger = (...[name, snap, f]: Parameters<typeof withSnapshotDefault>) => {
+    withSnapshotDefault('DBG ONLY ' + name, snap, f)
 }
 export type DefaultImpl = typeof defaultImpl
 type DefaultImplG = typeof defaultImplGenerator

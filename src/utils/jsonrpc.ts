@@ -84,8 +84,7 @@ export const ErrorResponseMapped = <T>(request: Request, e: unknown, mapper: Err
 }
 
 export const defaultErrorMapper = (stack = '', code = -1): ErrorMapFunction<AsyncCallErrorDetail> => (e) => {
-    let message = ''
-    if (isObject(e) && hasKey(e, 'message') && isString(e.message)) message = e.message
+    let message = toString('', () => (e as any).message)
     let type = toString(ERROR, (ctor = (e as any).constructor) => isFunction(ctor) && ctor.name)
     const E = DOMException()
     if (E && e instanceof E) type = DOMExceptionHeader + e.name
@@ -123,13 +122,14 @@ export const hasKey = <T, Q extends string>(
         [key in Q]: unknown
     } => key in obj
 
-const toString = (def: string, val: () => any) => {
-    let str = def
+const toString = (_default: string, val: () => any) => {
     try {
-        str = val()
-    } catch {}
-    if (!isString(str)) return def
-    return str
+        const v = val()
+        if (v === undefined) return _default
+        return String(v)
+    } catch {
+        return _default
+    }
 }
 const deleteUndefined = <O>(x: O, key: keyof O) => {
     if (x[key] === undefined) delete x[key]

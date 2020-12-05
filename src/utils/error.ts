@@ -17,6 +17,8 @@ export function makeHostedMessage(id: HostedMessages, error: Error) {
 // ! side effect
 /** These Error is defined in ECMAScript spec */
 const errors: Record<string, typeof EvalError> = {
+    // @ts-ignore
+    __proto__: null,
     Error,
     EvalError,
     RangeError,
@@ -33,7 +35,7 @@ export const RecoverError = (type: string, message: string, code: number, stack:
     try {
         const E = globalDOMException()
         if (type.startsWith(DOMExceptionHeader) && E) {
-            const [, name] = type.split(DOMExceptionHeader)
+            const name = type.slice(DOMExceptionHeader.length)
             return new E(message, name)
         } else if (type in errors) {
             const e = new errors[type](message)
