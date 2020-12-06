@@ -1,8 +1,0 @@
-html {
-    box-sizing: border-box;
-}
-body {
-    font-smoothing: grayscale;
-    font-kerning: normal;
-    font-feature-settings: 'kern', 'liga', 'clig', 'calt';
-}

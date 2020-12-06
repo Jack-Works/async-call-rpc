@@ -1,39 +1,52 @@
 import React from 'react'
-import { graphql, Link as gLink } from 'gatsby'
+import { graphql } from 'gatsby'
 import Layout from '../components/layout'
 import rehypeReact from 'rehype-react'
-import { Card, CardContent, Link, Paper, Typography } from '@material-ui/core'
+import {
+    CardContent,
+    makeStyles,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Typography,
+} from '@material-ui/core'
+import { SmartLink } from './SmartLink'
 
 // const heading =
 // @ts-ignore
 const renderAst = new rehypeReact({
     createElement: React.createElement,
     components: {
-        a: function (props) {
-            let href = props.href
-                ? // @ts-ignore
-                  props.children?.[0] === 'Home'
-                    ? '/'
-                    : String(props.href).replace(/\.md$/g, '')
-                : void 0
-            if (href?.startsWith('.') || href?.startsWith('/')) {
-                if (href.startsWith('.')) href = '.' + href
-                return <Link component={gLink} {...props} to={href} color="textPrimary" underline="always" />
-            } else return <Link {...props} href={href} color="textPrimary" underline="always" />
-        },
+        a: SmartLink,
+        h2: (props: any) => <Typography variant="h5" component="h2" style={{ marginTop: 24 }} {...props} />,
+        table: Table as any,
+        thead: TableHead as any,
+        tbody: TableBody as any,
+        td: TableCell as any,
+        tr: TableRow as any,
     },
 }).Compiler
 
+const useStyles = makeStyles((theme) => ({
+    root: {
+        paddingRight: theme.spacing(4),
+        paddingLeft: theme.spacing(4),
+    },
+}))
+
 export default function BlogPost({ data }) {
     const post = data.markdownRemark
-    console.log(post)
+    const classes = useStyles()
     return (
         <Layout>
-            <Card>
-                <CardContent>
+            <Paper>
+                <CardContent className={classes.root}>
                     <Typography component="main">{renderAst(post.htmlAst)}</Typography>
                 </CardContent>
-            </Card>
+            </Paper>
         </Layout>
     )
 }
