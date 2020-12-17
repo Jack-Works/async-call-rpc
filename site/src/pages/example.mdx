@@ -7,6 +7,9 @@
 ```ts twoslash
 // @target: esnext
 // @lib: dom,es6
+// @filename: global.d.ts
+declare module 'bson'
+declare module 'ws'
 // @filename: serializer.ts
 export default {} as import('async-call-rpc').Serialization
 // @filename: server.ts
@@ -29,6 +32,9 @@ const result = await server.now()
 ```ts twoslash
 // @target: esnext
 // @lib: es6
+// @filename: global.d.ts
+declare module 'bson'
+declare module 'ws'
 // @filename: serializer.ts
 export default {} as import('async-call-rpc').Serialization
 // ---cut---
@@ -52,6 +58,9 @@ AsyncCall({}, { channel, serializer })
 
 ```ts twoslash
 // @target: esnext
+declare module 'bson'
+declare module 'ws'
+// ---cut---
 // @filename: serializer.ts
 import { BSON_Serialization } from 'async-call-rpc/utils/node/bson'
 import bson from 'bson'
