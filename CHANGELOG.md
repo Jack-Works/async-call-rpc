@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.0.0](https://github.com/Jack-Works/async-call/compare/v4.2.1...v5.0.0) (2020-12-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* Provide un-minified version #28
+* improve typing, require at least TS 4.1
+
+### Features
+
+* add error handling of async initialization ([72105f1](https://github.com/Jack-Works/async-call/commit/72105f14886122eac59c97b63d2ae5fe1a97b6a2))
+* improve typing, require at least TS 4.1 ([684e979](https://github.com/Jack-Works/async-call/commit/684e979b6d2ee6d07ae89ad4a72cee34aab932c6))
+* Provide un-minified version [#28](https://github.com/Jack-Works/async-call/issues/28) ([78a059d](https://github.com/Jack-Works/async-call/commit/78a059d48dcd6ec9960f8fe90b83ef79e34f9637))
+* return undefined for then by default (to avoid auto unwrap) ([df4a673](https://github.com/Jack-Works/async-call/commit/df4a673f8f7ea3698aa21da3c4a3da68e0aa21f2))
+
+
+### Bug Fixes
+
+* response sent in notify mode ([24ea1e7](https://github.com/Jack-Works/async-call/commit/24ea1e7e61324371c2c44269dafdd2afffa1784d))
+
 ### [4.2.1](https://github.com/Jack-Works/async-call/compare/v4.2.0...v4.2.1) (2020-11-13)
 
 
