@@ -1,3 +1,4 @@
+import { replayFunction } from '../src/utils/constants'
 import { withSnapshotDefault } from './utils/test'
 
 withSnapshotDefault('AsyncCall with symbol methods', 'async-call-symbols', async (f) => {
@@ -18,4 +19,8 @@ withSnapshotDefault('AsyncCallGenerator with symbol methods', 'async-call-genera
     expect(() => server[Symbol.toStringTag]()).toThrowErrorMatchingInlineSnapshot(
         `"Error 1: https://github.com/Jack-Works/async-call-rpc/wiki/Errors#1"`,
     )
+})
+
+test('Expect replay function to be', () => {
+    expect(replayFunction()).toMatchInlineSnapshot(`"() => replay()"`)
 })

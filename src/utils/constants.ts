@@ -8,3 +8,4 @@ export const Object_setPrototypeOf = Object.setPrototypeOf
 export const Promise_reject = (x: any) => Promise.reject(x)
 export const Promise_resolve = <T>(x: T) => Promise.resolve(x)
 export const isArray = Array.isArray
+export const replayFunction = () => '() => replay()'

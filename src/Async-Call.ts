@@ -32,7 +32,16 @@ import { normalizeStrictOptions, normalizeLogOptions } from './utils/normalizeOp
 import { AsyncCallIgnoreResponse, AsyncCallNotify, AsyncCallBatch } from './utils/internalSymbol'
 import { BatchQueue } from './core/batch'
 import { CallbackBasedChannel, EventBasedChannel } from './index'
-import { ERROR, isArray, isFunction, isString, Promise_reject, Promise_resolve, undefined } from './utils/constants'
+import {
+    ERROR,
+    isArray,
+    isFunction,
+    isString,
+    Promise_reject,
+    Promise_resolve,
+    replayFunction,
+    undefined,
+} from './utils/constants'
 
 /**
  * Log options of AsyncCall
@@ -366,11 +375,13 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                         promise,
                         'color: gray; font-style: italic;',
                     ]
-                    if (log_requestReplay)
-                        logArgs.push(() => {
-                            debugger
-                            return executor.apply(resolvedThisSideImplementationValue, args)
-                        })
+                    if (log_requestReplay) {
+                        // This function will be logged to the console so it must be 1 line
+                        // prettier-ignore
+                        const replay = () => { debugger; return executor.apply(resolvedThisSideImplementationValue, args) }
+                        replay.toString = replayFunction
+                        logArgs.push(replay)
+                    }
                     if (remoteStack) {
                         console_groupCollapsed(...logArgs)
                         console_log(remoteStack)

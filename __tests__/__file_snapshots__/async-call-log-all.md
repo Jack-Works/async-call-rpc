@@ -28,7 +28,7 @@ Array [
     "",
     Promise {},
     "color: gray; font-style: italic;",
-    [Function anonymous],
+    [Function replay],
 ]
 ```
 
@@ -79,7 +79,7 @@ Array [
     "",
     Promise {},
     "color: gray; font-style: italic;",
-    [Function anonymous],
+    [Function replay],
 ]
 ```
 
