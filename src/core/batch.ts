@@ -1,6 +1,6 @@
 import { isString } from '../utils/constants'
 import { AsyncCallBatch, AsyncCallNotify } from '../utils/internalSymbol'
-import { Request } from '../utils/jsonrpc'
+import type { Request } from '../utils/jsonrpc'
 /**
  * Wrap the AsyncCall instance to use batch call.
  * @param asyncCallInstance - The AsyncCall instance

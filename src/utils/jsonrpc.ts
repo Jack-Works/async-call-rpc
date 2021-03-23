@@ -1,5 +1,5 @@
 import { globalDOMException as DOMException, DOMExceptionHeader } from './error'
-import { ErrorMapFunction } from '../Async-Call'
+import type { ErrorMapFunction } from '../Async-Call'
 import { ERROR, isArray, isBoolean, isFunction, isObject, isString, undefined } from './constants'
 
 export const jsonrpc = '2.0'
