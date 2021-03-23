@@ -1,14 +1,18 @@
 import type { Serialization } from 'async-call-rpc'
-
-export const BSON_Serialization = (bson: typeof import('bson')): Serialization => ({
+import type { serialize as S, deserialize as D } from 'bson'
+export const BSON_Serialization = ({
+    deserialize,
+    serialize,
+}: {
+    serialize: typeof S
+    deserialize: typeof D
+}): Serialization => ({
     async deserialization(data: unknown) {
         if (data instanceof Blob) data = await data.arrayBuffer()
         if (data instanceof ArrayBuffer) data = new Uint8Array(data)
-        // @ts-ignore
-        return bson.deserialize(data)
+        return deserialize(data as any)
     },
     serialization(data: any) {
-        // @ts-ignore
-        return bson.serialize(data)
+        return serialize(data)
     },
 })

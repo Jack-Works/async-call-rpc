@@ -1,11 +1,19 @@
-import type bsonLib from 'bson'
+import type { serialize as S, deserialize as D } from 'bson'
 import type { Serialization } from 'async-call-rpc'
 
-export const BSON_Serialization = (bson: typeof bsonLib): Serialization => ({
+export const BSON_Serialization = (
+    {
+        deserialize,
+        serialize,
+    }: {
+        serialize: typeof S
+        deserialize: typeof D
+    } = require('bson'),
+): Serialization => ({
     deserialization(data: Buffer) {
-        return bson.deserialize(data)
+        return deserialize(data)
     },
     serialization(data: Buffer) {
-        return bson.serialize(data)
+        return serialize(data)
     },
 })
