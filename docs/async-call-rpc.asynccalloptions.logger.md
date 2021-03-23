@@ -9,10 +9,10 @@ Provide the logger of AsyncCall
 <b>Signature:</b>
 
 ```typescript
-logger?: Console;
+logger?: ConsoleInterface;
 ```
 
 ## Remarks
 
-See [Console](./async-call-rpc.console.md)
+See [ConsoleInterface](./async-call-rpc.consoleinterface.md)
 

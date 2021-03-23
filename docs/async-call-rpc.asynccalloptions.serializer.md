@@ -20,5 +20,5 @@ See [Serialization](./async-call-rpc.serialization.md)<!-- -->. There is some bu
 
 - [JSONSerialization](./async-call-rpc.jsonserialization.md) (Using JSON.parse/stringify in the backend)
 
--  (use the [bson](https://npmjs.org/bson) as the serializer)
+- [BSONSerialization](https://github.com/jack-works/async-call-rpc#web-deno-and-node-bson) (use the [bson](https://npmjs.org/bson) as the serializer)
 

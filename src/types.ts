@@ -1,5 +1,7 @@
 import type { Serialization } from './utils/serialization'
-import type { Console } from './utils/console'
+import type { ConsoleInterface } from './utils/console'
+export type { ConsoleInterface as Console } from './utils/console'
+export type { ConsoleInterface } from './utils/console'
 /**
  * This interface represents a "on message" - "send response" model.
  * @remarks
@@ -126,7 +128,7 @@ export interface AsyncCallOptions {
      *
      * - {@link JSONSerialization} (Using JSON.parse/stringify in the backend)
      *
-     * - {@link https://github.com/jack-works/async-call-rpc#web-deno-and-node-bson BSONSerialization} (use the {@link https://npmjs.org/bson | bson} as the serializer)
+     * - {@link https://github.com/jack-works/async-call-rpc#web-deno-and-node-bson | BSONSerialization} (use the {@link https://npmjs.org/bson | bson} as the serializer)
      *
      * @defaultValue {@link NoSerialization}
      */
@@ -134,10 +136,10 @@ export interface AsyncCallOptions {
     /**
      * Provide the logger of AsyncCall
      * @remarks
-     * See {@link Console}
+     * See {@link ConsoleInterface}
      * @defaultValue globalThis.console
      */
-    logger?: Console
+    logger?: ConsoleInterface
     /**
      * The message channel to exchange messages between server and client
      * @example

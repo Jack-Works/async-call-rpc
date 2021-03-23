@@ -6,7 +6,11 @@ import { AsyncCallIgnoreResponse } from './utils/internalSymbol'
 import { normalizeStrictOptions } from './utils/normalizeOptions'
 import { generateRandomID } from './utils/generateRandomID'
 import { isFunction, isString, Object_setPrototypeOf, Promise_resolve } from './utils/constants'
-import { HostedMessages, makeHostedMessage } from './utils/error'
+import {
+    Err_Cannot_find_a_running_iterator_with_given_ID,
+    Err_Only_string_can_be_the_RPC_method_name,
+    makeHostedMessage,
+} from './utils/error'
 
 const i = 'rpc.async-iterator.'
 // ! side effect
@@ -112,10 +116,7 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
         const it = iterators.get(id)
         if (!it) {
             if (methodNotFound)
-                throw makeHostedMessage(
-                    HostedMessages.AsyncCallGenerator_cannot_find_a_running_iterator_with_the_given_ID,
-                    new Error(`Iterator ${id}, `),
-                )
+                throw makeHostedMessage(Err_Cannot_find_a_running_iterator_with_given_ID, new Error(`Iterator ${id}, `))
             else return AsyncCallIgnoreResponse
         }
         const result = next(it)
@@ -147,7 +148,7 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
     const remote = AsyncCall<AsyncGeneratorInternalMethods>(server, options)
     const proxyTrap = (cache: any, key: string): ((...args: unknown[]) => AsyncIterableIterator<unknown>) => {
         if (!isString(key))
-            throw makeHostedMessage(HostedMessages.Only_string_can_be_the_RPC_method_name, new TypeError(''))
+            throw makeHostedMessage(Err_Only_string_can_be_the_RPC_method_name, new TypeError(''))
         if (cache[key]) return cache[key]
         const f = (...args: unknown[]) => {
             const id = remote[AsyncIteratorStart](key, args)

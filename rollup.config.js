@@ -1,10 +1,12 @@
 import rollup from 'rollup'
-import ts from '@rollup/plugin-typescript'
+import ts from '@rollup/plugin-sucrase'
 import { terser } from 'rollup-plugin-terser'
 import dts from 'rollup-plugin-dts'
 
 /** @returns {rollup.RollupOptions} */
-const shared = () => ({ plugins: [ts()] })
+const shared = () => ({
+    plugins: [ts({ transforms: ['typescript'] })],
+})
 
 /** @type {rollup.RollupOptions} */
 const base = {

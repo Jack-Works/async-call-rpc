@@ -1,13 +1,12 @@
 export * from './types'
 export type { Serialization } from './utils/serialization'
-export type { Console } from './utils/console'
 export type { _IgnoreResponse } from './core/notify'
 export { JSONSerialization, NoSerialization } from './utils/serialization'
 export { notify } from './core/notify'
 export { batch } from './core/batch'
 
 import { NoSerialization } from './utils/serialization'
-import type { Console } from './utils/console'
+import type { ConsoleInterface } from './utils/console'
 import {
     Request,
     Response,
@@ -22,7 +21,13 @@ import {
     ErrorResponseInvalidRequest,
     ErrorResponseParseError,
 } from './utils/jsonrpc'
-import { removeStackHeader, RecoverError, makeHostedMessage, HostedMessages } from './utils/error'
+import {
+    removeStackHeader,
+    RecoverError,
+    makeHostedMessage,
+    Err_Cannot_call_method_starts_with_rpc_dot_directly,
+    Err_Then_is_accessed_on_local_implementation_Please_explicitly_mark_if_it_is_thenable_in_the_options,
+} from './utils/error'
 import { generateRandomID } from './utils/generateRandomID'
 import { normalizeStrictOptions, normalizeLogOptions } from './utils/normalizeOptions'
 import { AsyncCallIgnoreResponse, AsyncCallNotify, AsyncCallBatch } from './utils/internalSymbol'
@@ -112,7 +117,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         groupCollapsed: console_groupCollapsed = console_log,
         groupEnd: console_groupEnd = console_log,
         warn: console_warn = console_log,
-    } = (logger || console) as Console
+    } = (logger || console) as ConsoleInterface
     type PromiseParam = [resolve: (value?: any) => void, reject: (reason?: any) => void]
     const requestContext = new Map<string | number, { f: PromiseParam; stack: string }>()
     const onRequest = async (data: Request): Promise<Response | undefined> => {
@@ -314,7 +319,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                 if (thenable === undefined) {
                     console_warn(
                         makeHostedMessage(
-                            HostedMessages.Instance_is_treated_as_Promise_please_explicitly_mark_if_it_is_thenable_or_not_via_the_options,
+                            Err_Then_is_accessed_on_local_implementation_Please_explicitly_mark_if_it_is_thenable_in_the_options,
                             new TypeError('RPC used as Promise: '),
                         ),
                     )
@@ -337,10 +342,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                     }
                 } else if (method.startsWith('rpc.'))
                     return Promise_reject(
-                        makeHostedMessage(
-                            HostedMessages.Can_not_call_method_starts_with_rpc_dot_directly,
-                            new TypeError(),
-                        ),
+                        makeHostedMessage(Err_Cannot_call_method_starts_with_rpc_dot_directly, new TypeError()),
                     )
                 return new Promise<void>((resolve, reject) => {
                     if (preferLocalImplementation && !isThisSideImplementationPending && isString(method)) {
@@ -376,4 +378,4 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     }) as _AsyncVersionOf<OtherSideImplementedFunctions>
 }
 // Assume a console object in global if there is no custom logger provided
-declare const console: Console
+declare const console: ConsoleInterface

@@ -25,7 +25,7 @@ export interface AsyncCallOptions {
     idGenerator?(): string | number;
     key?: string;
     log?: AsyncCallLogLevel | boolean | 'all';
-    logger?: Console;
+    logger?: ConsoleInterface;
     mapError?: ErrorMapFunction<unknown>;
     parameterStructures?: 'by-position' | 'by-name';
     preferLocalImplementation?: boolean;
@@ -64,7 +64,7 @@ export interface CallbackBasedChannel<Data = unknown> extends Partial<EventBased
 }
 
 // @public
-export interface Console {
+interface ConsoleInterface {
     // (undocumented)
     debug?(...args: unknown[]): void;
     // (undocumented)
@@ -78,6 +78,10 @@ export interface Console {
     // (undocumented)
     warn?(...args: unknown[]): void;
 }
+
+export { ConsoleInterface as Console }
+
+export { ConsoleInterface }
 
 // @public (undocumented)
 export type ErrorMapFunction<T = unknown> = (error: unknown, request: Readonly<JSONRPCRequest>) => {
