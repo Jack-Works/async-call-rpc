@@ -47,11 +47,13 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(thisSideI
 
 // @internal
 export type _AsyncGeneratorVersionOf<T> = {
-    [key in keyof T
+    [key in keyof T as key extends 'then' ? never : T[key] extends _IteratorOrIterableFunction ? key : never]: T[key] extends _IteratorOrIterableFunction ? _IteratorLikeToAsyncGenerator<T[key]> : never;
+};
 
 // @internal
 export type _AsyncVersionOf<T> = {
-    readonly [key in keyof T
+    readonly [key in keyof T as key extends 'then' ? never : T[key] extends Function ? key : never]: T[key] extends (...args: any) => Promise<any> ? T[key] : T[key] extends (...args: infer Args) => infer Return ? (...args: Args) => Promise<Return extends PromiseLike<infer U> ? U : Return> : never;
+};
 
 // @public
 export function batch<T extends object>(asyncCallInstance: T): [T, () => void, (error?: unknown) => void];
@@ -92,7 +94,8 @@ export interface EventBasedChannel<Data = unknown> {
 
 // @internal
 export type _IgnoreResponse<T> = T extends (...args: infer Args) => unknown ? (...args: Args) => Promise<void> : {
-    [key in keyof T
+    [key in keyof T as T[key] extends Function ? key : never]: T[key] extends (...args: infer Args) => infer Return ? Return extends Promise<void> ? T[key] : (...args: Args) => Promise<void> : never;
+};
 
 // @internal (undocumented)
 export type _IteratorLikeToAsyncGenerator<T extends _IteratorOrIterableFunction> = T extends (...args: any) => AsyncGenerator<any> ? T : T extends (...args: infer Args) => Iterator<infer Yield, infer Return, infer Next> | Iterable<infer Yield> | AsyncIterator<infer Yield, infer Return, infer Next> | AsyncIterable<infer Yield> ? (...args: Args) => AsyncGenerator<Yield, Return, Next> : never;
