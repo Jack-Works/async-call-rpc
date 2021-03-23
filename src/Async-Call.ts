@@ -1,12 +1,10 @@
 export * from './types'
-export type { Serialization } from './utils/serialization'
 export type { _IgnoreResponse } from './core/notify'
 export { JSONSerialization, NoSerialization } from './utils/serialization'
 export { notify } from './core/notify'
 export { batch } from './core/batch'
 
 import { NoSerialization } from './utils/serialization'
-import type { ConsoleInterface } from './utils/console'
 import {
     Request,
     Response,
@@ -32,7 +30,7 @@ import { generateRandomID } from './utils/generateRandomID'
 import { normalizeStrictOptions, normalizeLogOptions } from './utils/normalizeOptions'
 import { AsyncCallIgnoreResponse, AsyncCallNotify, AsyncCallBatch } from './utils/internalSymbol'
 import type { BatchQueue } from './core/batch'
-import type { CallbackBasedChannel, EventBasedChannel, AsyncCallOptions, _AsyncVersionOf } from './types'
+import type { CallbackBasedChannel, EventBasedChannel, AsyncCallOptions, ConsoleInterface, _AsyncVersionOf } from './types'
 import {
     ERROR,
     isArray,

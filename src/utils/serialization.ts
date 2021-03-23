@@ -2,23 +2,8 @@
 
 import { isObject, hasKey } from './jsonrpc'
 import { undefined } from './constants'
+import type { Serialization } from '../types'
 
-/**
- * Serialize and deserialize of the JSON RPC payload
- * @public
- */
-export interface Serialization {
-    /**
-     * Serialize data
-     * @param from - original data
-     */
-    serialization(from: any): unknown | PromiseLike<unknown>
-    /**
-     * Deserialize data
-     * @param serialized - Serialized data
-     */
-    deserialization(serialized: unknown): unknown | PromiseLike<unknown>
-}
 
 /**
  * Serialization implementation that do nothing

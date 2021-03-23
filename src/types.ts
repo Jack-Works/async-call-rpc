@@ -1,7 +1,8 @@
-import type { Serialization } from './utils/serialization'
-import type { ConsoleInterface } from './utils/console'
-export type { ConsoleInterface as Console } from './utils/console'
-export type { ConsoleInterface } from './utils/console'
+/**
+ * ! This file MUST NOT contain any import statement.
+ * ! This file is part of public API of this package (for Deno users).
+ */
+
 /**
  * This interface represents a "on message" - "send response" model.
  * @remarks
@@ -263,4 +264,36 @@ export type _AsyncVersionOf<T> = {
         : T[key] extends (...args: infer Args) => infer Return // otherwise we convert it to async functions
         ? (...args: Args) => Promise<Return extends PromiseLike<infer U> ? U : Return>
         : never
+}
+/**
+ * The minimal Console interface that AsyncCall needs.
+ * @public
+ * @remarks
+ * The method not provided will use "log" as it's fallback.
+ */
+export interface ConsoleInterface {
+    warn?(...args: unknown[]): void
+    debug?(...args: unknown[]): void
+    log(...args: unknown[]): void
+    groupCollapsed?(...args: unknown[]): void
+    groupEnd?(...args: unknown[]): void
+    error?(...args: unknown[]): void
+}
+export type { ConsoleInterface as Console }
+
+/**
+ * Serialize and deserialize of the JSON RPC payload
+ * @public
+ */
+export interface Serialization {
+    /**
+     * Serialize data
+     * @param from - original data
+     */
+    serialization(from: any): unknown | PromiseLike<unknown>
+    /**
+     * Deserialize data
+     * @param serialized - Serialized data
+     */
+    deserialization(serialized: unknown): unknown | PromiseLike<unknown>
 }
