@@ -1,6 +1,7 @@
 devDependencies:
   '@microsoft/api-documenter': 7.12.14
   '@microsoft/api-extractor': 7.13.2
+  '@msgpack/msgpack': 2.5.1
   '@rollup/plugin-sucrase': 3.1.0_rollup@2.42.3
   '@types/bson': 4.0.3
   '@types/jest': 26.0.21
@@ -570,6 +571,14 @@ packages:
     dev: true
     resolution:
       integrity: sha512-Mfmij13RUTmHEMi9vRUhMXD7rnGR2VvxeNYtaGtaJ4redwwjT4UXYJ+nzmVJF7hhd4pn/Fx5sncDKxMVFJSWPg==
+  /@msgpack/msgpack/2.5.1:
+    dependencies:
+      tslib: 2.1.0
+    dev: true
+    engines:
+      node: '>= 10'
+    resolution:
+      integrity: sha512-l44t7u0VxuHZT5D2zCdsRbkUPkrAJMu4wyXTvHr75eXICklf38NZncRqPYA4g9t7rprPuRCPYT5+pTLihuSKRA==
   /@rollup/plugin-sucrase/3.1.0_rollup@2.42.3:
     dependencies:
       '@rollup/pluginutils': 3.1.0_rollup@2.42.3
@@ -5722,6 +5731,7 @@ packages:
 specifiers:
   '@microsoft/api-documenter': ^7.12.14
   '@microsoft/api-extractor': ^7.13.2
+  '@msgpack/msgpack': ^2.5.1
   '@rollup/plugin-sucrase': ^3.1.0
   '@types/bson': ^4.0.3
   '@types/jest': ^26.0.21

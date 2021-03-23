@@ -1,5 +1,5 @@
 const { WebSocketChannel } = require('async-call-rpc/utils/node/websocket.server')
-const { BSON_Serialization } = require('async-call-rpc/utils/node/bson')
+const { Msgpack_Serialization } = require('async-call-rpc/utils/node/msgpack')
 const { AsyncCall } = require('async-call-rpc')
 const { Server } = require('ws')
 
@@ -9,4 +9,4 @@ const server = (module.exports.server = {
     now: Date.now,
     echo: (x) => x,
 })
-AsyncCall(server, { channel: channel, serializer: BSON_Serialization(require('bson')) })
+AsyncCall(server, { channel: channel, serializer: Msgpack_Serialization() })

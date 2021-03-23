@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "module": "ESNext",
+    "module": "CommonJS",
     "lib": ["ES2018"],
     "outDir": "../utils/",
     "rootDir": "./",

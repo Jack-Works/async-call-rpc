@@ -235,9 +235,17 @@ Worker: `new WorkerChannel()`
 | Entry point Node         | `async-call-rpc/utils/node/bson.js`<br />[(Source code)](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/node/bson.ts)                                   |
 | Entry point Browser/Deno | `https://cdn.jsdelivr.net/npm/async-call-rpc@latest/utils/web/bson.js`<br />[(Source code)](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/bson.ts) |
 | Dependencies             | [bson](https://npmjs.com/bson)                                                                                                                                              |
-| Example (Node)           | [./examples/node.websocket.server.js](https://github.com/Jack-Works/async-call-rpc/blob/master/examples/node.websocket.server.js)                                           |
-| Example (Deno)           | [./examples/deno.websocket.server.ts](https://github.com/Jack-Works/async-call-rpc/blob/master/examples/deno.websocket.server.ts)                                           |
-| Example (Web)            | [./examples/browser.websocket.client.js](https://github.com/Jack-Works/async-call-rpc/blob/master/examples/browser.websocket.client.js)                                     |
+
+### (Web, Deno and Node) Msgpack
+
+|                          | Server                                                                                                                                                                            |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Entry point Node         | `async-call-rpc/utils/node/msgpack.js`<br />[(Source code)](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/node/msgpack.ts)                                   |
+| Entry point Browser/Deno | `https://cdn.jsdelivr.net/npm/async-call-rpc@latest/utils/web/msgpack.js`<br />[(Source code)](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/msgpack.ts) |
+| Dependencies             | [@msgpack/msgpack](https://npmjs.com/@msgpack/msgpack)                                                                                                                                                    |
+| Example (Node)           | [./examples/node.websocket.server.js](https://github.com/Jack-Works/async-call-rpc/blob/master/examples/node.websocket.server.js)                                                 |
+| Example (Deno)           | [./examples/deno.websocket.server.ts](https://github.com/Jack-Works/async-call-rpc/blob/master/examples/deno.websocket.server.ts)                                                 |
+| Example (Web)            | [./examples/browser.websocket.client.js](https://github.com/Jack-Works/async-call-rpc/blob/master/examples/browser.websocket.client.js)                                           |
 
 ## Utils available if both server and client are created by this library
 

@@ -13,7 +13,7 @@ export const BSON_Serialization = (
     deserialization(data: Buffer) {
         return deserialize(data)
     },
-    serialization(data: Buffer) {
+    serialization(data: any) {
         return serialize(data)
     },
 })
