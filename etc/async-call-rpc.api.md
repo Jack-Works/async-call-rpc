@@ -29,6 +29,8 @@ export interface AsyncCallOptions {
     mapError?: ErrorMapFunction<unknown>;
     parameterStructures?: 'by-position' | 'by-name';
     preferLocalImplementation?: boolean;
+    // (undocumented)
+    sameLib?: boolean;
     serializer?: Serialization;
     strict?: AsyncCallStrictJSONRPC | boolean;
     thenable?: boolean;

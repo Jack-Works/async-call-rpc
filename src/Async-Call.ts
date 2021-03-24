@@ -41,6 +41,7 @@ import {
     replayFunction,
     undefined,
 } from './utils/constants'
+import { CompressRequest, Decompress } from './utils/compat-jsonrpc'
 
 /**
  * Create a RPC server & client.
@@ -91,6 +92,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         logger,
         channel,
         thenable,
+        sameLib = false,
     } = options
 
     if (thisSideImplementation instanceof Promise) awaitThisSideImplementation()
@@ -222,6 +224,11 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         let result: Response | undefined = undefined
         try {
             data = await deserialization(_)
+            if (sameLib && isArray(data)) {
+                // CompatRequest | CompatRequest[]
+                if (typeof data[0] == 'number') data = Decompress(data as any)
+                else data = data.map(Decompress)
+            }
             if (isJSONRPCObject(data)) {
                 return (result = await handleSingleMessage(data))
             } else if (isArray(data) && data.every(isJSONRPCObject) && data.length !== 0) {
@@ -285,8 +292,12 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         return ErrorResponseMapped(data, e, mapError || defaultErrorMapper(log_sendLocalStack ? e.stack : undefined))
     }
 
-    async function sendPayload(payload: unknown, removeQueueR = false) {
+    async function sendPayload(payload: BatchQueue | Request, removeQueueR = false) {
         if (removeQueueR) payload = [...(payload as BatchQueue)]
+        if (sameLib) {
+            if (isArray(payload)) payload = payload.map(CompressRequest) as any
+            else payload = CompressRequest(payload) as any
+        }
         const data = await serialization(payload)
         return channel.send!(data)
     }
@@ -356,7 +367,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                     const request = Request(notify ? undefined : id, method as string, param, sendingStack)
                     if (queue) {
                         queue.push(request)
-                        if (!queue.r) queue.r = [() => sendPayload(queue, true), (e) => rejectsQueue(queue!, e)]
+                        if (!queue.r) queue.r = [() => sendPayload(queue!, true), (e) => rejectsQueue(queue!, e)]
                     } else sendPayload(request).catch(reject)
                     if (notify) return resolve()
                     requestContext.set(id, {
