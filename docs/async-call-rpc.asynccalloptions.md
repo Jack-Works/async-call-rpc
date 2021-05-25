@@ -23,7 +23,6 @@ export interface AsyncCallOptions
 |  [mapError?](./async-call-rpc.asynccalloptions.maperror.md) | [ErrorMapFunction](./async-call-rpc.errormapfunction.md)<!-- -->&lt;unknown&gt; | <i>(Optional)</i> Control how to report error response according to the exception |
 |  [parameterStructures?](./async-call-rpc.asynccalloptions.parameterstructures.md) | 'by-position' \| 'by-name' | <i>(Optional)</i> Choose flavor of parameter structures defined in the spec |
 |  [preferLocalImplementation?](./async-call-rpc.asynccalloptions.preferlocalimplementation.md) | boolean | <i>(Optional)</i> Prefer local implementation than remote. |
-|  [sameLib?](./async-call-rpc.asynccalloptions.samelib.md) | boolean | <i>(Optional)</i> |
 |  [serializer?](./async-call-rpc.asynccalloptions.serializer.md) | [Serialization](./async-call-rpc.serialization.md) | <i>(Optional)</i> How to serialize and deserialize the JSON RPC payload |
 |  [strict?](./async-call-rpc.asynccalloptions.strict.md) | [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) \| boolean | <i>(Optional)</i> Control the behavior that different from the JSON RPC spec. See [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) |
 |  [thenable?](./async-call-rpc.asynccalloptions.thenable.md) | boolean | <i>(Optional)</i> If the instance should be "thenable". |
