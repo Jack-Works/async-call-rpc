@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.1.0](https://github.com/Jack-Works/async-call/compare/v5.0.0...v5.1.0) (2021-05-25)
+
+
+### Features
+
+* add compat mode (WIP) ([eec99ee](https://github.com/Jack-Works/async-call/commit/eec99ee90f377c3eb0935e5b2c128d25f441b4c0))
+* add msgpack serializer ([12cbb82](https://github.com/Jack-Works/async-call/commit/12cbb823f67d7da27a491f042ba1a29a67e1d3f6))
+
+
+### Bug Fixes
+
+* replay function looks not good in console when uncompressed close gh-30 ([d93176b](https://github.com/Jack-Works/async-call/commit/d93176beb164611248bfcfdb7a22ee00260731f2))
+
 ## [5.0.0](https://github.com/Jack-Works/async-call/compare/v4.2.1...v5.0.0) (2020-12-17)
 
 
