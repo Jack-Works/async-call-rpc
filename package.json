@@ -14,11 +14,27 @@
       "require": "./out/full.js",
       "import": "./out/full.mjs"
     },
+    "./full.min": {
+      "require": "./out/full.min.js",
+      "import": "./out/full.min.mjs"
+    },
     "./base": {
       "require": "./out/base.js",
       "import": "./out/base.mjs"
     },
+    "./base.min": {
+      "require": "./out/base.min.js",
+      "import": "./out/base.min.mjs"
+    },
     "./utils/": "./utils/"
+  },
+  "typesVersions": {
+    "*": {
+      "base": ["./out/base.d.ts"],
+      "base.min": ["./out/base.d.ts"],
+      "full": ["./out/full.d.ts"],
+      "full.min": ["./out/full.d.ts"]
+    }
   },
   "scripts": {
     "prepublishOnly": "npm run clean && npm run test && npm run build",
@@ -80,10 +96,6 @@
     "out",
     "tsconfig.json",
     "utils",
-    "utils-src",
-    "base.js",
-    "base.d.ts",
-    "full.js",
-    "full.d.ts"
+    "utils-src"
   ]
 }
