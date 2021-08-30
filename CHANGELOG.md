@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0](https://github.com/Jack-Works/async-call/compare/v5.1.0...v6.0.0) (2021-08-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove package exports shim, drop < Node 12.20.0
+
+### Features
+
+* remove package exports shim, drop < Node 12.20.0 ([e2222d7](https://github.com/Jack-Works/async-call/commit/e2222d776172b4f3dfc23c0480a019d25d000f9d))
+
 ## [5.1.0](https://github.com/Jack-Works/async-call/compare/v5.0.0...v5.1.0) (2021-05-25)
 
 

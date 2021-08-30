@@ -1,6 +1,6 @@
 {
   "name": "async-call-rpc",
-  "version": "5.1.0",
+  "version": "6.0.0",
   "description": "A lightweight JSON RPC server & client",
   "main": "out/base.js",
   "module": "out/base.mjs",
@@ -30,10 +30,18 @@
   },
   "typesVersions": {
     "*": {
-      "base": ["./out/base.d.ts"],
-      "base.min": ["./out/base.d.ts"],
-      "full": ["./out/full.d.ts"],
-      "full.min": ["./out/full.d.ts"]
+      "base": [
+        "./out/base.d.ts"
+      ],
+      "base.min": [
+        "./out/base.d.ts"
+      ],
+      "full": [
+        "./out/full.d.ts"
+      ],
+      "full.min": [
+        "./out/full.d.ts"
+      ]
     }
   },
   "scripts": {
