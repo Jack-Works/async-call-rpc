@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.0.1](https://github.com/Jack-Works/async-call/compare/v6.0.0...v6.0.1) (2021-11-20)
+
+
+### Bug Fixes
+
+* Don't send message if websocket closed ([1d9ef47](https://github.com/Jack-Works/async-call/commit/1d9ef47070f11dde040b902f16b75f38d34ee771))
+
 ## [6.0.0](https://github.com/Jack-Works/async-call/compare/v5.1.0...v6.0.0) (2021-08-30)
 
 
