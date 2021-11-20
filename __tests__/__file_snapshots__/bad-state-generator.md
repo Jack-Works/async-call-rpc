@@ -162,3 +162,30 @@ Array [
     "",
 ]
 ```
+
+## T=12 Message: client received
+
+```php
+Object {
+    "error": Object {
+        "code": -1,
+        "data": Object {
+            "type": "TypeError",
+        },
+        "message": "not_found is not a function",
+    },
+    "id": 0,
+    "jsonrpc": "2.0",
+}
+```
+
+## T=13 Log: client/log
+
+```php
+Array [
+    "TypeError: not_found is not a function(-1) %c@0
+%c<remote stack not available>",
+    "color: gray",
+    "",
+]
+```

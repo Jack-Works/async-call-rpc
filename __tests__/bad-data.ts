@@ -84,7 +84,7 @@ withSnapshotDefault('bad state (generator)', 'bad-state-generator', async (f, _,
     raw.client.send(Request('a', 'rpc.async-iterator.next', ['b', undefined]))
     const iter = (server as any).not_found()
     expect(iter.next()).rejects.toThrowErrorMatchingInlineSnapshot(`"not_found is not a function"`)
-    await delay(40)
+    await delay(100)
 })
 
 withSnapshotDefault(
