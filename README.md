@@ -50,8 +50,8 @@ In the ES spec, there is no I/O related API so it's impossible to communicate wi
 
 You need to implement one of the following interfaces:
 
--   [CallbackBasedChannel](https://jack-works.github.io/async-call-rpc/async-call-rpc.callbackbasedchannel.html), generally used in the server. [Example](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/websocket.client.ts).
--   [EventBasedChannel](https://jack-works.github.io/async-call-rpc/async-call-rpc.eventbasedchannel.html), generally used in the client. [Example](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/node/websocket.server.ts)
+-   [CallbackBasedChannel](https://jack-works.github.io/async-call-rpc/async-call-rpc.callbackbasedchannel.html), generally used in the server. [Example](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/node/websocket.server.ts).
+-   [EventBasedChannel](https://jack-works.github.io/async-call-rpc/async-call-rpc.eventbasedchannel.html), generally used in the client. [Example](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/websocket.client.ts)
 
 There are some [built-in channel](#builtin-channels) you can simplify the usage.
 
