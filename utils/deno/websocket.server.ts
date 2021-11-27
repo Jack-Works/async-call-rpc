@@ -27,7 +27,7 @@ export class WebSocketChannel extends EventTarget implements CallbackBasedChanne
     ) {
         for await (const event of websocket) {
             if (signal.signal.aborted || websocket.isClosed) return
-            callback(event).then((x) => x && websocket.send(x as any), this.error)
+            callback(event).then((x) => x && !websocket.isClosed && websocket.send(x as any), this.error)
         }
     }
     private error = (error: any) => {
