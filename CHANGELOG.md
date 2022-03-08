@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.0.2](https://github.com/Jack-Works/async-call/compare/v6.0.1...v6.0.2) (2022-03-08)
+
+
+### Bug Fixes
+
+* Don't send message if websocket closed after callback ([75f105e](https://github.com/Jack-Works/async-call/commit/75f105e37531ddb381d294cb1ebe389c298bc477)), closes [/github.com/Jack-Works/async-call-rpc/blob/255e7ea0ca75165a902478e18a5991a82197cc9b/utils/deno/websocket.server.ts#L30](https://github.com/Jack-Works//github.com/Jack-Works/async-call-rpc/blob/255e7ea0ca75165a902478e18a5991a82197cc9b/utils/deno/websocket.server.ts/issues/L30)
+* import folder ([11f0472](https://github.com/Jack-Works/async-call/commit/11f04723c8a5c38ab477960ab935a5a9c7697006))
+
 ### [6.0.1](https://github.com/Jack-Works/async-call/compare/v6.0.0...v6.0.1) (2021-11-20)
 
 
