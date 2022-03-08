@@ -18,7 +18,7 @@ export type API = typeof api
 // @filename: client.ts
 // ---cut---
 import { AsyncCall } from 'async-call-rpc'
-import { WebSocketMessageChannel } from 'async-call-rpc/utils/web/websocket.client'
+import { WebSocketMessageChannel } from 'async-call-rpc/utils/web/websocket.client.js'
 import type { API } from './server'
 import serializer from './serializer'
 const channel = new WebSocketMessageChannel('wss://api.example.com:3456/')
@@ -40,7 +40,7 @@ export default {} as import('async-call-rpc').Serialization
 // ---cut---
 // @filename: server.ts
 import { AsyncCall } from 'async-call-rpc'
-import { WebSocketChannel } from 'async-call-rpc/utils/node/websocket.server'
+import { WebSocketChannel } from 'async-call-rpc/utils/node/websocket.server.js'
 import { Server } from 'ws'
 import serializer from './serializer'
 
@@ -62,7 +62,7 @@ declare module 'bson'
 declare module 'ws'
 // ---cut---
 // @filename: serializer.ts
-import { BSON_Serialization } from 'async-call-rpc/utils/node/bson'
+import { BSON_Serialization } from 'async-call-rpc/utils/node/bson.js'
 import bson from 'bson'
 export default BSON_Serialization(bson)
 ```

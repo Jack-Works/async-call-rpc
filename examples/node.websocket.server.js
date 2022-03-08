@@ -1,5 +1,5 @@
-const { WebSocketChannel } = require('async-call-rpc/utils/node/websocket.server')
-const { Msgpack_Serialization } = require('async-call-rpc/utils/node/msgpack')
+const { WebSocketChannel } = require('async-call-rpc/utils/node/websocket.server.js')
+const { Msgpack_Serialization } = require('async-call-rpc/utils/node/msgpack.js')
 const { AsyncCall } = require('async-call-rpc')
 const { Server } = require('ws')
 
