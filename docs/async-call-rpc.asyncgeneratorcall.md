@@ -54,6 +54,5 @@ async function main() {
          console.log('Server yielded number', x)
      }
 }
-
 ```
 

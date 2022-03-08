@@ -33,6 +33,5 @@ thisSideImplementation can be a Promise so you can write:
 
 ```ts
 export const service = AsyncCall(typeof window === 'object' ? {} : import('./backend/service.js'), {})
-
 ```
 

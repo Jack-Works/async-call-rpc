@@ -238,7 +238,8 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             }
         } catch (e) {
             if (log_localError) console_error(e, data, result)
-            return ErrorResponseParseError(e, mapError || defaultErrorMapper(e && e.stack))
+            // todo: should check before access e.stack
+            return ErrorResponseParseError(e, mapError || defaultErrorMapper(e && (e as any).stack))
         }
     }
     const rawMessageSender = async (res: undefined | Response | (Response | undefined)[]) => {

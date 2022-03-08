@@ -28,7 +28,6 @@ Consider this code:
 async function getRPC() {
     return AsyncCall(...)
 }
-
 ```
 According to the JS semantics, it will invoke the "then" method immediately on the returning instance which is unwanted in most scenarios.
 
