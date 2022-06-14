@@ -52,8 +52,14 @@ export type _IteratorLikeToAsyncGenerator<T extends _IteratorOrIterableFunction>
  * Only generics signatures on function that returning an AsyncGenerator<T> will be preserved due to the limitation of TypeScript.
  *
  * Method called `then` are intentionally removed because it is very likely to be a foot gun in promise auto-unwrap.
- * @internal
  */
+export type AsyncGeneratorVersionOf<T> = T extends Record<keyof T, _IteratorOrIterableFunction>
+    ? 'then' extends keyof T
+        ? Omit<Readonly<T>, 'then'>
+        : // in this case we don't want to use Readonly<T>, so it will provide a better experience
+          T
+    : _AsyncGeneratorVersionOf<T>
+/** @internal */
 export type _AsyncGeneratorVersionOf<T> = {
     // Omit 'then'
     [key in keyof T as key extends 'then'
@@ -105,7 +111,7 @@ type IterResult = IteratorResult<unknown> | Promise<IteratorResult<unknown>>
 export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
     thisSideImplementation: null | undefined | object | Promise<object>,
     options: AsyncCallOptions,
-): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions> {
+): AsyncGeneratorVersionOf<OtherSideImplementedFunctions> {
     const iterators = new Map<string | number, Iter>()
     const [methodNotFound] = normalizeStrictOptions(options.strict ?? true)
     const { idGenerator = generateRandomID } = options
@@ -147,8 +153,7 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
     } as AsyncGeneratorInternalMethods
     const remote = AsyncCall<AsyncGeneratorInternalMethods>(server, options)
     const proxyTrap = (cache: any, key: string): ((...args: unknown[]) => AsyncIterableIterator<unknown>) => {
-        if (!isString(key))
-            throw makeHostedMessage(Err_Only_string_can_be_the_RPC_method_name, new TypeError(''))
+        if (!isString(key)) throw makeHostedMessage(Err_Only_string_can_be_the_RPC_method_name, new TypeError(''))
         if (cache[key]) return cache[key]
         const f = (...args: unknown[]) => {
             const id = remote[AsyncIteratorStart](key, args)
@@ -157,7 +162,7 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
         Object.defineProperty(cache, key, { value: f, configurable: true })
         return f
     }
-    return new Proxy({ __proto__: null }, { get: proxyTrap }) as _AsyncGeneratorVersionOf<OtherSideImplementedFunctions>
+    return new Proxy({ __proto__: null }, { get: proxyTrap }) as AsyncGeneratorVersionOf<OtherSideImplementedFunctions>
 }
 class _AsyncGenerator implements AsyncIterableIterator<unknown>, AsyncIterator<unknown, unknown, unknown> {
     /** done? */

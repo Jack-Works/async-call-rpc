@@ -1,6 +1,6 @@
 import { createLogger } from './logger'
 import { join } from 'path'
-import { _AsyncVersionOf, _AsyncGeneratorVersionOf, AsyncCall, AsyncCallOptions, AsyncGeneratorCall } from '../../src'
+import { AsyncVersionOf, AsyncGeneratorVersionOf, AsyncCall, AsyncCallOptions, AsyncGeneratorCall } from '../../src'
 import { createChannelPair, JestCallbackBasedChannel, JestEventBasedChannel } from './channels'
 import { reproduceIDGenerator } from './reproduce'
 
@@ -87,8 +87,8 @@ export function withSnapshotDefault(
     name: string,
     snapshot: string,
     f: (
-        call: <T extends object = DefaultImpl>(option?: Options<T>) => _AsyncVersionOf<T>,
-        generatorCall: <T extends object = DefaultImplG>(option?: Options<T>) => _AsyncGeneratorVersionOf<T>,
+        call: <T extends object = DefaultImpl>(option?: Options<T>) => AsyncVersionOf<T>,
+        generatorCall: <T extends object = DefaultImplG>(option?: Options<T>) => AsyncGeneratorVersionOf<T>,
         log: (...args: any) => void,
         rawChannel: Record<'server' | 'client', JestCallbackBasedChannel | JestEventBasedChannel>,
     ) => Promise<void>,
@@ -103,12 +103,12 @@ export function withSnapshotDefault(
 
         const serverShared = { channel: server, logger: log.server.log, idGenerator }
         const clientShared = { channel: client, logger: log.client.log, idGenerator }
-        function setup<T extends object = DefaultImpl>(opt: Options<T> = {}): _AsyncVersionOf<T> {
+        function setup<T extends object = DefaultImpl>(opt: Options<T> = {}): AsyncVersionOf<T> {
             const { client, server, impl, opts } = opt
             AsyncCall(impl || defaultImpl, { ...serverShared, ...opts, ...server })
             return AsyncCall<T>(impl || defaultImpl, { ...clientShared, ...opts, ...client })
         }
-        function setupGenerator<T extends object = DefaultImplG>(opt: Options<T> = {}): _AsyncGeneratorVersionOf<T> {
+        function setupGenerator<T extends object = DefaultImplG>(opt: Options<T> = {}): AsyncGeneratorVersionOf<T> {
             const { client, server, impl, opts } = opt
             AsyncGeneratorCall(impl || defaultImplGenerator, { ...serverShared, ...opts, ...server })
             return AsyncGeneratorCall<T>(impl || defaultImplGenerator, { ...clientShared, ...opts, ...client })

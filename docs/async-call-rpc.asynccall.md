@@ -9,7 +9,7 @@ Create a RPC server &amp; client.
 <b>Signature:</b>
 
 ```typescript
-export declare function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: null | undefined | object | Promise<object>, options: AsyncCallOptions): _AsyncVersionOf<OtherSideImplementedFunctions>;
+export declare function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: null | undefined | object | Promise<object>, options: AsyncCallOptions): AsyncVersionOf<OtherSideImplementedFunctions>;
 ```
 
 ## Parameters
@@ -21,7 +21,7 @@ export declare function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideIm
 
 <b>Returns:</b>
 
-\_AsyncVersionOf&lt;OtherSideImplementedFunctions&gt;
+[AsyncVersionOf](./async-call-rpc.asyncversionof.md)<!-- -->&lt;OtherSideImplementedFunctions&gt;
 
 Same as the `OtherSideImplementedFunctions` type parameter, but every function in that interface becomes async and non-function value is removed. Method called "then" are also removed.
 

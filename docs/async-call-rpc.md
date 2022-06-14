@@ -42,6 +42,8 @@ See the introduction at [Github](https://github.com/Jack-Works/async-call)
 
 |  Type Alias | Description |
 |  --- | --- |
+|  [AsyncGeneratorVersionOf](./async-call-rpc.asyncgeneratorversionof.md) | Make all generator in the type T becomes AsyncGenerator |
+|  [AsyncVersionOf](./async-call-rpc.asyncversionof.md) | Make all function in the type T becomes async functions and filtering non-Functions out. |
 |  [ErrorMapFunction](./async-call-rpc.errormapfunction.md) |  |
 |  [JSONRPCRequest](./async-call-rpc.jsonrpcrequest.md) | JSON RPC Request object |
 

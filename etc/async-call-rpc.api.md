@@ -4,10 +4,8 @@
 
 ```ts
 
-// Warning: (ae-incompatible-release-tags) The symbol "AsyncCall" is marked as @public, but its signature references "_AsyncVersionOf" which is marked as @internal
-//
 // @public
-export function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: null | undefined | object | Promise<object>, options: AsyncCallOptions): _AsyncVersionOf<OtherSideImplementedFunctions>;
+export function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: null | undefined | object | Promise<object>, options: AsyncCallOptions): AsyncVersionOf<OtherSideImplementedFunctions>;
 
 // @public
 export interface AsyncCallLogLevel {
@@ -40,19 +38,28 @@ export interface AsyncCallStrictJSONRPC {
     unknownMessage?: boolean;
 }
 
-// Warning: (ae-incompatible-release-tags) The symbol "AsyncGeneratorCall" is marked as @public, but its signature references "_AsyncGeneratorVersionOf" which is marked as @internal
+// @public
+export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: null | undefined | object | Promise<object>, options: AsyncCallOptions): AsyncGeneratorVersionOf<OtherSideImplementedFunctions>;
+
+// Warning: (ae-incompatible-release-tags) The symbol "AsyncGeneratorVersionOf" is marked as @public, but its signature references "_IteratorOrIterableFunction" which is marked as @internal
+// Warning: (ae-incompatible-release-tags) The symbol "AsyncGeneratorVersionOf" is marked as @public, but its signature references "_AsyncGeneratorVersionOf" which is marked as @internal
 //
 // @public
-export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: null | undefined | object | Promise<object>, options: AsyncCallOptions): _AsyncGeneratorVersionOf<OtherSideImplementedFunctions>;
+export type AsyncGeneratorVersionOf<T> = T extends Record<keyof T, _IteratorOrIterableFunction> ? 'then' extends keyof T ? Omit<Readonly<T>, 'then'> : T : _AsyncGeneratorVersionOf<T>;
 
-// @internal
+// @internal (undocumented)
 export type _AsyncGeneratorVersionOf<T> = {
     [key in keyof T as key extends 'then' ? never : T[key] extends _IteratorOrIterableFunction ? key : never]: T[key] extends _IteratorOrIterableFunction ? _IteratorLikeToAsyncGenerator<T[key]> : never;
 };
 
-// @internal
+// Warning: (ae-incompatible-release-tags) The symbol "AsyncVersionOf" is marked as @public, but its signature references "_AsyncVersionOf" which is marked as @internal
+//
+// @public
+export type AsyncVersionOf<T> = T extends Record<keyof T, (...args: any) => PromiseLike<any>> ? 'then' extends keyof T ? Omit<Readonly<T>, 'then'> : T : _AsyncVersionOf<T>;
+
+// @internal (undocumented)
 export type _AsyncVersionOf<T> = {
-    readonly [key in keyof T as key extends 'then' ? never : T[key] extends Function ? key : never]: T[key] extends (...args: any) => Promise<any> ? T[key] : T[key] extends (...args: infer Args) => infer Return ? (...args: Args) => Promise<Return extends PromiseLike<infer U> ? U : Return> : never;
+    readonly [key in keyof T as key extends 'then' ? never : T[key] extends Function ? key : never]: T[key] extends (...args: any) => Promise<any> ? T[key] : T[key] extends (...args: infer Args) => infer Return ? (...args: Args) => Promise<Awaited<Return>> : never;
 };
 
 // @public
@@ -78,9 +85,7 @@ interface ConsoleInterface {
     // (undocumented)
     warn?(...args: unknown[]): void;
 }
-
 export { ConsoleInterface as Console }
-
 export { ConsoleInterface }
 
 // @public (undocumented)
@@ -131,6 +136,5 @@ export interface Serialization {
     deserialization(serialized: unknown): unknown | PromiseLike<unknown>;
     serialization(from: any): unknown | PromiseLike<unknown>;
 }
-
 
 ```

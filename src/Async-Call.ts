@@ -30,7 +30,7 @@ import { generateRandomID } from './utils/generateRandomID'
 import { normalizeStrictOptions, normalizeLogOptions } from './utils/normalizeOptions'
 import { AsyncCallIgnoreResponse, AsyncCallNotify, AsyncCallBatch } from './utils/internalSymbol'
 import type { BatchQueue } from './core/batch'
-import type { CallbackBasedChannel, EventBasedChannel, AsyncCallOptions, ConsoleInterface, _AsyncVersionOf } from './types'
+import type { CallbackBasedChannel, EventBasedChannel, AsyncCallOptions, ConsoleInterface, AsyncVersionOf } from './types'
 import {
     ERROR,
     isArray,
@@ -63,7 +63,7 @@ import {
 export function AsyncCall<OtherSideImplementedFunctions = {}>(
     thisSideImplementation: null | undefined | object | Promise<object>,
     options: AsyncCallOptions,
-): _AsyncVersionOf<OtherSideImplementedFunctions> {
+): AsyncVersionOf<OtherSideImplementedFunctions> {
     let isThisSideImplementationPending = true
     let resolvedThisSideImplementationValue: unknown = undefined
     let rejectedThisSideImplementation: unknown = undefined
@@ -374,7 +374,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             isString(method) && Object.defineProperty(cache, method, { value: f, configurable: true })
             return f
         },
-    }) as _AsyncVersionOf<OtherSideImplementedFunctions>
+    }) as AsyncVersionOf<OtherSideImplementedFunctions>
 }
 // Assume a console object in global if there is no custom logger provided
 declare const console: ConsoleInterface

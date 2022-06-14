@@ -253,8 +253,14 @@ export type ErrorMapFunction<T = unknown> = (
  * Only generics signatures on function that returning an Promise<T> will be preserved due to the limitation of TypeScript.
  *
  * Method called `then` are intentionally removed because it is very likely to be a foot gun in promise auto-unwrap.
- * @internal
  */
+ export type AsyncVersionOf<T> = T extends Record<keyof T, (...args: any) => PromiseLike<any>>
+ ? 'then' extends keyof T
+     ? Omit<Readonly<T>, 'then'>
+     // in this case we don't want to use Readonly<T>, so it will provide a better experience
+     : T
+     : _AsyncVersionOf<T>
+ /** @internal */
 export type _AsyncVersionOf<T> = {
     readonly // Explicitly exclude key called "then" because it will cause problem in promise auto-unwrap.
     [key in keyof T as key extends 'then' ? never : T[key] extends Function ? key : never]: T[key] extends (
@@ -262,7 +268,7 @@ export type _AsyncVersionOf<T> = {
     ) => Promise<any>
         ? T[key] // If it is returning Promise<any>, we use T[key] to preserve generics on function signatures
         : T[key] extends (...args: infer Args) => infer Return // otherwise we convert it to async functions
-        ? (...args: Args) => Promise<Return extends PromiseLike<infer U> ? U : Return>
+        ? (...args: Args) => Promise<Awaited<Return>>
         : never
 }
 /**
