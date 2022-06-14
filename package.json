@@ -8,22 +8,27 @@
   "types": "out/base.d.ts",
   "exports": {
     ".": {
+      "types": "./out/base.d.ts",
       "require": "./out/base.js",
       "import": "./out/base.mjs"
     },
     "./full": {
+      "types": "./out/full.d.ts",
       "require": "./out/full.js",
       "import": "./out/full.mjs"
     },
     "./full.min": {
+      "types": "./out/full.d.ts",
       "require": "./out/full.min.js",
       "import": "./out/full.min.mjs"
     },
     "./base": {
+      "types": "./out/base.d.ts",
       "require": "./out/base.js",
       "import": "./out/base.mjs"
     },
     "./base.min": {
+      "types": "./out/base.d.ts",
       "require": "./out/base.min.js",
       "import": "./out/base.min.mjs"
     },
