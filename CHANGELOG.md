@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.1.0](https://github.com/Jack-Works/async-call/compare/v6.0.3...v6.1.0) (2022-06-14)
+
+
+### Features
+
+* add AsyncVersionOf and AsyncGeneratorVersionOf improve UX require at least TypeScript 4.5 ([fc97167](https://github.com/Jack-Works/async-call/commit/fc97167610ac4220eb9b950a19c3850db5525f64))
+
 ### [6.0.3](https://github.com/Jack-Works/async-call/compare/v6.0.2...v6.0.3) (2022-06-14)
 
 ### [6.0.2](https://github.com/Jack-Works/async-call/compare/v6.0.1...v6.0.2) (2022-03-08)
