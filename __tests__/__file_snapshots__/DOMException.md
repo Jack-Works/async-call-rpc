@@ -29,7 +29,7 @@ Array [
 
 ```php
 Array [
-    [Error: message],
+    DOMException {},
 ]
 ```
 
@@ -40,7 +40,7 @@ Object {
     "error": Object {
         "code": -1,
         "data": Object {
-            "type": "DOMException:Error",
+            "type": "DOMException:name",
         },
         "message": "message",
     },
@@ -53,7 +53,7 @@ Object {
 
 ```php
 Array [
-    "DOMException:Error: message(-1) %c@0
+    "DOMException:name: message(-1) %c@0
 %c<remote stack not available>",
     "color: gray",
     "",

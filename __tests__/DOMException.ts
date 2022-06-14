@@ -15,12 +15,7 @@ withSnapshotDefault('Recover Error with bad implementation', 'recover-error-with
         reproduceDOMException(true, async () => {
             const server = f()
             const promise = server.DOMException()
-            await expect(promise).rejects.toThrowErrorMatchingInlineSnapshot(`
-                        "E-1 DOMException:Error: message
-                        <remote stack not available>
-                            аt AsyncCall (rpc) 
-                        <mocked stack>"
-                    `)
+            await expect(promise).rejects.toThrowErrorMatchingInlineSnapshot(`"message"`)
         }),
     )
 })

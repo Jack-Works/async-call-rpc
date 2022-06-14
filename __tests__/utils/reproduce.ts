@@ -19,24 +19,27 @@ export async function reproduceRandomID(f: Function) {
 }
 export async function reproduceDOMException(badImpl: boolean, f: Function) {
     const old = globalThis.DOMException
-    globalThis.DOMException = class F extends Error {
-        static nextThrow = false
-        constructor(...args: any) {
-            super(...args)
-            if (badImpl) {
-                if (F.nextThrow) {
-                    F.nextThrow = false
-                    throw new Error('')
-                } else F.nextThrow = true
+    Object.defineProperty(globalThis, 'DOMException', {
+        configurable: true,
+        value: class F extends Error {
+            static nextThrow = false
+            constructor(...args: any) {
+                super(...args)
+                if (badImpl) {
+                    if (F.nextThrow) {
+                        F.nextThrow = false
+                        throw new Error('')
+                    } else F.nextThrow = true
+                }
             }
-        }
-    } as any
+        } as any,
+    })
     try {
         return await f()
     } catch (e) {
         throw e
     } finally {
-        globalThis.DOMException = old
+        Object.defineProperty(globalThis, 'DOMException', { configurable: true, value: old })
     }
 }
 export async function reproduceError(f: Function) {
