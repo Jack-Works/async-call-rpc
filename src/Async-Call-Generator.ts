@@ -52,6 +52,7 @@ export type _IteratorLikeToAsyncGenerator<T extends _IteratorOrIterableFunction>
  * Only generics signatures on function that returning an AsyncGenerator<T> will be preserved due to the limitation of TypeScript.
  *
  * Method called `then` are intentionally removed because it is very likely to be a foot gun in promise auto-unwrap.
+ * @public
  */
 export type AsyncGeneratorVersionOf<T> = T extends Record<keyof T, _IteratorOrIterableFunction>
     ? 'then' extends keyof T

@@ -253,6 +253,7 @@ export type ErrorMapFunction<T = unknown> = (
  * Only generics signatures on function that returning an Promise<T> will be preserved due to the limitation of TypeScript.
  *
  * Method called `then` are intentionally removed because it is very likely to be a foot gun in promise auto-unwrap.
+ * @public
  */
  export type AsyncVersionOf<T> = T extends Record<keyof T, (...args: any) => PromiseLike<any>>
  ? 'then' extends keyof T
