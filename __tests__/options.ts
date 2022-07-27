@@ -70,3 +70,10 @@ withSnapshotDefault('AsyncCall custom error mapper', 'async-call-custom-error-ma
     })
     await expect(server.throws()).rejects.toThrowErrorMatchingInlineSnapshot(`"Oh my message"`)
 })
+
+withSnapshotDefault('AsyncCall thenable = false', 'async-call-thenable-false', async (f) => {
+    const a = f({
+        opts: { thenable: false },
+    })
+    expect(a).toHaveProperty('then', undefined)
+})

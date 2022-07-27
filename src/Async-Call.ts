@@ -30,17 +30,14 @@ import { generateRandomID } from './utils/generateRandomID'
 import { normalizeStrictOptions, normalizeLogOptions } from './utils/normalizeOptions'
 import { AsyncCallIgnoreResponse, AsyncCallNotify, AsyncCallBatch } from './utils/internalSymbol'
 import type { BatchQueue } from './core/batch'
-import type { CallbackBasedChannel, EventBasedChannel, AsyncCallOptions, ConsoleInterface, AsyncVersionOf } from './types'
-import {
-    ERROR,
-    isArray,
-    isFunction,
-    isString,
-    Promise_reject,
-    Promise_resolve,
-    replayFunction,
-    undefined,
-} from './utils/constants'
+import type {
+    CallbackBasedChannel,
+    EventBasedChannel,
+    AsyncCallOptions,
+    ConsoleInterface,
+    AsyncVersionOf,
+} from './types'
+import { ERROR, isArray, isFunction, isString, Promise_resolve, replayFunction, undefined } from './utils/constants'
 
 /**
  * Create a RPC server & client.
@@ -100,14 +97,8 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     }
 
     const [banMethodNotFound, banUnknownMessage] = normalizeStrictOptions(strict)
-    const [
-        log_beCalled,
-        log_localError,
-        log_remoteError,
-        log_pretty,
-        log_requestReplay,
-        log_sendLocalStack,
-    ] = normalizeLogOptions(log)
+    const [log_beCalled, log_localError, log_remoteError, log_pretty, log_requestReplay, log_sendLocalStack] =
+        normalizeLogOptions(log)
     const {
         log: console_log,
         error: console_error = console_log,
@@ -178,7 +169,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             errorCode = 0,
             errorType = ERROR
         if (hasKey(data, 'error')) {
-            const e = data.error
+            const e = data.error as any
             errorMessage = e.message
             errorCode = e.code
             const detail = e.data
@@ -312,68 +303,84 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         }
         return onResponse(data) as Promise<undefined>
     }
-    return new Proxy({ __proto__: null } as any, {
-        get(cache, method: string | symbol) {
-            if (method === 'then') {
-                if (thenable === undefined) {
-                    console_warn(
-                        makeHostedMessage(
-                            Err_Then_is_accessed_on_local_implementation_Please_explicitly_mark_if_it_is_thenable_in_the_options,
-                            new TypeError('RPC used as Promise: '),
-                        ),
-                    )
-                }
-                if (thenable !== true) return undefined
+    const call = (method: string | symbol, args: unknown[], stack: string | undefined, notify = false) => {
+        return new Promise<void>((resolve, reject) => {
+            let queue: BatchQueue | undefined = undefined
+            if (method === AsyncCallBatch) {
+                queue = args.shift() as any
+                method = args.shift() as any
             }
-            if (isString(method) && cache[method]) return cache[method]
-            const factory = (notify: boolean) => (...params: unknown[]) => {
-                let stack = removeStackHeader(new Error().stack)
-                let queue: BatchQueue | undefined = undefined
-                if (method === AsyncCallBatch) {
-                    queue = params.shift() as any
-                    method = params.shift() as any
+            if (typeof method === 'symbol') {
+                const RPCInternalMethod: string = Symbol.keyFor(method) || (method as any).description
+                if (RPCInternalMethod) {
+                    if (RPCInternalMethod.startsWith('rpc.')) method = RPCInternalMethod
+                    else throw new TypeError('Not start with rpc.')
                 }
-                if (typeof method === 'symbol') {
-                    const RPCInternalMethod = Symbol.keyFor(method) || (method as any).description
-                    if (RPCInternalMethod) {
-                        if (RPCInternalMethod.startsWith('rpc.')) method = RPCInternalMethod
-                        else return Promise_reject(new TypeError('Not start with rpc.'))
-                    }
-                } else if (method.startsWith('rpc.'))
-                    return Promise_reject(
-                        makeHostedMessage(Err_Cannot_call_method_starts_with_rpc_dot_directly, new TypeError()),
-                    )
-                return new Promise<void>((resolve, reject) => {
-                    if (preferLocalImplementation && !isThisSideImplementationPending && isString(method)) {
-                        const localImpl: unknown =
-                            resolvedThisSideImplementationValue && (resolvedThisSideImplementationValue as any)[method]
-                        if (isFunction(localImpl)) return resolve(localImpl(...params))
-                    }
-                    const id = idGenerator()
-                    const [param0] = params
-                    const sendingStack = log_sendLocalStack ? stack : ''
-                    const param =
-                        parameterStructures === 'by-name' && params.length === 1 && isObject(param0) ? param0 : params
-                    const request = Request(notify ? undefined : id, method as string, param, sendingStack)
-                    if (queue) {
-                        queue.push(request)
-                        if (!queue.r) queue.r = [() => sendPayload(queue, true), (e) => rejectsQueue(queue!, e)]
-                    } else sendPayload(request).catch(reject)
-                    if (notify) return resolve()
-                    requestContext.set(id, {
-                        f: [resolve, reject],
-                        stack,
-                    })
-                })
+            } else if (method.startsWith('rpc.')) {
+                throw makeHostedMessage(Err_Cannot_call_method_starts_with_rpc_dot_directly, new TypeError())
             }
-            const f = factory(false)
-            // @ts-ignore
-            f[AsyncCallNotify] = factory(true)
-            // @ts-ignore
-            f[AsyncCallNotify][AsyncCallNotify] = f[AsyncCallNotify]
-            isString(method) && Object.defineProperty(cache, method, { value: f, configurable: true })
-            return f
+
+            if (preferLocalImplementation && !isThisSideImplementationPending && isString(method)) {
+                const localImpl: unknown =
+                    resolvedThisSideImplementationValue && (resolvedThisSideImplementationValue as any)[method]
+                if (isFunction(localImpl)) return resolve(localImpl(...args))
+            }
+            const id = idGenerator()
+            stack = removeStackHeader(stack)
+            const param = parameterStructures === 'by-name' && args.length === 1 && isObject(args[0]) ? args[0] : args
+            const request = Request(
+                notify ? undefined : id,
+                method as string,
+                param,
+                log_sendLocalStack ? stack : undefined,
+            )
+            if (queue) {
+                queue.push(request)
+                if (!queue.r) queue.r = [() => sendPayload(queue, true), (e) => rejectsQueue(queue!, e)]
+            } else sendPayload(request).catch(reject)
+            if (notify) return resolve()
+            requestContext.set(id, {
+                f: [resolve, reject],
+                stack,
+            })
+        })
+    }
+    const getTrap = new Proxy(
+        {},
+        {
+            get(_, method) {
+                const f = {
+                    // This function will be logged to the console so it must be 1 line
+                    [method]: (..._: unknown[]) => call(method, _, new Error().stack),
+                }[method as any]!
+                const f2 = {
+                    [method]: (..._: unknown[]) => call(method, _, new Error().stack, true),
+                }[method as any]!
+                // @ts-expect-error
+                f[AsyncCallNotify] = f2[AsyncCallNotify] = f2
+                isString(method) && Object.defineProperty(methodContainer, method, { value: f, configurable: true })
+                return f
+            },
         },
+    )
+    const methodContainer = { __proto__: getTrap } as any
+    if (thenable === false) methodContainer.then = undefined
+    else if (thenable === undefined) {
+        Object.defineProperty(methodContainer, 'then', {
+            configurable: true,
+            get() {
+                console_warn(
+                    makeHostedMessage(
+                        Err_Then_is_accessed_on_local_implementation_Please_explicitly_mark_if_it_is_thenable_in_the_options,
+                        new TypeError('RPC used as Promise: '),
+                    ),
+                )
+            },
+        })
+    }
+    return new Proxy(methodContainer, {
+        getPrototypeOf: () => null,
+        setPrototypeOf: (_, value) => value === null,
     }) as AsyncVersionOf<OtherSideImplementedFunctions>
 }
 // Assume a console object in global if there is no custom logger provided

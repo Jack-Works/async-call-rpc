@@ -83,18 +83,20 @@ export const ErrorResponseMapped = <T>(request: Request, e: unknown, mapper: Err
     return ErrorResponse(id, code, message, data)
 }
 
-export const defaultErrorMapper = (stack = '', code = -1): ErrorMapFunction<AsyncCallErrorDetail> => (e) => {
-    let message = toString('', () => (e as any).message)
-    let type = toString(ERROR, (ctor = (e as any).constructor) => isFunction(ctor) && ctor.name)
-    const E = DOMException()
-    if (E && e instanceof E) type = DOMExceptionHeader + e.name
-    if (isString(e) || typeof e === 'number' || isBoolean(e) || typeof e === 'bigint') {
-        type = ERROR
-        message = String(e)
+export const defaultErrorMapper =
+    (stack = '', code = -1): ErrorMapFunction<AsyncCallErrorDetail> =>
+    (e) => {
+        let message = toString('', () => (e as any).message)
+        let type = toString(ERROR, (ctor = (e as any).constructor) => isFunction(ctor) && ctor.name)
+        const E = DOMException()
+        if (E && e instanceof E) type = DOMExceptionHeader + e.name
+        if (isString(e) || typeof e === 'number' || isBoolean(e) || typeof e === 'bigint') {
+            type = ERROR
+            message = String(e)
+        }
+        const data: AsyncCallErrorDetail = stack ? { stack, type } : { type }
+        return { code, message, data }
     }
-    const data: AsyncCallErrorDetail = stack ? { stack, type } : { type }
-    return { code, message, data }
-}
 
 /**
  * A JSONRPC response object
@@ -114,13 +116,15 @@ export const isJSONRPCObject = (data: any): data is Response | Request => {
 
 export { isObject } from './constants'
 
-export const hasKey = <T, Q extends string>(
-    obj: T,
-    key: Q,
-): obj is T &
-    {
+export type hasKey = {
+    (obj: SuccessResponse | ErrorResponse | Request, key: 'result'): obj is SuccessResponse
+    (obj: SuccessResponse | ErrorResponse | Request, key: 'error'): obj is ErrorResponse
+    (obj: SuccessResponse | ErrorResponse | Request, key: 'method'): obj is Request
+    <T, Q extends string>(obj: T, key: Q): obj is T & {
         [key in Q]: unknown
-    } => key in obj
+    }
+}
+export const hasKey: hasKey = (obj: any, key: any): obj is any => key in obj
 
 const toString = (_default: string, val: () => any) => {
     try {

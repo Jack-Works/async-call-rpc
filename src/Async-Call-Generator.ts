@@ -5,7 +5,7 @@ import { AsyncCallOptions, AsyncCall } from './Async-Call'
 import { AsyncCallIgnoreResponse } from './utils/internalSymbol'
 import { normalizeStrictOptions } from './utils/normalizeOptions'
 import { generateRandomID } from './utils/generateRandomID'
-import { isFunction, isString, Object_setPrototypeOf, Promise_resolve } from './utils/constants'
+import { isFunction, isString, Object_setPrototypeOf } from './utils/constants'
 import {
     Err_Cannot_find_a_running_iterator_with_given_ID,
     Err_Only_string_can_be_the_RPC_method_name,
@@ -139,7 +139,7 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
             const iterator = iteratorGenerator(...args)
             const id = idGenerator()
             iterators.set(id, iterator)
-            return Promise_resolve(id)
+            return id
         },
         [AsyncIteratorNext](id, val) {
             return findIterator(id, (it) => it.next(val as any))
@@ -152,17 +152,29 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
         },
     } as AsyncGeneratorInternalMethods
     const remote = AsyncCall<AsyncGeneratorInternalMethods>(server, options)
-    const proxyTrap = (cache: any, key: string): ((...args: unknown[]) => AsyncIterableIterator<unknown>) => {
-        if (!isString(key)) throw makeHostedMessage(Err_Only_string_can_be_the_RPC_method_name, new TypeError(''))
-        if (cache[key]) return cache[key]
-        const f = (...args: unknown[]) => {
-            const id = remote[AsyncIteratorStart](key, args)
-            return new _AsyncGenerator(remote, id)
-        }
-        Object.defineProperty(cache, key, { value: f, configurable: true })
-        return f
-    }
-    return new Proxy({ __proto__: null }, { get: proxyTrap }) as AsyncGeneratorVersionOf<OtherSideImplementedFunctions>
+
+    const getTrap = new Proxy(
+        {},
+        {
+            get(_, method) {
+                if (!isString(method))
+                    throw makeHostedMessage(Err_Only_string_can_be_the_RPC_method_name, new TypeError(''))
+                const f = {
+                    [method]: (..._: unknown[]) => {
+                        const id = remote[AsyncIteratorStart](method, _)
+                        return new _AsyncGenerator(remote, id)
+                    },
+                }[method]!
+                Object.defineProperty(methodContainer, method, { value: f, configurable: true })
+                return f
+            },
+        },
+    )
+    const methodContainer = { __proto__: getTrap } as any
+    return new Proxy(methodContainer, {
+        getPrototypeOf: () => null,
+        setPrototypeOf: (_, val) => val === null,
+    }) as AsyncGeneratorVersionOf<OtherSideImplementedFunctions>
 }
 class _AsyncGenerator implements AsyncIterableIterator<unknown>, AsyncIterator<unknown, unknown, unknown> {
     /** done? */

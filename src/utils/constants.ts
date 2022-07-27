@@ -5,7 +5,6 @@ export const isObject = (params: any): params is object => typeof params === 'ob
 export const ERROR = 'Error'
 export const undefined = void 0
 export const Object_setPrototypeOf = Object.setPrototypeOf
-export const Promise_reject = (x: any) => Promise.reject(x)
 export const Promise_resolve = <T>(x: T) => Promise.resolve(x)
 export const isArray = Array.isArray
 export const replayFunction = () => '() => replay()'
