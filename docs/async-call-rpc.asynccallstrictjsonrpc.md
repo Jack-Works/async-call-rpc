@@ -14,8 +14,8 @@ export interface AsyncCallStrictJSONRPC
 
 ## Properties
 
-|  Property | Type | Description |
-|  --- | --- | --- |
-|  [methodNotFound?](./async-call-rpc.asynccallstrictjsonrpc.methodnotfound.md) | boolean | <i>(Optional)</i> Controls if AsyncCall send an ErrorResponse when the requested method is not defined. |
-|  [unknownMessage?](./async-call-rpc.asynccallstrictjsonrpc.unknownmessage.md) | boolean | <i>(Optional)</i> Controls if AsyncCall send an ErrorResponse when the message is not valid. |
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [methodNotFound?](./async-call-rpc.asynccallstrictjsonrpc.methodnotfound.md) |  | boolean | <i>(Optional)</i> Controls if AsyncCall send an ErrorResponse when the requested method is not defined. |
+|  [unknownMessage?](./async-call-rpc.asynccallstrictjsonrpc.unknownmessage.md) |  | boolean | <i>(Optional)</i> Controls if AsyncCall send an ErrorResponse when the message is not valid. |
 
