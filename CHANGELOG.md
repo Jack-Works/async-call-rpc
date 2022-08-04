@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.1.2](https://github.com/Jack-Works/async-call/compare/v6.1.1...v6.1.2) (2022-08-04)
+
+
+### Bug Fixes
+
+* batch not clear the queue after emit ([dc6807f](https://github.com/Jack-Works/async-call/commit/dc6807f11ea9ed1c5cb867f366c30b5d3f328de9))
+
 ### [6.1.1](https://github.com/Jack-Works/async-call/compare/v6.1.0...v6.1.1) (2022-07-27)
 
 ## [6.1.0](https://github.com/Jack-Works/async-call/compare/v6.0.3...v6.1.0) (2022-06-14)
