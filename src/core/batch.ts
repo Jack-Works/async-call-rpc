@@ -21,10 +21,10 @@ import type { Request } from '../utils/jsonrpc'
  */
 export function batch<T extends object>(asyncCallInstance: T): [T, () => void, (error?: unknown) => void] {
     const queue: BatchQueue = []
-    return [
-        new Proxy({ __proto__: null } as any, {
-            get(cache, p) {
-                if (isString(p) && cache[p]) return cache[p]
+    const getTrap = new Proxy(
+        {},
+        {
+            get(_, p) {
                 // @ts-ignore
                 const f = (...args: any) => asyncCallInstance[AsyncCallBatch](queue, p, ...args)
                 // @ts-ignore
@@ -33,16 +33,23 @@ export function batch<T extends object>(asyncCallInstance: T): [T, () => void, (
                     asyncCallInstance[AsyncCallBatch][AsyncCallNotify](queue, p, ...args)
                 // @ts-ignore
                 f[AsyncCallNotify][AsyncCallNotify] = f[AsyncCallNotify]
-                isString(p) && Object.defineProperty(cache, p, { value: f, configurable: true })
+                isString(p) && Object.defineProperty(methodContainer, p, { value: f, configurable: true })
                 return f
             },
+        },
+    )
+    const methodContainer = { __proto__: getTrap } as any
+    return [
+        new Proxy(methodContainer, {
+            getPrototypeOf: () => null,
+            setPrototypeOf: (_, value) => value === null,
         }),
         () => {
-            queue.length && queue.r?.[0]()
+            queue.length && queue.r![0]()
             queue.length = 0
         },
         (error = new Error('Aborted')) => {
-            queue.r?.[1](error)
+            queue.length && queue.r![1](error)
             queue.length = 0
         },
     ]

@@ -3,9 +3,15 @@ import { withSnapshotDefault } from './utils/test'
 
 withSnapshotDefault('AsyncCall batch request', 'async-call-batch', async (f, _, log) => {
     const [server, send, drop] = batch(f())
-    {
-        send()
-    }
+
+    // brand check
+    expect(Object.getPrototypeOf(server)).toBeNull()
+    expect(() => Object.setPrototypeOf(server, {})).toThrow()
+    expect(Object.getPrototypeOf(server)).toBeNull()
+    Object.setPrototypeOf(server, null)
+
+    // should not send anything
+    send()
     {
         const a = server.add(2, 3)
         const b = server.echo(1)
