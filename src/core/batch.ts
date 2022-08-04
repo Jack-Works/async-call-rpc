@@ -20,7 +20,7 @@ import type { Request } from '../utils/jsonrpc'
  * @public
  */
 export function batch<T extends object>(asyncCallInstance: T): [T, () => void, (error?: unknown) => void] {
-    let queue: BatchQueue = [] as any
+    const queue: BatchQueue = []
     return [
         new Proxy({ __proto__: null } as any, {
             get(cache, p) {
@@ -37,11 +37,17 @@ export function batch<T extends object>(asyncCallInstance: T): [T, () => void, (
                 return f
             },
         }),
-        (r = queue.r) => r && r[0](),
-        (error = new Error('Aborted'), r = queue.r) => {
-            r && r[1](error)
-            queue = []
+        () => {
+            queue.length && queue.r?.[0]()
+            queue.length = 0
+        },
+        (error = new Error('Aborted')) => {
+            queue.r?.[1](error)
+            queue.length = 0
         },
     ]
 }
-export type BatchQueue = Request[] & { r?: [() => void, (error?: unknown) => void] }
+export type BatchQueue = Request[] & {
+    /** Request handler */
+    r?: [emit: () => void, reject: (error?: unknown) => void]
+}

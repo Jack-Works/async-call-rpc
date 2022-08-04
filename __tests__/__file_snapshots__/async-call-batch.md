@@ -84,7 +84,7 @@ Array [
 
 ```php
 Array [
-    "Part 1 end",
+    "After this line no request was sent",
 ]
 ```
 
@@ -92,7 +92,7 @@ Array [
 
 ```php
 Array [
-    "Part 2 start",
+    "Part 1 end",
 ]
 ```
 
@@ -100,11 +100,19 @@ Array [
 
 ```php
 Array [
-    "In this part there should be no log",
+    "Part 2 start",
 ]
 ```
 
 ## T=8 Log: jest/log
+
+```php
+Array [
+    "In this part it should be no log",
+]
+```
+
+## T=9 Log: jest/log
 
 ```php
 Array [
