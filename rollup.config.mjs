@@ -1,56 +1,29 @@
-import rollup from 'rollup'
-import ts from '@rollup/plugin-sucrase'
 import { terser } from 'rollup-plugin-terser'
-import dts from 'rollup-plugin-dts'
+import ts from '@rollup/plugin-sucrase'
 
-/** @returns {rollup.RollupOptions} */
-const shared = () => ({
-    plugins: [ts({ transforms: ['typescript'] })],
-})
-
-/** @type {rollup.RollupOptions} */
+/** @type {import('rollup').RollupOptions} */
 const base = {
     input: './src/Async-Call.ts',
     output: outputMatrix('base'),
-    ...shared(),
+    plugins: [ts({ transforms: ['typescript'] })],
 }
 
-/** @type {rollup.RollupOptions} */
+/** @type {import('rollup').RollupOptions} */
 const full = {
     input: './src/index.ts',
     output: outputMatrix('full'),
-    ...shared(),
+    plugins: [ts({ transforms: ['typescript'] })],
 }
-
-/** @type {rollup.RollupOptions[]} */
-const dtsConfig = [
-    {
-        input: './es/Async-Call.d.ts',
-        output: [
-            { file: './out/base.d.ts', format: 'es' },
-            { file: './out/base.min.d.ts', format: 'es' },
-        ],
-        plugins: [dts()],
-    },
-    {
-        input: './es/index.d.ts',
-        output: [
-            { file: './out/full.d.ts', format: 'es' },
-            { file: './out/full.min.d.ts', format: 'es' },
-        ],
-        plugins: [dts()],
-    },
-]
-export default [base, full, ...dtsConfig]
+export default [base, full]
 
 /**
  * @param {string} name
  * @param {('es' | 'umd')[]} format
- * @returns {rollup.OutputOptions[]}
+ * @returns {import('rollup').OutputOptions[]}
  */
 function outputMatrix(name, format = ['es', 'umd']) {
     return format.flatMap((f) => {
-        /** @returns {rollup.OutputOptions} */
+        /** @returns {import('rollup').OutputOptions} */
         const base = (compress = false) => {
             const baseName = getBaseName(name, compress)
             return {
@@ -74,7 +47,6 @@ function outputMatrix(name, format = ['es', 'umd']) {
                                 keep_fargs: false,
                                 module: f === 'es',
                             },
-                            // @ts-ignore
                             output: {
                                 ecma: 2018,
                                 comments: /reference types/,
@@ -86,6 +58,10 @@ function outputMatrix(name, format = ['es', 'umd']) {
         return [base(false), base(true)]
     })
 }
+/**
+ * @param {string} name
+ * @param {boolean} compress
+ */
 function getBaseName(name, compress) {
     if (!compress) return name
     return `${name}.min`

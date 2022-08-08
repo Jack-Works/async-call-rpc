@@ -1,64 +1,65 @@
-import { normalizeLogOptions, normalizeStrictOptions } from '../src/utils/normalizeOptions'
+import { normalizeLogOptions, normalizeStrictOptions } from '../src/utils/normalizeOptions.js'
+import { expect, it } from 'vitest'
 
-test('normalizeLogOptions should be normalized as the following snapshot', () => {
+it('should normalize log options', () => {
     expect(normalizeLogOptions(true)).toMatchInlineSnapshot(`
-        Array [
-          true,
-          true,
-          true,
-          true,
-        ]
+      [
+        true,
+        true,
+        true,
+        true,
+      ]
     `)
-    expect(normalizeLogOptions(false)).toMatchInlineSnapshot(`Array []`)
+    expect(normalizeLogOptions(false)).toMatchInlineSnapshot('[]')
     expect(normalizeLogOptions('all')).toMatchInlineSnapshot(`
-        Array [
-          true,
-          true,
-          true,
-          true,
-          true,
-          true,
-        ]
+      [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+      ]
     `)
     expect(normalizeLogOptions({ type: 'basic' })).toMatchInlineSnapshot(`
-        Array [
-          true,
-          true,
-          true,
-          false,
-          undefined,
-          undefined,
-        ]
+      [
+        true,
+        true,
+        true,
+        false,
+        undefined,
+        undefined,
+      ]
     `)
     expect(normalizeLogOptions({ beCalled: false })).toMatchInlineSnapshot(`
-        Array [
-          false,
-          true,
-          true,
-          true,
-          undefined,
-          undefined,
-        ]
+      [
+        false,
+        true,
+        true,
+        true,
+        undefined,
+        undefined,
+      ]
     `)
 })
 
-test('normalizeLogOptions should be normalized as the following snapshot', () => {
+it('should normalize strict options', () => {
     expect(normalizeStrictOptions(true)).toMatchInlineSnapshot(`
-        Array [
-          true,
-          true,
-        ]
+      [
+        true,
+        true,
+      ]
     `)
     expect(normalizeStrictOptions(false)).toMatchInlineSnapshot(`
-        Array [
-          false,
-          false,
-        ]
+      [
+        false,
+        false,
+      ]
     `)
     expect(normalizeStrictOptions({ methodNotFound: false })).toMatchInlineSnapshot(`
-        Array [
-          false,
-          undefined,
-        ]
+      [
+        false,
+        undefined,
+      ]
     `)
 })

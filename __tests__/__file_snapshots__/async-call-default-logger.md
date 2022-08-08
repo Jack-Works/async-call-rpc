@@ -1,6 +1,6 @@
 # Timeline
 
-## T=0 Log: jest/log
+## T=0 Log: testRunner/log
 
 ```php
 Array [
@@ -24,7 +24,7 @@ Object {
 }
 ```
 
-## T=2 Log: jest/log
+## T=2 Log: testRunner/log
 
 ```php
 Array [

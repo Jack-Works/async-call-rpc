@@ -1,15 +1,14 @@
 {
-  "extends": "../tsconfig.base.json",
+  "extends": "../tsconfig.json",
   "compilerOptions": {
     "module": "ESNext",
     "rootDir": "./",
-    "outDir": "../es/",
+    "outDir": "../dist/core/",
     // This lib does not require any external libs
     "typeRoots": [],
     "types": [],
     "lib": ["ES2018"],
-    "tsBuildInfoFile": "../temp/core.tsbuildinfo",
-    "emitDeclarationOnly": true
+    "tsBuildInfoFile": "../dist/core/.tsbuildinfo"
   },
-  "include": ["./**/*.ts"]
+  "include": ["./"]
 }

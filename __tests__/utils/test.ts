@@ -1,8 +1,15 @@
-import { createLogger } from './logger'
+import { createLogger } from './logger.js'
 import { join } from 'path'
-import { AsyncVersionOf, AsyncGeneratorVersionOf, AsyncCall, AsyncCallOptions, AsyncGeneratorCall } from '../../src'
-import { createChannelPair, JestCallbackBasedChannel, JestEventBasedChannel } from './channels'
-import { reproduceIDGenerator } from './reproduce'
+import {
+    AsyncVersionOf,
+    AsyncGeneratorVersionOf,
+    AsyncCall,
+    AsyncCallOptions,
+    AsyncGeneratorCall,
+} from '../../src/index.js'
+import { createChannelPair, TestCallbackBasedChannel, TestEventBasedChannel } from './channels.js'
+import { reproduceIDGenerator } from './reproduce.js'
+import { expect } from 'vitest'
 
 export const defaultImpl = {
     add: (x: number, y: number) => x + y,
@@ -36,7 +43,7 @@ export const defaultImpl = {
             }
         } else if (type === 'cn') {
             function f() {
-                // @ts-ignore
+                // @ts-expect-error
                 this.message = 'normal message'
             }
             Object.defineProperty(f, 'name', {
@@ -55,8 +62,8 @@ const defaultImplGenerator = {
     async *echo(arr: number[]) {
         yield* arr
     },
-    async *magic() {
-        let last = undefined
+    async *magic(): AsyncGenerator<any, any, any> {
+        let last: any = undefined
         while (true) {
             try {
                 last = yield last
@@ -84,20 +91,18 @@ type Options<T> = {
     impl?: T | Promise<T>
 }
 export function withSnapshotDefault(
-    name: string,
     snapshot: string,
     f: (
         call: <T extends object = DefaultImpl>(option?: Options<T>) => AsyncVersionOf<T>,
         generatorCall: <T extends object = DefaultImplG>(option?: Options<T>) => AsyncGeneratorVersionOf<T>,
         log: (...args: any) => void,
-        rawChannel: Record<'server' | 'client', JestCallbackBasedChannel | JestEventBasedChannel>,
+        rawChannel: Record<'server' | 'client', TestCallbackBasedChannel | TestEventBasedChannel>,
     ) => Promise<void>,
     timeout = 800,
-    C: typeof JestCallbackBasedChannel | typeof JestEventBasedChannel = JestEventBasedChannel,
+    C: typeof TestCallbackBasedChannel | typeof TestEventBasedChannel = TestEventBasedChannel,
 ) {
     async function testImpl() {
-        if (name.includes('DBG')) debugger
-        const { emit, log } = createLogger(['server', 'client', 'jest'] as const)
+        const { emit, log } = createLogger(['server', 'client', 'testRunner'] as const)
         const { client, server } = createChannelPair(log, C)
         const idGenerator = reproduceIDGenerator()
 
@@ -113,11 +118,10 @@ export function withSnapshotDefault(
             AsyncGeneratorCall(impl || defaultImplGenerator, { ...serverShared, ...opts, ...server })
             return AsyncGeneratorCall<T>(impl || defaultImplGenerator, { ...clientShared, ...opts, ...client })
         }
-        await race(f(setup, setupGenerator, log.jest.log.log, { client, server }), timeout)
+        await race(f(setup, setupGenerator, log.testRunner.log.log, { client, server }), timeout)
         expect(emit()).toMatchFile(join(__dirname, '../__file_snapshots__/', snapshot + '.md'))
     }
-    if (name.includes('ONLY')) test.only(name, testImpl)
-    else test(name, testImpl)
+    return testImpl
 }
 withSnapshotDefault.debugger = (...[name, snap, f]: Parameters<typeof withSnapshotDefault>) => {
     withSnapshotDefault('DBG ONLY ' + name, snap, f)

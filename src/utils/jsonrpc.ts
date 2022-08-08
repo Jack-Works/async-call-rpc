@@ -1,6 +1,6 @@
-import { globalDOMException as DOMException, DOMExceptionHeader } from './error'
-import type { ErrorMapFunction } from '../Async-Call'
-import { ERROR, isArray, isBoolean, isFunction, isObject, isString, undefined } from './constants'
+import { globalDOMException as DOMException, DOMExceptionHeader } from './error.js'
+import type { ErrorMapFunction } from '../Async-Call.js'
+import { ERROR, isArray, isBoolean, isFunction, isObject, isString, undefined } from './constants.js'
 
 export const jsonrpc = '2.0'
 export type ID = string | number | null | undefined
@@ -114,7 +114,7 @@ export const isJSONRPCObject = (data: any): data is Response | Request => {
     return true
 }
 
-export { isObject } from './constants'
+export { isObject } from './constants.js'
 
 export type hasKey = {
     (obj: SuccessResponse | ErrorResponse | Request, key: 'result'): obj is SuccessResponse

@@ -5,7 +5,7 @@ import { Link } from '@material-ui/core'
 
 export function SmartLink(props: rehypeReact.ComponentProps): JSX.Element {
     let href = props.href
-        ? // @ts-ignore
+        ? // @ts-expect-error
           props.children?.[0] === 'Home'
             ? '/'
             : String(props.href).replace(/\.md$/g, '')

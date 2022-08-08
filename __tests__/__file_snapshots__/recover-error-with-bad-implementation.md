@@ -29,7 +29,7 @@ Array [
 
 ```php
 Array [
-    DOMException {},
+    [name: message],
 ]
 ```
 

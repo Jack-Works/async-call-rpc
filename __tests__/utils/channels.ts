@@ -1,11 +1,11 @@
-import { CallbackBasedChannel, EventBasedChannel } from '../../src'
+import type { CallbackBasedChannel, EventBasedChannel } from '../../src/index.js'
 import { EventEmitter } from 'events'
-import { Logger } from './logger'
-import { delay } from './test'
+import type { Logger } from './logger.js'
+import { delay } from './test.js'
 
-export class JestEventBasedChannel implements EventBasedChannel {
+export class TestEventBasedChannel implements EventBasedChannel {
     channel = new EventEmitter()
-    constructor(public otherSide: JestCallbackBasedChannel | JestEventBasedChannel, private logger: Logger) {
+    constructor(public otherSide: TestCallbackBasedChannel | TestEventBasedChannel, private logger: Logger) {
         this.channel.addListener('message', this.logger.receive)
     }
     on(callback: any) {
@@ -18,9 +18,9 @@ export class JestEventBasedChannel implements EventBasedChannel {
         this.otherSide.channel.emit('message', data)
     }
 }
-export class JestCallbackBasedChannel implements CallbackBasedChannel {
+export class TestCallbackBasedChannel implements CallbackBasedChannel {
     channel = new EventEmitter()
-    constructor(public otherSide: JestCallbackBasedChannel | JestEventBasedChannel, private logger: Logger) {
+    constructor(public otherSide: TestCallbackBasedChannel | TestEventBasedChannel, private logger: Logger) {
         this.channel.addListener('message', this.logger.receive)
     }
     setup(jsonRPCHandlerCallback: Function, isValidJSONRPCPayload: (data: unknown) => boolean | Promise<boolean>) {
@@ -42,7 +42,7 @@ export class JestCallbackBasedChannel implements CallbackBasedChannel {
 }
 export function createChannelPair(
     logger: { server: Logger; client: Logger },
-    C: typeof JestCallbackBasedChannel | typeof JestEventBasedChannel = JestEventBasedChannel,
+    C: typeof TestCallbackBasedChannel | typeof TestEventBasedChannel = TestEventBasedChannel,
 ) {
     const server = new C(undefined!, logger.server)
     const client = new C(server, logger.client)

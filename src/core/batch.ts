@@ -1,6 +1,6 @@
-import { isString } from '../utils/constants'
-import { AsyncCallBatch, AsyncCallNotify } from '../utils/internalSymbol'
-import type { Request } from '../utils/jsonrpc'
+import { isString } from '../utils/constants.js'
+import { AsyncCallBatch, AsyncCallNotify } from '../utils/internalSymbol.js'
+import type { Request } from '../utils/jsonrpc.js'
 /**
  * Wrap the AsyncCall instance to use batch call.
  * @param asyncCallInstance - The AsyncCall instance
@@ -25,13 +25,13 @@ export function batch<T extends object>(asyncCallInstance: T): [T, () => void, (
         {},
         {
             get(_, p) {
-                // @ts-ignore
+                // @ts-expect-error
                 const f = (...args: any) => asyncCallInstance[AsyncCallBatch](queue, p, ...args)
-                // @ts-ignore
+                // @ts-expect-error
                 f[AsyncCallNotify] = (...args: any) =>
-                    // @ts-ignore
+                    // @ts-expect-error
                     asyncCallInstance[AsyncCallBatch][AsyncCallNotify](queue, p, ...args)
-                // @ts-ignore
+                // @ts-expect-error
                 f[AsyncCallNotify][AsyncCallNotify] = f[AsyncCallNotify]
                 isString(p) && Object.defineProperty(methodContainer, p, { value: f, configurable: true })
                 return f

@@ -113,7 +113,7 @@ Object {
         "code": -1,
         "data": Object {
             "stack": "<mocked stack>",
-            "type": "E",
+            "type": "Error",
         },
         "message": "impl error",
     },
@@ -126,7 +126,7 @@ Object {
 
 ```php
 Array [
-    "E: impl error(-1) %c@1
+    "Error: impl error(-1) %c@1
 %c<mocked stack>",
     "color: gray",
     "",

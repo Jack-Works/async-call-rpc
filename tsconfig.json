@@ -1,16 +1,42 @@
 {
-  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "tsBuildInfoFile": "./temp/solution.tsbuildinfo",
-  },
-  "ts-node": {
-    "compilerOptions": { "module": "CommonJS", "esModuleInterop": true },
-    "transpileOnly": true
+    // Project composition
+    "composite": true,
+    "incremental": true,
+
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "noEmitOnError": true,
+
+    // Build target
+    "target": "ES2018",
+    "lib": ["ES2018"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+
+    // Strict
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "importsNotUsedAsValues": "error",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    // "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
+    // Spec compliance
+    "useDefineForClassFields": true
   },
   "references": [
     { "path": "./src/tsconfig.json" },
-    { "path": "./utils-src/tsconfig.node.json" },
-    { "path": "./utils-src/tsconfig.es.json" }
+    { "path": "./utils-src/node/tsconfig.json" },
+    { "path": "./utils-src/web/tsconfig.json" },
+    { "path": "./__tests__/tsconfig.json" }
   ],
   "files": []
 }

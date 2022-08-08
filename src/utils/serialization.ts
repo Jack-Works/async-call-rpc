@@ -1,9 +1,8 @@
 //#region Serialization
 
-import { isObject, hasKey } from './jsonrpc'
-import { undefined } from './constants'
-import type { Serialization } from '../types'
-
+import { isObject, hasKey } from './jsonrpc.js'
+import { undefined } from './constants.js'
+import type { Serialization } from '../types.js'
 
 /**
  * Serialization implementation that do nothing

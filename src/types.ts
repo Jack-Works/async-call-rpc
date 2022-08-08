@@ -255,13 +255,13 @@ export type ErrorMapFunction<T = unknown> = (
  * Method called `then` are intentionally removed because it is very likely to be a foot gun in promise auto-unwrap.
  * @public
  */
- export type AsyncVersionOf<T> = T extends Record<keyof T, (...args: any) => PromiseLike<any>>
- ? 'then' extends keyof T
-     ? Omit<Readonly<T>, 'then'>
-     // in this case we don't want to use Readonly<T>, so it will provide a better experience
-     : T
-     : _AsyncVersionOf<T>
- /** @internal */
+export type AsyncVersionOf<T> = T extends Record<keyof T, (...args: any) => PromiseLike<any>>
+    ? 'then' extends keyof T
+        ? Omit<Readonly<T>, 'then'>
+        : // in this case we don't want to use Readonly<T>, so it will provide a better experience
+          T
+    : _AsyncVersionOf<T>
+/** @internal */
 export type _AsyncVersionOf<T> = {
     readonly // Explicitly exclude key called "then" because it will cause problem in promise auto-unwrap.
     [key in keyof T as key extends 'then' ? never : T[key] extends Function ? key : never]: T[key] extends (

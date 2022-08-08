@@ -21,15 +21,16 @@ export async function reproduceDOMException(badImpl: boolean, f: Function) {
     const old = globalThis.DOMException
     Object.defineProperty(globalThis, 'DOMException', {
         configurable: true,
-        value: class F extends Error {
+        value: class DOMException extends old {
             static nextThrow = false
             constructor(...args: any) {
                 super(...args)
+                this.stack = '<mocked stack>'
                 if (badImpl) {
-                    if (F.nextThrow) {
-                        F.nextThrow = false
+                    if (DOMException.nextThrow) {
+                        DOMException.nextThrow = false
                         throw new Error('')
-                    } else F.nextThrow = true
+                    } else DOMException.nextThrow = true
                 }
             }
         } as any,
@@ -44,7 +45,7 @@ export async function reproduceDOMException(badImpl: boolean, f: Function) {
 }
 export async function reproduceError(f: Function) {
     const orig = Error
-    globalThis.Error = class E extends Error {
+    globalThis.Error = class Error extends orig {
         constructor(msg: string) {
             super(msg)
             this.stack = '<mocked stack>'
@@ -54,7 +55,7 @@ export async function reproduceError(f: Function) {
     JSON.parse = (...args) => {
         try {
             return old(...args)
-        } catch (e) {
+        } catch (e: any) {
             e.stack = '<mocked stack>'
             throw e
         }

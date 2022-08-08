@@ -1,16 +1,17 @@
 /**
  * See the document at https://github.com/Jack-Works/async-call/
  */
-import { AsyncCallOptions, AsyncCall } from './Async-Call'
-import { AsyncCallIgnoreResponse } from './utils/internalSymbol'
-import { normalizeStrictOptions } from './utils/normalizeOptions'
-import { generateRandomID } from './utils/generateRandomID'
-import { isFunction, isString, Object_setPrototypeOf } from './utils/constants'
+import type { AsyncCallOptions } from './types.js'
+import { AsyncCall } from './Async-Call.js'
+import { AsyncCallIgnoreResponse } from './utils/internalSymbol.js'
+import { normalizeStrictOptions } from './utils/normalizeOptions.js'
+import { generateRandomID } from './utils/generateRandomID.js'
+import { isFunction, isString, Object_setPrototypeOf } from './utils/constants.js'
 import {
     Err_Cannot_find_a_running_iterator_with_given_ID,
     Err_Only_string_can_be_the_RPC_method_name,
     makeHostedMessage,
-} from './utils/error'
+} from './utils/error.js'
 
 const i = 'rpc.async-iterator.'
 // ! side effect

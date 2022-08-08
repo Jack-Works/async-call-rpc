@@ -1,14 +1,6 @@
 # Timeline
 
-## T=0 Log: client/log
-
-```php
-Array [
-    [TypeError: RPC used as Promise: Error 3: https://github.com/Jack-Works/async-call-rpc/wiki/Errors#3],
-]
-```
-
-## T=1 Message: client => server
+## T=0 Message: client => server
 
 ```php
 Object {
@@ -19,7 +11,7 @@ Object {
 }
 ```
 
-## T=2 Log: server/log
+## T=1 Log: server/log
 
 ```php
 Array [
@@ -33,7 +25,7 @@ Array [
 ]
 ```
 
-## T=3 Message: server => client
+## T=2 Message: server => client
 
 ```php
 Object {

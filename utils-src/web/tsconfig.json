@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "lib": ["ES2018", "DOM", "DOM.Iterable"],
+    "outDir": "../../utils/web/",
+    "rootDir": "./",
+    "baseUrl": "./",
+    "tsBuildInfoFile": "../../dist/web.tsbuildinfo",
+    "paths": {
+      "async-call-rpc": ["../../src/index.ts"],
+      "bson": ["../../node_modules/bson"]
+    }
+  },
+  "include": ["./**/*.ts"],
+  "references": [{ "path": "../../src" }]
+}

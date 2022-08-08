@@ -16,7 +16,7 @@ import {
 import { SmartLink } from './SmartLink'
 
 // const heading =
-// @ts-ignore
+// @ts-expect-error
 const renderAst = new rehypeReact({
     createElement: React.createElement,
     components: {
@@ -51,7 +51,7 @@ export default function BlogPost({ data }) {
     )
 }
 export const query = graphql`
-    query($slug: String!) {
+    query ($slug: String!) {
         markdownRemark(fields: { slug: { eq: $slug } }) {
             htmlAst
         }

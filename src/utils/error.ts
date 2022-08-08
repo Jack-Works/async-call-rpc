@@ -6,7 +6,8 @@ class CustomError extends Error {
 export const Err_Cannot_find_a_running_iterator_with_given_ID = {} as Symbol
 export const Err_Only_string_can_be_the_RPC_method_name = {} as Symbol
 export const Err_Cannot_call_method_starts_with_rpc_dot_directly = {} as Symbol
-export const Err_Then_is_accessed_on_local_implementation_Please_explicitly_mark_if_it_is_thenable_in_the_options = {} as Symbol
+export const Err_Then_is_accessed_on_local_implementation_Please_explicitly_mark_if_it_is_thenable_in_the_options =
+    {} as Symbol
 const Messages = [
     Err_Cannot_find_a_running_iterator_with_given_ID,
     Err_Only_string_can_be_the_RPC_method_name,
@@ -22,7 +23,7 @@ export function makeHostedMessage(id: Symbol, error: Error) {
 // ! side effect
 /** These Error is defined in ECMAScript spec */
 const errors: Record<string, typeof EvalError> = {
-    // @ts-ignore
+    // @ts-expect-error
     __proto__: null,
     Error,
     EvalError,
@@ -45,7 +46,7 @@ export const RecoverError = (type: string, message: string, code: number, stack:
         } else if (type in errors) {
             const e = new errors[type]!(message)
             e.stack = stack
-            // @ts-ignore
+            // @ts-expect-error
             e.code = code
             return e
         } else {
@@ -59,7 +60,7 @@ export const removeStackHeader = (stack: unknown) => String(stack).replace(/^.+\
 // ! side effect
 export const globalDOMException = (() => {
     try {
-        // @ts-ignore
+        // @ts-expect-error
         return DOMException
     } catch {}
 }) as () => DOMException | undefined

@@ -1,6 +1,8 @@
 import format from 'pretty-format'
-import { Console } from '../../src'
+import type { Console } from '../../src/index.js'
 import { toMatchFile } from 'jest-file-snapshot'
+import { expect } from 'vitest'
+
 expect.extend({ toMatchFile })
 
 export type TimelineItem =
@@ -56,15 +58,5 @@ function code(lang: string, str: string) {
     return '\n```' + lang + '\n' + str + '\n```\n'
 }
 function formatValue(value: unknown) {
-    return code('php', format(value, { indent: 4 }))
+    return code('php', (format as any)(value, { indent: 4 }))
 }
-
-// const {
-//     emit,
-//     log: [server, client],
-// } = createLogger(['server', 'client'])
-// server.logger.log('hi client')
-// server.send({ type: 'hi' })
-// client.receive({ type: 'hi' })
-// client.logger.log('hi server')
-// console.log(emit())

@@ -1,8 +1,8 @@
 es/
 out/
-temp/
 utils/*
 !utils/deno/
+dist/
 # Logs
 logs
 *.log

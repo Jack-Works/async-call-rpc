@@ -1,9 +1,15 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "strict": true,
     "esModuleInterop": true,
-    "target": "ES2018",
-    "moduleResolution": "node"
+    "moduleResolution": "NodeNext",
+    "outDir": "../dist/tests/",
+    "rootDir": "./",
+    "incremental": true,
+    "tsBuildInfoFile": "../dist/tests/tsconfig.tsbuildinfo",
+    "lib": ["ES2018", "DOM"],
+    "types": ["node"]
   },
-  "include": ["./**/*.ts"]
+  "include": ["./**/*.ts"],
+  "references": [{ "path": "../src" }, { "path": "../utils-src/node/tsconfig.json" }]
 }

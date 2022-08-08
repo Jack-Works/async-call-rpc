@@ -1,10 +1,10 @@
-export * from './types'
-export type { _IgnoreResponse } from './core/notify'
-export { JSONSerialization, NoSerialization } from './utils/serialization'
-export { notify } from './core/notify'
-export { batch } from './core/batch'
+export * from './types.js'
+export type { _IgnoreResponse } from './core/notify.js'
+export { JSONSerialization, NoSerialization } from './utils/serialization.js'
+export { notify } from './core/notify.js'
+export { batch } from './core/batch.js'
 
-import { NoSerialization } from './utils/serialization'
+import { NoSerialization } from './utils/serialization.js'
 import {
     Request,
     Response,
@@ -18,26 +18,26 @@ import {
     ErrorResponseMethodNotFound,
     ErrorResponseInvalidRequest,
     ErrorResponseParseError,
-} from './utils/jsonrpc'
+} from './utils/jsonrpc.js'
 import {
     removeStackHeader,
     RecoverError,
     makeHostedMessage,
     Err_Cannot_call_method_starts_with_rpc_dot_directly,
     Err_Then_is_accessed_on_local_implementation_Please_explicitly_mark_if_it_is_thenable_in_the_options,
-} from './utils/error'
-import { generateRandomID } from './utils/generateRandomID'
-import { normalizeStrictOptions, normalizeLogOptions } from './utils/normalizeOptions'
-import { AsyncCallIgnoreResponse, AsyncCallNotify, AsyncCallBatch } from './utils/internalSymbol'
-import type { BatchQueue } from './core/batch'
+} from './utils/error.js'
+import { generateRandomID } from './utils/generateRandomID.js'
+import { normalizeStrictOptions, normalizeLogOptions } from './utils/normalizeOptions.js'
+import { AsyncCallIgnoreResponse, AsyncCallNotify, AsyncCallBatch } from './utils/internalSymbol.js'
+import type { BatchQueue } from './core/batch.js'
 import type {
     CallbackBasedChannel,
     EventBasedChannel,
     AsyncCallOptions,
     ConsoleInterface,
     AsyncVersionOf,
-} from './types'
-import { ERROR, isArray, isFunction, isString, Promise_resolve, replayFunction, undefined } from './utils/constants'
+} from './types.js'
+import { ERROR, isArray, isFunction, isString, Promise_resolve, replayFunction, undefined } from './utils/constants.js'
 
 /**
  * Create a RPC server & client.
