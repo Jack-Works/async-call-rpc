@@ -2,28 +2,15 @@
 
 [Home](./index.md) &gt; [async-call-rpc](./async-call-rpc.md) &gt; [AsyncCall](./async-call-rpc.asynccall.md)
 
-## AsyncCall() function
+## AsyncCall namespace
 
 Create a RPC server &amp; client.
 
 <b>Signature:</b>
 
 ```typescript
-export declare function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: null | undefined | object | Promise<object>, options: AsyncCallOptions): AsyncVersionOf<OtherSideImplementedFunctions>;
+export declare namespace AsyncCall 
 ```
-
-## Parameters
-
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  thisSideImplementation | null \| undefined \| object \| Promise&lt;object&gt; | The implementation when this AsyncCall acts as a JSON RPC server. Can be a Promise. |
-|  options | [AsyncCallOptions](./async-call-rpc.asynccalloptions.md) | [AsyncCallOptions](./async-call-rpc.asynccalloptions.md) |
-
-<b>Returns:</b>
-
-[AsyncVersionOf](./async-call-rpc.asyncversionof.md)<!-- -->&lt;OtherSideImplementedFunctions&gt;
-
-Same as the `OtherSideImplementedFunctions` type parameter, but every function in that interface becomes async and non-function value is removed. Method called "then" are also removed.
 
 ## Remarks
 
@@ -34,4 +21,10 @@ thisSideImplementation can be a Promise so you can write:
 ```ts
 export const service = AsyncCall(typeof window === 'object' ? {} : import('./backend/service.js'), {})
 ```
+
+## Variables
+
+|  Variable | Description |
+|  --- | --- |
+|  [revocable](./async-call-rpc.asynccall.revocable.md) |  |
 

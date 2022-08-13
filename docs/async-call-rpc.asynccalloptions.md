@@ -4,7 +4,7 @@
 
 ## AsyncCallOptions interface
 
-Options for [AsyncCall()](./async-call-rpc.asynccall.md)
+Options for 
 
 <b>Signature:</b>
 

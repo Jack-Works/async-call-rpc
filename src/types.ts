@@ -304,3 +304,15 @@ export interface Serialization {
      */
     deserialization(serialized: unknown): unknown | PromiseLike<unknown>
 }
+
+/**
+ * A revocable instance of AsyncCall().
+ */
+export interface RevocableInstance<T> {
+    /** Instance of AsyncCall() */
+    instance: AsyncVersionOf<T>
+    /** Stop the service gracefully, wait until all request stopped. */
+    revoke: () => void
+    /** Force stop the service, reject all pending requests (on client) and ignore the result of unfinished requests (on server) */
+    forceRevoke: () => void
+}

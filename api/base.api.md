@@ -4,8 +4,17 @@
 
 ```ts
 
-// @public
+// @public (undocumented)
 export function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: null | undefined | object | Promise<object>, options: AsyncCallOptions): AsyncVersionOf<OtherSideImplementedFunctions>;
+
+// @public
+export namespace AsyncCall { }
+
+// @public (undocumented)
+export namespace AsyncCall {
+    var // (undocumented)
+    revocable: <OtherSideImplementedFunctions = {}>(thisSideImplementation: object | Promise<object> | null | undefined, options: AsyncCallOptions) => RevocableInstance<OtherSideImplementedFunctions>;
+}
 
 // @public
 export interface AsyncCallLogLevel {
@@ -110,6 +119,13 @@ export const NoSerialization: Serialization;
 //
 // @public
 export function notify<T extends object>(instanceOrFnOnInstance: T): _IgnoreResponse<T>;
+
+// @public
+export interface RevocableInstance<T> {
+    forceRevoke: () => void;
+    instance: AsyncVersionOf<T>;
+    revoke: () => void;
+}
 
 // @public
 export interface Serialization {

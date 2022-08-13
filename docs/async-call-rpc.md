@@ -14,7 +14,7 @@ See the introduction at [Github](https://github.com/Jack-Works/async-call)
 
 |  Function | Description |
 |  --- | --- |
-|  [AsyncCall(thisSideImplementation, options)](./async-call-rpc.asynccall.md) | Create a RPC server &amp; client. |
+|  [AsyncCall(thisSideImplementation, options)](./async-call-rpc.asynccall.md) |  |
 |  [AsyncGeneratorCall(thisSideImplementation, options)](./async-call-rpc.asyncgeneratorcall.md) | The async generator version of the AsyncCall |
 |  [batch(asyncCallInstance)](./async-call-rpc.batch.md) | Wrap the AsyncCall instance to use batch call. |
 |  [notify(instanceOrFnOnInstance)](./async-call-rpc.notify.md) | Wrap the AsyncCall instance to send notification. |
@@ -24,12 +24,19 @@ See the introduction at [Github](https://github.com/Jack-Works/async-call)
 |  Interface | Description |
 |  --- | --- |
 |  [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) | Log options of AsyncCall |
-|  [AsyncCallOptions](./async-call-rpc.asynccalloptions.md) | Options for [AsyncCall()](./async-call-rpc.asynccall.md) |
+|  [AsyncCallOptions](./async-call-rpc.asynccalloptions.md) | Options for  |
 |  [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) | Control the behavior that different from the JSON RPC spec. |
 |  [CallbackBasedChannel](./async-call-rpc.callbackbasedchannel.md) | This interface represents a "callback" model. |
 |  [ConsoleInterface](./async-call-rpc.consoleinterface.md) | The minimal Console interface that AsyncCall needs. |
 |  [EventBasedChannel](./async-call-rpc.eventbasedchannel.md) | This interface represents a "on message" - "send response" model. |
+|  [RevocableInstance](./async-call-rpc.revocableinstance.md) | A revocable instance of AsyncCall(). |
 |  [Serialization](./async-call-rpc.serialization.md) | Serialize and deserialize of the JSON RPC payload |
+
+## Namespaces
+
+|  Namespace | Description |
+|  --- | --- |
+|  [AsyncCall](./async-call-rpc.asynccall.md) | Create a RPC server &amp; client. |
 
 ## Variables
 

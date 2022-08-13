@@ -36,6 +36,7 @@ import type {
     AsyncCallOptions,
     ConsoleInterface,
     AsyncVersionOf,
+    RevocableInstance,
 } from './types.js'
 import { ERROR, isArray, isFunction, isString, Promise_resolve, replayFunction, undefined } from './utils/constants.js'
 
@@ -57,10 +58,25 @@ import { ERROR, isArray, isFunction, isString, Promise_resolve, replayFunction, 
  * @returns Same as the `OtherSideImplementedFunctions` type parameter, but every function in that interface becomes async and non-function value is removed. Method called "then" are also removed.
  * @public
  */
+export declare namespace AsyncCall {}
 export function AsyncCall<OtherSideImplementedFunctions = {}>(
     thisSideImplementation: null | undefined | object | Promise<object>,
     options: AsyncCallOptions,
 ): AsyncVersionOf<OtherSideImplementedFunctions> {
+    return AsyncCall_inner<OtherSideImplementedFunctions>(thisSideImplementation, options).instance
+}
+
+AsyncCall.revocable = function revocable<OtherSideImplementedFunctions = {}>(
+    thisSideImplementation: null | undefined | object | Promise<object>,
+    options: AsyncCallOptions,
+): RevocableInstance<OtherSideImplementedFunctions> {
+    return AsyncCall_inner(thisSideImplementation, options)
+}
+
+function AsyncCall_inner<OtherSideImplementedFunctions = {}>(
+    thisSideImplementation: null | undefined | object | Promise<object>,
+    options: AsyncCallOptions,
+): RevocableInstance<OtherSideImplementedFunctions> {
     let isThisSideImplementationPending = true
     let resolvedThisSideImplementationValue: unknown = undefined
     let rejectedThisSideImplementation: unknown = undefined
@@ -378,10 +394,19 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             },
         })
     }
-    return new Proxy(methodContainer, {
+    const { proxy, revoke } = Proxy.revocable<AsyncVersionOf<OtherSideImplementedFunctions>>(methodContainer, {
         getPrototypeOf: () => null,
         setPrototypeOf: (_, value) => value === null,
-    }) as AsyncVersionOf<OtherSideImplementedFunctions>
+    })
+    // TODO: revoke: use a Promise chain to chain all pending requests, stop accepting new requests, unsubscribe the channel.
+    // TODO: forceRevoke: stop all pending requests, unsubscribe the channel, revoke the proxy.
+    return {
+        instance: proxy,
+        revoke: () => {},
+        forceRevoke: () => {
+            revoke()
+        },
+    }
 }
 // Assume a console object in global if there is no custom logger provided
 declare const console: ConsoleInterface
