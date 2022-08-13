@@ -9,17 +9,16 @@ This interface represents a "callback" model.
 <b>Signature:</b>
 
 ```typescript
-export interface CallbackBasedChannel<Data = unknown> extends Partial<EventBasedChannel<Data>> 
+export interface CallbackBasedChannel<Data = unknown> extends Partial<EventBasedChannel<Data>>
 ```
 <b>Extends:</b> Partial&lt;[EventBasedChannel](./async-call-rpc.eventbasedchannel.md)
 
 ## Remarks
 
-Usually used for there are many remotes (act like a server). Example: [Example for CallbackBasedChannel](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/websocket.client.ts)
+Usually used for there are many remotes (act like a server). Example: [Example for CallbackBasedChannel](https://github.com/Jack-Works/async-call-rpc/blob/main/utils-src/web/websocket.client.ts)
 
 ## Methods
 
 |  Method | Description |
 |  --- | --- |
 |  [setup(jsonRPCHandlerCallback, isValidJSONRPCPayload)](./async-call-rpc.callbackbasedchannel.setup.md) | Setup the CallbackBasedChannel. |
-

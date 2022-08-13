@@ -9,12 +9,12 @@ This interface represents a "on message" - "send response" model.
 <b>Signature:</b>
 
 ```typescript
-export interface EventBasedChannel<Data = unknown> 
+export interface EventBasedChannel<Data = unknown>
 ```
 
 ## Remarks
 
-Usually used for there is only 1 remote (act like a client). Example: [Example for EventBasedChannel](https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/node/websocket.server.ts)
+Usually used for there is only 1 remote (act like a client). Example: [Example for EventBasedChannel](https://github.com/Jack-Works/async-call-rpc/blob/main/utils-src/node/websocket.server.ts)
 
 ## Methods
 
@@ -22,4 +22,3 @@ Usually used for there is only 1 remote (act like a client). Example: [Example f
 |  --- | --- |
 |  [on(listener)](./async-call-rpc.eventbasedchannel.on.md) | Register the message listener. |
 |  [send(data)](./async-call-rpc.eventbasedchannel.send.md) | Send the data to the remote side. |
-

@@ -7,7 +7,7 @@
  * This interface represents a "on message" - "send response" model.
  * @remarks
  * Usually used for there is only 1 remote (act like a client).
- * Example: {@link https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/node/websocket.server.ts | Example for EventBasedChannel}
+ * Example: {@link https://github.com/Jack-Works/async-call-rpc/blob/main/utils-src/node/websocket.server.ts | Example for EventBasedChannel}
  * @public
  */
 export interface EventBasedChannel<Data = unknown> {
@@ -28,7 +28,7 @@ export interface EventBasedChannel<Data = unknown> {
  * This interface represents a "callback" model.
  * @remarks
  * Usually used for there are many remotes (act like a server).
- * Example: {@link https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/websocket.client.ts | Example for CallbackBasedChannel}
+ * Example: {@link https://github.com/Jack-Works/async-call-rpc/blob/main/utils-src/web/websocket.client.ts | Example for CallbackBasedChannel}
  * @public
  */
 export interface CallbackBasedChannel<Data = unknown> extends Partial<EventBasedChannel<Data>> {
@@ -144,7 +144,7 @@ export interface AsyncCallOptions {
     /**
      * The message channel to exchange messages between server and client
      * @example
-     * {@link https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/web/websocket.client.ts | Example for CallbackBasedChannel} or {@link https://github.com/Jack-Works/async-call-rpc/blob/master/utils-src/node/websocket.server.ts | Example for EventBasedChannel}
+     * {@link https://github.com/Jack-Works/async-call-rpc/blob/main/utils-src/web/websocket.client.ts | Example for CallbackBasedChannel} or {@link https://github.com/Jack-Works/async-call-rpc/blob/main/utils-src/node/websocket.server.ts | Example for EventBasedChannel}
      */
     channel: CallbackBasedChannel | EventBasedChannel
     /**
