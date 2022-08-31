@@ -17,6 +17,14 @@ it(
         // Method name check
         expect(server.add.name).toBe('add')
 
+        // [[GetOwnPropertyDescriptor]] check
+        {
+            const method = Object.getOwnPropertyDescriptor(server, 'missing-method')
+            expect(method).toBeTypeOf('object')
+            expect(Reflect.has(server, 'missing-method')).toBeTruthy()
+            expect((server as any)['missing-method']).toBe(method!.value!)
+        }
+
         // Result check
         const q = server.add(0, 1)
         expect(q).toBeInstanceOf(Promise)
@@ -39,6 +47,14 @@ it(
 
         // Method name check
         expect(server.echo.name).toBe('echo')
+
+        // [[GetOwnPropertyDescriptor]] check
+        {
+            const method = Object.getOwnPropertyDescriptor(server, 'missing-method')
+            expect(method).toBeTypeOf('object')
+            expect(Reflect.has(server, 'missing-method')).toBeTruthy()
+            expect((server as any)['missing-method']).toBe(method!.value!)
+        }
 
         // Result check
         const iter = server.echo([])

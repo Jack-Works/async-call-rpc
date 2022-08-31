@@ -176,6 +176,11 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
     return new Proxy(methodContainer, {
         getPrototypeOf: () => null,
         setPrototypeOf: (_, val) => val === null,
+        // some library will treat this object as a normal object and run algorithm steps in https://tc39.es/ecma262/#sec-ordinaryget
+        getOwnPropertyDescriptor(_, method) {
+            if (!(method in methodContainer)) (getTrap as any)[method] // trigger [[Get]]
+            return Object.getOwnPropertyDescriptor(methodContainer, method)
+        },
     }) as AsyncGeneratorVersionOf<OtherSideImplementedFunctions>
 }
 class _AsyncGenerator implements AsyncIterableIterator<unknown>, AsyncIterator<unknown, unknown, unknown> {

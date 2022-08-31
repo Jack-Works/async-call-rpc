@@ -381,6 +381,11 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     return new Proxy(methodContainer, {
         getPrototypeOf: () => null,
         setPrototypeOf: (_, value) => value === null,
+        // some library will treat this object as a normal object and run algorithm steps in https://tc39.es/ecma262/#sec-ordinaryget
+        getOwnPropertyDescriptor(_, method) {
+            if (!(method in methodContainer)) (getTrap as any)[method] // trigger [[Get]]
+            return Object.getOwnPropertyDescriptor(methodContainer, method)
+        },
     }) as AsyncVersionOf<OtherSideImplementedFunctions>
 }
 // Assume a console object in global if there is no custom logger provided
