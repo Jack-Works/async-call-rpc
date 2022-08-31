@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.1.4
+
+### Patch Changes
+
+- 2d38ab4: fix getOwnPropertyDescriptor becomes invalid after optimized
+
 ## 6.1.3
 
 ### Patch Changes
