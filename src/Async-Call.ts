@@ -345,25 +345,20 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             })
         })
     }
-    const getTrap = new Proxy(
-        {},
-        {
-            get(_, method) {
-                const f = {
-                    // This function will be logged to the console so it must be 1 line
-                    [method]: (..._: unknown[]) => call(method, _, new Error().stack),
-                }[method as any]!
-                const f2 = {
-                    [method]: (..._: unknown[]) => call(method, _, new Error().stack, true),
-                }[method as any]!
-                // @ts-expect-error
-                f[AsyncCallNotify] = f2[AsyncCallNotify] = f2
-                isString(method) && Object.defineProperty(methodContainer, method, { value: f, configurable: true })
-                return f
-            },
-        },
-    )
-    const methodContainer = { __proto__: getTrap } as any
+    const getTrap = (_: any, method: string | symbol) => {
+        const f = {
+            // This function will be logged to the console so it must be 1 line
+            [method]: (..._: unknown[]) => call(method, _, new Error().stack),
+        }[method as any]!
+        const f2 = {
+            [method]: (..._: unknown[]) => call(method, _, new Error().stack, true),
+        }[method as any]!
+        // @ts-expect-error
+        f[AsyncCallNotify] = f2[AsyncCallNotify] = f2
+        isString(method) && Object.defineProperty(methodContainer, method, { value: f, configurable: true })
+        return f
+    }
+    const methodContainer: any = { __proto__: new Proxy({}, { get: getTrap }) }
     if (thenable === false) methodContainer.then = undefined
     else if (thenable === undefined) {
         Object.defineProperty(methodContainer, 'then', {
@@ -383,7 +378,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         setPrototypeOf: (_, value) => value === null,
         // some library will treat this object as a normal object and run algorithm steps in https://tc39.es/ecma262/#sec-ordinaryget
         getOwnPropertyDescriptor(_, method) {
-            if (!(method in methodContainer)) (getTrap as any)[method] // trigger [[Get]]
+            if (!(method in methodContainer)) getTrap(_, method) // trigger [[Get]]
             return Object.getOwnPropertyDescriptor(methodContainer, method)
         },
     }) as AsyncVersionOf<OtherSideImplementedFunctions>

@@ -155,30 +155,24 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
     } as AsyncGeneratorInternalMethods
     const remote = AsyncCall<AsyncGeneratorInternalMethods>(server, options)
 
-    const getTrap = new Proxy(
-        {},
-        {
-            get(_, method) {
-                if (!isString(method))
-                    throw makeHostedMessage(Err_Only_string_can_be_the_RPC_method_name, new TypeError(''))
-                const f = {
-                    [method]: (..._: unknown[]) => {
-                        const id = remote[AsyncIteratorStart](method, _)
-                        return new _AsyncGenerator(remote, id)
-                    },
-                }[method]!
-                Object.defineProperty(methodContainer, method, { value: f, configurable: true })
-                return f
+    const getTrap = (_: any, method: PropertyKey) => {
+        if (!isString(method)) throw makeHostedMessage(Err_Only_string_can_be_the_RPC_method_name, new TypeError(''))
+        const f = {
+            [method]: (..._: unknown[]) => {
+                const id = remote[AsyncIteratorStart](method, _)
+                return new _AsyncGenerator(remote, id)
             },
-        },
-    )
-    const methodContainer = { __proto__: getTrap } as any
+        }[method]!
+        Object.defineProperty(methodContainer, method, { value: f, configurable: true })
+        return f
+    }
+    const methodContainer: any = { __proto__: new Proxy({}, { get: getTrap }) }
     return new Proxy(methodContainer, {
         getPrototypeOf: () => null,
         setPrototypeOf: (_, val) => val === null,
         // some library will treat this object as a normal object and run algorithm steps in https://tc39.es/ecma262/#sec-ordinaryget
         getOwnPropertyDescriptor(_, method) {
-            if (!(method in methodContainer)) (getTrap as any)[method] // trigger [[Get]]
+            if (!(method in methodContainer)) getTrap(_, method) // trigger [[Get]]
             return Object.getOwnPropertyDescriptor(methodContainer, method)
         },
     }) as AsyncGeneratorVersionOf<OtherSideImplementedFunctions>
