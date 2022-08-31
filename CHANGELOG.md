@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.1.5
+
+### Patch Changes
+
+- 78ab196: fix: types is missing in the release process
+
 ## 6.1.4
 
 ### Patch Changes

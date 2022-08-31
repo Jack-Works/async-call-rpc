@@ -1,7 +1,7 @@
 {
   "name": "async-call-rpc",
   "packageManager": "pnpm@7.9.0",
-  "version": "6.1.4",
+  "version": "6.1.5",
   "description": "A lightweight JSON RPC server & client",
   "main": "out/base.js",
   "module": "out/base.mjs",
