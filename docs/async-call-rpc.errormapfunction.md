@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-export declare type ErrorMapFunction<T = unknown> = (error: unknown, request: Readonly<JSONRPCRequest>) => {
+export type ErrorMapFunction<T = unknown> = (error: unknown, request: Readonly<JSONRPCRequest>) => {
     code: number;
     message: string;
     data?: T;

@@ -15,3 +15,4 @@ channel: CallbackBasedChannel | EventBasedChannel;
 ## Example
 
 [Example for CallbackBasedChannel](https://github.com/Jack-Works/async-call-rpc/blob/main/utils-src/web/websocket.client.ts) or [Example for EventBasedChannel](https://github.com/Jack-Works/async-call-rpc/blob/main/utils-src/node/websocket.server.ts)
+

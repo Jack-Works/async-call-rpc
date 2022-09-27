@@ -9,7 +9,7 @@ This interface represents a "on message" - "send response" model.
 <b>Signature:</b>
 
 ```typescript
-export interface EventBasedChannel<Data = unknown>
+export interface EventBasedChannel<Data = unknown> 
 ```
 
 ## Remarks
@@ -22,3 +22,4 @@ Usually used for there is only 1 remote (act like a client). Example: [Example f
 |  --- | --- |
 |  [on(listener)](./async-call-rpc.eventbasedchannel.on.md) | Register the message listener. |
 |  [send(data)](./async-call-rpc.eventbasedchannel.send.md) | Send the data to the remote side. |
+

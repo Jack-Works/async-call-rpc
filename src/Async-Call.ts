@@ -10,7 +10,6 @@ import {
     Response,
     ErrorResponseMapped,
     SuccessResponse,
-    hasKey,
     isJSONRPCObject,
     isObject,
     ErrorResponse,
@@ -168,16 +167,16 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             remoteErrorStack = '',
             errorCode = 0,
             errorType = ERROR
-        if (hasKey(data, 'error')) {
-            const e = data.error as any
+        if ('error' in data) {
+            const e = data.error
             errorMessage = e.message
             errorCode = e.code
             const detail = e.data
 
-            if (isObject(detail) && hasKey(detail, 'stack') && isString(detail.stack)) remoteErrorStack = detail.stack
+            if (isObject(detail) && 'stack' in detail && isString(detail.stack)) remoteErrorStack = detail.stack
             else remoteErrorStack = '<remote stack not available>'
 
-            if (isObject(detail) && hasKey(detail, 'type') && isString(detail.type)) errorType = detail.type
+            if (isObject(detail) && 'type' in detail && isString(detail.type)) errorType = detail.type
             else errorType = ERROR
 
             if (log_remoteError)
@@ -193,7 +192,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         const { f: [resolve, reject] = [null, null], stack: localErrorStack = '' } = requestContext.get(data.id) || {}
         if (!resolve || !reject) return // drop this response
         requestContext.delete(data.id)
-        if (hasKey(data, 'error')) {
+        if ('error' in data) {
             reject(
                 RecoverError(
                     errorType,
@@ -236,7 +235,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     const rawMessageSender = async (res: undefined | Response | (Response | undefined)[]) => {
         if (!res) return
         if (isArray(res)) {
-            const reply = res.filter((x) => x && hasKey(x, 'id'))
+            const reply = res.filter((x) => x && 'id' in x)
             if (reply.length === 0) return
             return serialization(reply)
         } else {
@@ -245,9 +244,8 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     }
     const serialization = (x: unknown) => serializer.serialization(x)
     const deserialization = (x: unknown) => serializer.deserialization(x)
-    const isEventBasedChannel = (x: typeof channel): x is EventBasedChannel => hasKey(x, 'send') && isFunction(x.send)
-    const isCallbackBasedChannel = (x: typeof channel): x is CallbackBasedChannel =>
-        hasKey(x, 'setup') && isFunction(x.setup)
+    const isEventBasedChannel = (x: typeof channel): x is EventBasedChannel => 'send' in x && isFunction(x.send)
+    const isCallbackBasedChannel = (x: typeof channel): x is CallbackBasedChannel => 'setup' in x && isFunction(x.setup)
 
     if (isCallbackBasedChannel(channel)) {
         channel.setup(
@@ -268,8 +266,8 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                     .then((x) => x && m.send!(x)),
             )
     }
-    function makeErrorObject(e: any, frameworkStack: string, data: Request) {
-        if (isObject(e) && hasKey(e, 'stack'))
+    const makeErrorObject = (e: any, frameworkStack: string, data: Request) => {
+        if (isObject(e) && 'stack' in e)
             e.stack = frameworkStack
                 .split('\n')
                 .reduce((stack, fstack) => stack.replace(fstack + '\n', ''), '' + e.stack)
@@ -277,14 +275,14 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         return ErrorResponseMapped(data, e, mapError || defaultErrorMapper(log_sendLocalStack ? e.stack : undefined))
     }
 
-    async function sendPayload(payload: unknown, removeQueueR = false) {
+    const sendPayload = async (payload: unknown, removeQueueR = false) => {
         if (removeQueueR) payload = [...(payload as BatchQueue)]
         const data = await serialization(payload)
         return channel.send!(data)
     }
-    function rejectsQueue(queue: BatchQueue, error: unknown) {
+    const rejectsQueue = (queue: BatchQueue, error: unknown) => {
         for (const x of queue) {
-            if (hasKey(x, 'id')) {
+            if ('id' in x) {
                 const ctx = requestContext.get(x.id!)
                 ctx && ctx.f[1](error)
             }
@@ -293,9 +291,9 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     const handleSingleMessage = async (
         data: SuccessResponse | ErrorResponse | Request,
     ): Promise<SuccessResponse | ErrorResponse | undefined> => {
-        if (hasKey(data, 'method')) {
+        if ('method' in data) {
             const r = onRequest(data)
-            if (hasKey(data, 'id')) return r
+            if ('id' in data) return r
             try {
                 await r
             } catch {}

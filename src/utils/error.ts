@@ -3,19 +3,19 @@ class CustomError extends Error {
         super(message)
     }
 }
-export const Err_Cannot_find_a_running_iterator_with_given_ID = {} as Symbol
-export const Err_Only_string_can_be_the_RPC_method_name = {} as Symbol
-export const Err_Cannot_call_method_starts_with_rpc_dot_directly = {} as Symbol
-export const Err_Then_is_accessed_on_local_implementation_Please_explicitly_mark_if_it_is_thenable_in_the_options =
-    {} as Symbol
+export const Err_Cannot_find_a_running_iterator_with_given_ID: unique symbol = {} as any
+export const Err_Only_string_can_be_the_RPC_method_name: unique symbol = {} as any
+export const Err_Cannot_call_method_starts_with_rpc_dot_directly: unique symbol = {} as any
+export const Err_Then_is_accessed_on_local_implementation_Please_explicitly_mark_if_it_is_thenable_in_the_options: unique symbol =
+    {} as any
 const Messages = [
     Err_Cannot_find_a_running_iterator_with_given_ID,
     Err_Only_string_can_be_the_RPC_method_name,
     Err_Cannot_call_method_starts_with_rpc_dot_directly,
     Err_Then_is_accessed_on_local_implementation_Please_explicitly_mark_if_it_is_thenable_in_the_options,
-]
+] as const
 // https://github.com/Jack-Works/async-call-rpc/wiki/Error-messages
-export function makeHostedMessage(id: Symbol, error: Error) {
+export const makeHostedMessage = (id: typeof Messages[number], error: Error) => {
     const n = Messages.indexOf(id)
     error.message += `Error ${n}: https://github.com/Jack-Works/async-call-rpc/wiki/Errors#` + n
     return error

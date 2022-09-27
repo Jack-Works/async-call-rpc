@@ -9,9 +9,9 @@ This interface represents a "callback" model.
 <b>Signature:</b>
 
 ```typescript
-export interface CallbackBasedChannel<Data = unknown> extends Partial<EventBasedChannel<Data>>
+export interface CallbackBasedChannel<Data = unknown> extends Partial<EventBasedChannel<Data>> 
 ```
-<b>Extends:</b> Partial&lt;[EventBasedChannel](./async-call-rpc.eventbasedchannel.md)
+<b>Extends:</b> Partial&lt;[EventBasedChannel](./async-call-rpc.eventbasedchannel.md)<!-- -->&lt;Data&gt;&gt;
 
 ## Remarks
 
@@ -22,3 +22,4 @@ Usually used for there are many remotes (act like a server). Example: [Example f
 |  Method | Description |
 |  --- | --- |
 |  [setup(jsonRPCHandlerCallback, isValidJSONRPCPayload)](./async-call-rpc.callbackbasedchannel.setup.md) | Setup the CallbackBasedChannel. |
+

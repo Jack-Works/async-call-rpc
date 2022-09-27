@@ -1,6 +1,6 @@
 //#region Serialization
 
-import { isObject, hasKey } from './jsonrpc.js'
+import { isObject } from './jsonrpc.js'
 import { undefined } from './constants.js'
 import type { Serialization } from '../types.js'
 
@@ -43,7 +43,7 @@ export const JSONSerialization = (
     undefinedKeepingBehavior: 'keep' | 'null' | false = 'null',
 ): Serialization => ({
     serialization(from) {
-        if (undefinedKeepingBehavior && isObject(from) && hasKey(from, 'result') && from.result === undefined) {
+        if (undefinedKeepingBehavior && isObject(from) && 'result' in from && from.result === undefined) {
             const alt = { ...from }
             alt.result = null
             if (undefinedKeepingBehavior === 'keep') (alt as any).undef = true
@@ -55,9 +55,9 @@ export const JSONSerialization = (
         const result = JSON.parse(serialized as string, replacerAndReceiver[1])
         if (
             isObject(result) &&
-            hasKey(result, 'result') &&
+            'result' in result &&
             result.result === null &&
-            hasKey(result, 'undef') &&
+            'undef' in result &&
             result.undef === true
         ) {
             result.result = undefined

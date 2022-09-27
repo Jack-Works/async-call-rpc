@@ -22,7 +22,6 @@ it(
     'should not treat a promise-like as a real Promise',
     withSnapshotDefault('async-call-impl-promise-like', async (f) => {
         const server = f({ impl: { then: () => 1, otherMethods: () => 1 } })
-        expect(server).toHaveProperty('then', undefined)
         await expect(server.otherMethods()).resolves.toMatchInlineSnapshot(`1`)
     }),
 )

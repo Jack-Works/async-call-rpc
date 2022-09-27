@@ -9,7 +9,7 @@ JSON RPC Request object
 <b>Signature:</b>
 
 ```typescript
-export declare type JSONRPCRequest = {
+export type JSONRPCRequest = {
     jsonrpc: '2.0';
     id?: string | number | null;
     method: string;

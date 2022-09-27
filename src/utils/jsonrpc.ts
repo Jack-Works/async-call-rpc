@@ -105,26 +105,16 @@ export type Response = SuccessResponse | ErrorResponse
 
 export const isJSONRPCObject = (data: any): data is Response | Request => {
     if (!isObject(data)) return false
-    if (!hasKey(data, 'jsonrpc')) return false
+    if (!('jsonrpc' in data)) return false
     if (data.jsonrpc !== jsonrpc) return false
-    if (hasKey(data, 'params')) {
-        const params = (data as Request).params
+    if ('params' in data) {
+        const params = data.params
         if (!isArray(params) && !isObject(params)) return false
     }
     return true
 }
 
 export { isObject } from './constants.js'
-
-export type hasKey = {
-    (obj: SuccessResponse | ErrorResponse | Request, key: 'result'): obj is SuccessResponse
-    (obj: SuccessResponse | ErrorResponse | Request, key: 'error'): obj is ErrorResponse
-    (obj: SuccessResponse | ErrorResponse | Request, key: 'method'): obj is Request
-    <T, Q extends string>(obj: T, key: Q): obj is T & {
-        [key in Q]: unknown
-    }
-}
-export const hasKey: hasKey = (obj: any, key: any): obj is any => key in obj
 
 const toString = (_default: string, val: () => any) => {
     try {
