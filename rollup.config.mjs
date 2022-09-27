@@ -1,18 +1,17 @@
-import { terser } from 'rollup-plugin-terser'
-import ts from '@rollup/plugin-sucrase'
+import { swc, minify } from 'rollup-plugin-swc3'
 
 /** @type {import('rollup').RollupOptions} */
 const base = {
     input: './src/Async-Call.ts',
     output: outputMatrix('base'),
-    plugins: [ts({ transforms: ['typescript'] })],
+    plugins: [swc({ sourceMaps: true })],
 }
 
 /** @type {import('rollup').RollupOptions} */
 const full = {
     input: './src/index.ts',
     output: outputMatrix('full'),
-    plugins: [ts({ transforms: ['typescript'] })],
+    plugins: [swc({ sourceMaps: true })],
 }
 export default [base, full]
 
@@ -34,12 +33,12 @@ function outputMatrix(name, format = ['es', 'umd']) {
                 banner: `/// <reference types="./${baseName}.d.ts" />`,
                 plugins: [
                     compress &&
-                        terser({
+                        minify({
+                            sourceMap: true,
                             compress: {
                                 unsafe: true,
                                 ecma: 2018,
-                                passes: 3,
-                                unsafe_arrows: true,
+                                // unsafe_arrows: true,
                                 unsafe_symbols: true,
                                 unsafe_undefined: true,
                                 drop_debugger: false,
@@ -47,10 +46,8 @@ function outputMatrix(name, format = ['es', 'umd']) {
                                 keep_fargs: false,
                                 module: f === 'es',
                             },
-                            output: {
-                                ecma: 2018,
-                                comments: /reference types/,
-                            },
+                            ecma: 2018,
+                            module: f === 'es',
                         }),
                 ],
             }
