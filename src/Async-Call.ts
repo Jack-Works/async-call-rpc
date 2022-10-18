@@ -106,8 +106,8 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         groupEnd: console_groupEnd = console_log,
         warn: console_warn = console_log,
     } = (logger || console) as ConsoleInterface
-    type PromiseParam = [resolve: (value?: any) => void, reject: (reason?: any) => void]
-    const requestContext = new Map<string | number, { f: PromiseParam; stack: string }>()
+    type PromiseParam = [resolve: (value?: any) => void, reject: (reason?: any) => void, stack?: string]
+    const requestContext = new Map<string | number, PromiseParam>()
     const onRequest = async (data: Request): Promise<Response | undefined> => {
         if (isThisSideImplementationPending) await awaitThisSideImplementation()
         else {
@@ -188,10 +188,10 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                       )
                     : console_error(`${errorType}: ${errorMessage}(${errorCode}) @${data.id}\n${remoteErrorStack}`)
         }
-        if (data.id === null || data.id === undefined) return
-        const { f: [resolve, reject] = [null, null], stack: localErrorStack = '' } = requestContext.get(data.id) || {}
-        if (!resolve || !reject) return // drop this response
-        requestContext.delete(data.id)
+        const { id } = data
+        if (id === null || id === undefined || !requestContext.has(id)) return
+        const [resolve, reject, localErrorStack = ''] = requestContext.get(id)!
+        requestContext.delete(id)
         if ('error' in data) {
             reject(
                 RecoverError(
@@ -284,7 +284,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         for (const x of queue) {
             if ('id' in x) {
                 const ctx = requestContext.get(x.id!)
-                ctx && ctx.f[1](error)
+                ctx && ctx[1](error)
             }
         }
     }
@@ -337,10 +337,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                 if (!queue.r) queue.r = [() => sendPayload(queue, true), (e) => rejectsQueue(queue!, e)]
             } else sendPayload(request).catch(reject)
             if (notify) return resolve()
-            requestContext.set(id, {
-                f: [resolve, reject],
-                stack,
-            })
+            requestContext.set(id, [resolve, reject, stack])
         })
     }
     const getTrap = (_: any, method: string | symbol) => {
