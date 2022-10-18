@@ -4,7 +4,6 @@ export { JSONSerialization, NoSerialization } from './utils/serialization.js'
 export { notify } from './core/notify.js'
 export { batch } from './core/batch.js'
 
-import { NoSerialization } from './utils/serialization.js'
 import {
     Request,
     Response,
@@ -76,7 +75,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     }
 
     const {
-        serializer = NoSerialization,
+        serializer,
         key: logKey = 'rpc',
         strict = true,
         log = true,
@@ -242,8 +241,8 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             return serialization(res)
         }
     }
-    const serialization = (x: unknown) => serializer.serialization(x)
-    const deserialization = (x: unknown) => serializer.deserialization(x)
+    const serialization = serializer ? (x: unknown) => serializer.serialization(x) : Object
+    const deserialization = serializer ? (x: unknown) => serializer.deserialization(x) : Object
     const isEventBasedChannel = (x: typeof channel): x is EventBasedChannel => 'send' in x && isFunction(x.send)
     const isCallbackBasedChannel = (x: typeof channel): x is CallbackBasedChannel => 'setup' in x && isFunction(x.setup)
 

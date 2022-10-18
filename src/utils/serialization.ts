@@ -8,6 +8,7 @@ import type { Serialization } from '../types.js'
  * Serialization implementation that do nothing
  * @remarks {@link Serialization}
  * @public
+ * @deprecated Will be removed in next major version
  */
 export const NoSerialization: Serialization = {
     serialization(from) {
