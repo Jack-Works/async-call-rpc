@@ -156,7 +156,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             }
             const result = await promise
             if (result === AsyncCallIgnoreResponse) return
-            return SuccessResponse(req_id, await promise)
+            return SuccessResponse(req_id, result)
         } catch (e) {
             return makeErrorObject(e, frameworkStack, data)
         }
