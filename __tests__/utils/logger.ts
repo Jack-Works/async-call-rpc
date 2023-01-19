@@ -58,5 +58,5 @@ function code(lang: string, str: string) {
     return '\n```' + lang + '\n' + str + '\n```\n'
 }
 function formatValue(value: unknown) {
-    return code('php', (format as any)(value, { indent: 4 }))
+    return code('php', format.default(value, { indent: 4 }))
 }

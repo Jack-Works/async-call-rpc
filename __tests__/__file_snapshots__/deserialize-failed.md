@@ -10,7 +10,7 @@
 
 ```php
 Array [
-    [SyntaxError: Unexpected token i in JSON at position 0],
+    [SyntaxError: Unexpected token 'i', "invalid JSON" is not valid JSON],
     undefined,
     undefined,
 ]
