@@ -4,6 +4,11 @@
 
 ## NoSerialization variable
 
+> Warning: This API is now obsolete.
+> 
+> Will be removed in next major version
+> 
+
 Serialization implementation that do nothing
 
 <b>Signature:</b>

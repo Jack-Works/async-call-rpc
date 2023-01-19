@@ -123,7 +123,7 @@ export type JSONRPCRequest = {
 // @public
 export const JSONSerialization: (replacerAndReceiver?: [(((key: string, value: any) => any) | undefined)?, (((key: string, value: any) => any) | undefined)?], space?: string | number | undefined, undefinedKeepingBehavior?: 'keep' | 'null' | false) => Serialization;
 
-// @public
+// @public @deprecated
 export const NoSerialization: Serialization;
 
 // Warning: (ae-incompatible-release-tags) The symbol "notify" is marked as @public, but its signature references "_IgnoreResponse" which is marked as @internal

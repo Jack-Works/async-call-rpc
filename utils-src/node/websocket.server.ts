@@ -6,7 +6,7 @@ export class WebSocketChannel implements CallbackBasedChannel {
     constructor(public server: Server) {}
     setup(callback: JSONRPCHandlerCallback) {
         const f = (ws: WebSocket) => {
-            ws.on('message', (data) => callback(data).then((x) => x && ws.send(x)))
+            ws.on('message', (data) => callback(data).then((x) => x && ws.send(x as any)))
         }
         this.server.on('connection', f)
         return () => this.server.off('connection', f)
