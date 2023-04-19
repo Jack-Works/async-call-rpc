@@ -1,5 +1,15 @@
 # Changelog
 
+## 6.2.0
+
+### Minor Changes
+
+- 920074c: deprecate NoSerialization
+
+### Patch Changes
+
+- fbfa022: add provenance statements
+
 ## 6.1.5
 
 ### Patch Changes
