@@ -6,7 +6,7 @@
 
 How to serialize and deserialize the JSON RPC payload
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 serializer?: Serialization;

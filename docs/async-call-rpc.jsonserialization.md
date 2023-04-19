@@ -6,7 +6,7 @@
 
 Create a serialization by JSON.parse/stringify
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 JSONSerialization: (replacerAndReceiver?: [(((key: string, value: any) => any) | undefined)?, (((key: string, value: any) => any) | undefined)?], space?: string | number | undefined, undefinedKeepingBehavior?: 'keep' | 'null' | false) => Serialization

@@ -6,7 +6,7 @@
 
 Controls if AsyncCall send an ErrorResponse when the requested method is not defined.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 methodNotFound?: boolean;

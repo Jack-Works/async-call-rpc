@@ -6,7 +6,7 @@
 
 Choose log level.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 log?: AsyncCallLogLevel | boolean | 'all';

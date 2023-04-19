@@ -4,7 +4,7 @@
 
 ## ErrorMapFunction type
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type ErrorMapFunction<T = unknown> = (error: unknown, request: Readonly<JSONRPCRequest>) => {
@@ -13,5 +13,5 @@ export type ErrorMapFunction<T = unknown> = (error: unknown, request: Readonly<J
     data?: T;
 };
 ```
-<b>References:</b> [JSONRPCRequest](./async-call-rpc.jsonrpcrequest.md)
+**References:** [JSONRPCRequest](./async-call-rpc.jsonrpcrequest.md)
 

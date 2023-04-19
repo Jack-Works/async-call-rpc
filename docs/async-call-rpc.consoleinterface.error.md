@@ -4,7 +4,7 @@
 
 ## ConsoleInterface.error() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 error?(...args: unknown[]): void;
@@ -16,7 +16,7 @@ error?(...args: unknown[]): void;
 |  --- | --- | --- |
 |  args | unknown\[\] |  |
 
-<b>Returns:</b>
+**Returns:**
 
 void
 

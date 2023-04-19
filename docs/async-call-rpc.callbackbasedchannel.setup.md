@@ -6,7 +6,7 @@
 
 Setup the CallbackBasedChannel.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 setup(jsonRPCHandlerCallback: (jsonRPCPayload: unknown) => Promise<unknown | undefined>, isValidJSONRPCPayload: (data: unknown) => boolean | Promise<boolean>): (() => void) | void;
@@ -19,7 +19,7 @@ setup(jsonRPCHandlerCallback: (jsonRPCPayload: unknown) => Promise<unknown | und
 |  jsonRPCHandlerCallback | (jsonRPCPayload: unknown) =&gt; Promise&lt;unknown \| undefined&gt; | A function that will execute the JSON RPC request then give the result back. If the result is undefined, it means no response is created. |
 |  isValidJSONRPCPayload | (data: unknown) =&gt; boolean \| Promise&lt;boolean&gt; |  |
 
-<b>Returns:</b>
+**Returns:**
 
 (() =&gt; void) \| void
 

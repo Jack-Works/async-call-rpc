@@ -6,7 +6,7 @@
 
 Send the call stack to the remote when making requests
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 sendLocalStack?: boolean;

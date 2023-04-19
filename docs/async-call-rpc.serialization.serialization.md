@@ -6,7 +6,7 @@
 
 Serialize data
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 serialization(from: any): unknown | PromiseLike<unknown>;
@@ -18,7 +18,7 @@ serialization(from: any): unknown | PromiseLike<unknown>;
 |  --- | --- | --- |
 |  from | any | original data |
 
-<b>Returns:</b>
+**Returns:**
 
 unknown \| PromiseLike&lt;unknown&gt;
 

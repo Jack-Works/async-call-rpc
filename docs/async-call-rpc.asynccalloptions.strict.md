@@ -6,7 +6,7 @@
 
 Control the behavior that different from the JSON RPC spec. See [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md)
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 strict?: AsyncCallStrictJSONRPC | boolean;

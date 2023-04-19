@@ -6,7 +6,7 @@ export { batch } from './core/batch.js'
 
 import {
     Request,
-    Response,
+    type Response,
     ErrorResponseMapped,
     SuccessResponse,
     isJSONRPCObject,

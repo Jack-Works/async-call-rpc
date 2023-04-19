@@ -6,7 +6,7 @@
 
 Control the behavior that different from the JSON RPC spec.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface AsyncCallStrictJSONRPC 
@@ -16,6 +16,6 @@ export interface AsyncCallStrictJSONRPC
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [methodNotFound?](./async-call-rpc.asynccallstrictjsonrpc.methodnotfound.md) |  | boolean | <i>(Optional)</i> Controls if AsyncCall send an ErrorResponse when the requested method is not defined. |
-|  [unknownMessage?](./async-call-rpc.asynccallstrictjsonrpc.unknownmessage.md) |  | boolean | <i>(Optional)</i> Controls if AsyncCall send an ErrorResponse when the message is not valid. |
+|  [methodNotFound?](./async-call-rpc.asynccallstrictjsonrpc.methodnotfound.md) |  | boolean | _(Optional)_ Controls if AsyncCall send an ErrorResponse when the requested method is not defined. |
+|  [unknownMessage?](./async-call-rpc.asynccallstrictjsonrpc.unknownmessage.md) |  | boolean | _(Optional)_ Controls if AsyncCall send an ErrorResponse when the message is not valid. |
 

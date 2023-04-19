@@ -6,7 +6,7 @@
 
 Log all requests to this instance
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 beCalled?: boolean;

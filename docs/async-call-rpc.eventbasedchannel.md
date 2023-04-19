@@ -6,7 +6,7 @@
 
 This interface represents a "on message" - "send response" model.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface EventBasedChannel<Data = unknown> 

@@ -6,7 +6,7 @@
 
 Wrap the AsyncCall instance to use batch call.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function batch<T extends object>(asyncCallInstance: T): [T, () => void, (error?: unknown) => void];
@@ -18,7 +18,7 @@ export declare function batch<T extends object>(asyncCallInstance: T): [T, () =>
 |  --- | --- | --- |
 |  asyncCallInstance | T | The AsyncCall instance |
 
-<b>Returns:</b>
+**Returns:**
 
 \[T, () =&gt; void, (error?: unknown) =&gt; void\]
 

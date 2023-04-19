@@ -6,7 +6,7 @@
 
 The minimal Console interface that AsyncCall needs.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface ConsoleInterface 
@@ -20,10 +20,10 @@ The method not provided will use "log" as it's fallback.
 
 |  Method | Description |
 |  --- | --- |
-|  [debug(args)?](./async-call-rpc.consoleinterface.debug.md) | <i>(Optional)</i> |
-|  [error(args)?](./async-call-rpc.consoleinterface.error.md) | <i>(Optional)</i> |
-|  [groupCollapsed(args)?](./async-call-rpc.consoleinterface.groupcollapsed.md) | <i>(Optional)</i> |
-|  [groupEnd(args)?](./async-call-rpc.consoleinterface.groupend.md) | <i>(Optional)</i> |
+|  [debug(args)?](./async-call-rpc.consoleinterface.debug.md) | _(Optional)_ |
+|  [error(args)?](./async-call-rpc.consoleinterface.error.md) | _(Optional)_ |
+|  [groupCollapsed(args)?](./async-call-rpc.consoleinterface.groupcollapsed.md) | _(Optional)_ |
+|  [groupEnd(args)?](./async-call-rpc.consoleinterface.groupend.md) | _(Optional)_ |
 |  [log(args)](./async-call-rpc.consoleinterface.log.md) |  |
-|  [warn(args)?](./async-call-rpc.consoleinterface.warn.md) | <i>(Optional)</i> |
+|  [warn(args)?](./async-call-rpc.consoleinterface.warn.md) | _(Optional)_ |
 

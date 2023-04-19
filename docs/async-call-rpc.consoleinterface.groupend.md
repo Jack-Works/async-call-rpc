@@ -4,7 +4,7 @@
 
 ## ConsoleInterface.groupEnd() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 groupEnd?(...args: unknown[]): void;
@@ -16,7 +16,7 @@ groupEnd?(...args: unknown[]): void;
 |  --- | --- | --- |
 |  args | unknown\[\] |  |
 
-<b>Returns:</b>
+**Returns:**
 
 void
 

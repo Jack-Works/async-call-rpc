@@ -4,7 +4,7 @@
 
 ## ConsoleInterface.log() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 log(...args: unknown[]): void;
@@ -16,7 +16,7 @@ log(...args: unknown[]): void;
 |  --- | --- | --- |
 |  args | unknown\[\] |  |
 
-<b>Returns:</b>
+**Returns:**
 
 void
 

@@ -6,7 +6,7 @@
 
 This option is used for better log print.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 key?: string;

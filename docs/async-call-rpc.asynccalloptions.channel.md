@@ -6,7 +6,7 @@
 
 The message channel to exchange messages between server and client
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 channel: CallbackBasedChannel | EventBasedChannel;

@@ -6,7 +6,7 @@
 
 Send the data to the remote side.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 send(data: Data): void;
@@ -18,7 +18,7 @@ send(data: Data): void;
 |  --- | --- | --- |
 |  data | Data | The data should send to the remote side. |
 
-<b>Returns:</b>
+**Returns:**
 
 void
 

@@ -6,7 +6,7 @@
 
 Register the message listener.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 on(listener: (data: Data) => void): void | (() => void);
@@ -18,7 +18,7 @@ on(listener: (data: Data) => void): void | (() => void);
 |  --- | --- | --- |
 |  listener | (data: Data) =&gt; void | The message listener. |
 
-<b>Returns:</b>
+**Returns:**
 
 void \| (() =&gt; void)
 

@@ -6,7 +6,7 @@
 
 Create a RPC server &amp; client.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: null | undefined | object | Promise<object>, options: AsyncCallOptions): AsyncVersionOf<OtherSideImplementedFunctions>;
@@ -19,7 +19,7 @@ export declare function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideIm
 |  thisSideImplementation | null \| undefined \| object \| Promise&lt;object&gt; | The implementation when this AsyncCall acts as a JSON RPC server. Can be a Promise. |
 |  options | [AsyncCallOptions](./async-call-rpc.asynccalloptions.md) | [AsyncCallOptions](./async-call-rpc.asynccalloptions.md) |
 
-<b>Returns:</b>
+**Returns:**
 
 [AsyncVersionOf](./async-call-rpc.asyncversionof.md)<!-- -->&lt;OtherSideImplementedFunctions&gt;
 

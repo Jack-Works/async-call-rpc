@@ -6,7 +6,7 @@
 
 Controls if AsyncCall send an ErrorResponse when the message is not valid.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 unknownMessage?: boolean;

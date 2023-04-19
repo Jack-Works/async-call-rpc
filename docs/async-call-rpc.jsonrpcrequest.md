@@ -6,7 +6,7 @@
 
 JSON RPC Request object
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type JSONRPCRequest = {

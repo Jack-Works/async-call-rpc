@@ -6,7 +6,7 @@
 
 Deserialize data
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 deserialization(serialized: unknown): unknown | PromiseLike<unknown>;
@@ -18,7 +18,7 @@ deserialization(serialized: unknown): unknown | PromiseLike<unknown>;
 |  --- | --- | --- |
 |  serialized | unknown | Serialized data |
 
-<b>Returns:</b>
+**Returns:**
 
 unknown \| PromiseLike&lt;unknown&gt;
 

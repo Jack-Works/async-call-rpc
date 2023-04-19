@@ -6,7 +6,7 @@
 
 Control how to report error response according to the exception
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 mapError?: ErrorMapFunction<unknown>;

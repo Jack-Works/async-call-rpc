@@ -1,10 +1,10 @@
 import { createLogger } from './logger.js'
 import { join } from 'path'
 import {
-    AsyncVersionOf,
-    AsyncGeneratorVersionOf,
+    type AsyncVersionOf,
+    type AsyncGeneratorVersionOf,
     AsyncCall,
-    AsyncCallOptions,
+    type AsyncCallOptions,
     AsyncGeneratorCall,
 } from '../../src/index.js'
 import { createChannelPair, TestCallbackBasedChannel, TestEventBasedChannel } from './channels.js'

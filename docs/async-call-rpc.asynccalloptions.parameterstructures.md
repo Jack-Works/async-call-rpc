@@ -6,7 +6,7 @@
 
 Choose flavor of parameter structures defined in the spec
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 parameterStructures?: 'by-position' | 'by-name';

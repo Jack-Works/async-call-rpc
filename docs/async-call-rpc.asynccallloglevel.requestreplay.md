@@ -6,7 +6,7 @@
 
 Log a function that allows to execute the request with same arguments again
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 requestReplay?: boolean;

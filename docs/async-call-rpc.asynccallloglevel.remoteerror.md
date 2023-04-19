@@ -6,7 +6,7 @@
 
 Log remote errors
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 remoteError?: boolean;

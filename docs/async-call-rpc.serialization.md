@@ -6,7 +6,7 @@
 
 Serialize and deserialize of the JSON RPC payload
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface Serialization 

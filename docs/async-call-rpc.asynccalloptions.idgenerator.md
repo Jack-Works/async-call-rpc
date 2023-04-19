@@ -6,12 +6,12 @@
 
 The ID generator of each JSON RPC request
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 idGenerator?(): string | number;
 ```
-<b>Returns:</b>
+**Returns:**
 
 string \| number
 

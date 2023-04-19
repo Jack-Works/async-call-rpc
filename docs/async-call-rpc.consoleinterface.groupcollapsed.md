@@ -4,7 +4,7 @@
 
 ## ConsoleInterface.groupCollapsed() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 groupCollapsed?(...args: unknown[]): void;
@@ -16,7 +16,7 @@ groupCollapsed?(...args: unknown[]): void;
 |  --- | --- | --- |
 |  args | unknown\[\] |  |
 
-<b>Returns:</b>
+**Returns:**
 
 void
 

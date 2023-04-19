@@ -6,7 +6,7 @@
 
 Control if AsyncCall should make the log better
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 type?: 'basic' | 'pretty';

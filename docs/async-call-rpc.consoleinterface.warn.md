@@ -4,7 +4,7 @@
 
 ## ConsoleInterface.warn() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 warn?(...args: unknown[]): void;
@@ -16,7 +16,7 @@ warn?(...args: unknown[]): void;
 |  --- | --- | --- |
 |  args | unknown\[\] |  |
 
-<b>Returns:</b>
+**Returns:**
 
 void
 

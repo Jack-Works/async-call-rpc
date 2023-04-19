@@ -6,7 +6,7 @@
 
 Log all errors produced when responding requests
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 localError?: boolean;

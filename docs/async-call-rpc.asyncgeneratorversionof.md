@@ -6,7 +6,7 @@
 
 Make all generator in the type T becomes AsyncGenerator
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type AsyncGeneratorVersionOf<T> = T extends Record<keyof T, _IteratorOrIterableFunction> ? 'then' extends keyof T ? Omit<Readonly<T>, 'then'> : T : _AsyncGeneratorVersionOf<T>;

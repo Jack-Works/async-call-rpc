@@ -6,7 +6,7 @@
 
 Prefer local implementation than remote.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 preferLocalImplementation?: boolean;

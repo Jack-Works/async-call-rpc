@@ -11,7 +11,7 @@
 
 Serialization implementation that do nothing
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 NoSerialization: Serialization

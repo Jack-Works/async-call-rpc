@@ -6,7 +6,7 @@
 
 If the instance should be "thenable".
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 thenable?: boolean;

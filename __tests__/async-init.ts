@@ -1,4 +1,4 @@
-import { DefaultImpl, defaultImpl, delay, withSnapshotDefault } from './utils/test.js'
+import { type DefaultImpl, defaultImpl, delay, withSnapshotDefault } from './utils/test.js'
 import { expect, it } from 'vitest'
 
 it(

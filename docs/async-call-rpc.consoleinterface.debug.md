@@ -4,7 +4,7 @@
 
 ## ConsoleInterface.debug() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 debug?(...args: unknown[]): void;
@@ -16,7 +16,7 @@ debug?(...args: unknown[]): void;
 |  --- | --- | --- |
 |  args | unknown\[\] |  |
 
-<b>Returns:</b>
+**Returns:**
 
 void
 

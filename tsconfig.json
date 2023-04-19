@@ -21,7 +21,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "importsNotUsedAsValues": "error",
+    // "verbatimModuleSyntax": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
     // "noPropertyAccessFromIndexSignature": true,

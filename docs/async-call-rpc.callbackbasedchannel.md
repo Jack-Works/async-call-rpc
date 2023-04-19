@@ -6,12 +6,12 @@
 
 This interface represents a "callback" model.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface CallbackBasedChannel<Data = unknown> extends Partial<EventBasedChannel<Data>> 
 ```
-<b>Extends:</b> Partial&lt;[EventBasedChannel](./async-call-rpc.eventbasedchannel.md)<!-- -->&lt;Data&gt;&gt;
+**Extends:** Partial&lt;[EventBasedChannel](./async-call-rpc.eventbasedchannel.md)<!-- -->&lt;Data&gt;&gt;
 
 ## Remarks
 

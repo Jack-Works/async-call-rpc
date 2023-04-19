@@ -6,7 +6,7 @@
 
 Provide the logger of AsyncCall
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 logger?: ConsoleInterface;
