@@ -146,7 +146,7 @@ export interface AsyncCallOptions {
      * @example
      * {@link https://github.com/Jack-Works/async-call-rpc/blob/main/utils-src/web/websocket.client.ts | Example for CallbackBasedChannel} or {@link https://github.com/Jack-Works/async-call-rpc/blob/main/utils-src/node/websocket.server.ts | Example for EventBasedChannel}
      */
-    channel: CallbackBasedChannel | EventBasedChannel
+    channel: CallbackBasedChannel | EventBasedChannel | Promise<CallbackBasedChannel> | Promise<EventBasedChannel>
     /**
      * Choose log level.
      * @remarks
