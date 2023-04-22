@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
-      contents: write
       id-token: write
     steps:
       - uses: actions/checkout@v3
@@ -28,8 +27,9 @@ jobs:
       - run: npm install -g npm
       - uses: changesets/action@v1
         with:
-          publish: npm publish --provenance --access public
+          publish: pnpm run publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
