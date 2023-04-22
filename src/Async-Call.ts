@@ -62,13 +62,46 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     let isThisSideImplementationPending = true
     let resolvedThisSideImplementationValue: unknown = undefined
     let rejectedThisSideImplementation: unknown = undefined
+
+    let isChannelPending = true
     let resolvedChannel: CallbackBasedChannel | EventBasedChannel | null = null
+    let rejectedChannel: unknown = undefined
     // This promise should never fail
     const awaitThisSideImplementation = async () => {
         try {
             resolvedThisSideImplementationValue = await thisSideImplementation
         } catch (e) {
             rejectedThisSideImplementation = e
+            console_error('AsyncCall failed to start', e)
+        } finally {
+            isThisSideImplementationPending = false
+        }
+    }
+
+    const awaitChannelImplementation = async () => {
+        try {
+            resolvedChannel = await channel
+            if (isCallbackBasedChannel(resolvedChannel)) {
+                resolvedChannel.setup(
+                    (data) => rawMessageReceiver(data).then(rawMessageSender),
+                    (data) => {
+                        const _ = deserialization(data)
+                        if (isJSONRPCObject(_)) return true
+                        return Promise_resolve(_).then(isJSONRPCObject)
+                    },
+                )
+            }
+            if (isEventBasedChannel(resolvedChannel)) {
+                const m = resolvedChannel as EventBasedChannel | CallbackBasedChannel
+                m.on &&
+                m.on((_) =>
+                    rawMessageReceiver(_)
+                    .then(rawMessageSender)
+                    .then((x) => x && m.send!(x)),
+                )
+            }
+        } catch (e) {
+            rejectedChannel = e
             console_error('AsyncCall failed to start', e)
         } finally {
             isThisSideImplementationPending = false
@@ -113,6 +146,12 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         else {
             // not pending
             if (rejectedThisSideImplementation) return makeErrorObject(rejectedThisSideImplementation, '', data)
+        }
+        if (isChannelPending) {
+            await awaitChannelImplementation()
+        } else {
+            // not pending
+            if (rejectedChannel) return makeErrorObject(rejectedChannel, '', data)
         }
         let frameworkStack: string = ''
         try {
@@ -248,7 +287,8 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     const isCallbackBasedChannel = (x: typeof channel): x is CallbackBasedChannel => 'setup' in x && isFunction(x.setup)
 
     if (isCallbackBasedChannel(channel)) {
-        channel.setup(
+        resolvedChannel = channel
+        resolvedChannel.setup(
             (data) => rawMessageReceiver(data).then(rawMessageSender),
             (data) => {
                 const _ = deserialization(data)
@@ -256,39 +296,21 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                 return Promise_resolve(_).then(isJSONRPCObject)
             },
         )
-        resolvedChannel = channel
+        isChannelPending = false
     }
     if (isEventBasedChannel(channel)) {
-        const m = channel as EventBasedChannel | CallbackBasedChannel
-        m.on &&
-            m.on((_) =>
-                rawMessageReceiver(_)
-                    .then(rawMessageSender)
-                    .then((x) => x && m.send!(x)),
-            )
         resolvedChannel = channel
+        const m = resolvedChannel as EventBasedChannel | CallbackBasedChannel
+        m.on &&
+        m.on((_) =>
+            rawMessageReceiver(_)
+            .then(rawMessageSender)
+            .then((x) => x && m.send!(x)),
+        )
+        isChannelPending = false
     } else if (channel instanceof Promise) {
-        channel.then((channel) => {
-            resolvedChannel = channel
-            if (isEventBasedChannel(channel)) {
-                const m = channel as EventBasedChannel | CallbackBasedChannel
-                m.on &&
-                    m.on((_) =>
-                        rawMessageReceiver(_)
-                            .then(rawMessageSender)
-                            .then((x) => x && m.send!(x)),
-                    )
-            } else if (isCallbackBasedChannel(channel)) {
-                channel.setup(
-                    (data) => rawMessageReceiver(data).then(rawMessageSender),
-                    (data) => {
-                        const _ = deserialization(data)
-                        if (isJSONRPCObject(_)) return true
-                        return Promise_resolve(_).then(isJSONRPCObject)
-                    },
-                )
-            }
-        })
+        awaitChannelImplementation()
+        isChannelPending = false
     }
     const makeErrorObject = (e: any, frameworkStack: string, data: Request) => {
         if (isObject(e) && 'stack' in e)
@@ -302,13 +324,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     const sendPayload = async (payload: unknown, removeQueueR = false) => {
         if (removeQueueR) payload = [...(payload as BatchQueue)]
         const data = await serialization(payload)
-        if (resolvedChannel) {
-            resolvedChannel.send!(data)
-        } else if (channel instanceof Promise) {
-            channel.then((channel) => channel.send!(data))
-        } else {
-            return channel.send!(data)
-        }
+        return resolvedChannel!.send!(data)
     }
     const rejectsQueue = (queue: BatchQueue, error: unknown) => {
         for (const x of queue) {
