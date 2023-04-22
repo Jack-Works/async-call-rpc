@@ -51,6 +51,7 @@
     }
   },
   "scripts": {
+    "publish": "pnpm run clean && pnpm run build && pnpm run doc:api && pnpm test && npx changeset publish",
     "clean": "rimraf ./out ./utils/web ./utils/node ./es ./coverage ./dist",
     "watch:tsc": "tsc -b -w",
     "build:tsc": "tsc -b",
