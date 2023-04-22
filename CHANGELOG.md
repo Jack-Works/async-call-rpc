@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.2.1
+
+### Patch Changes
+
+- 3cd9415: fix build file is missing
+
 ## 6.2.0
 
 ### Minor Changes
