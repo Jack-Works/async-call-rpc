@@ -13,7 +13,7 @@ it(
     'launches with rejected implementation',
     withSnapshotDefault('async-call-impl-rejected', async (f) => {
         const server = f({ impl: Promise.reject(new TypeError('Import failed')) })
-        await expect((server as any).add(1, 2)).rejects.toThrowErrorMatchingInlineSnapshot(`"Import failed"`)
+        await expect((server as any).add(1, 2)).rejects.toThrowErrorMatchingInlineSnapshot('"Import failed"')
     }),
 )
 

@@ -24,7 +24,7 @@ it(
     withSnapshotDefault('async-call-strict', async (f, _, _log, raw) => {
         const server: any = f()
         raw.client.send('unknown message')
-        await expect(server.not_defined_method()).rejects.toThrowErrorMatchingInlineSnapshot(`"Method not found"`)
+        await expect(server.not_defined_method()).rejects.toThrowErrorMatchingInlineSnapshot('"Method not found"')
     }),
 )
 
@@ -33,6 +33,6 @@ it(
     withSnapshotDefault('async-call-strict-partial', async (f, _, _log, raw) => {
         const server: any = f({ opts: { strict: { methodNotFound: true } } })
         raw.client.send('unknown message')
-        await expect(server.not_defined_method()).rejects.toThrowErrorMatchingInlineSnapshot(`"Method not found"`)
+        await expect(server.not_defined_method()).rejects.toThrowErrorMatchingInlineSnapshot('"Method not found"')
     }),
 )

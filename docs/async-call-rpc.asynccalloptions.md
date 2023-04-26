@@ -16,7 +16,7 @@ export interface AsyncCallOptions
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [channel](./async-call-rpc.asynccalloptions.channel.md) |  | [CallbackBasedChannel](./async-call-rpc.callbackbasedchannel.md) \| [EventBasedChannel](./async-call-rpc.eventbasedchannel.md) | The message channel to exchange messages between server and client |
+|  [channel](./async-call-rpc.asynccalloptions.channel.md) |  | [CallbackBasedChannel](./async-call-rpc.callbackbasedchannel.md) \| [EventBasedChannel](./async-call-rpc.eventbasedchannel.md) \| Promise&lt;[CallbackBasedChannel](./async-call-rpc.callbackbasedchannel.md) \| [EventBasedChannel](./async-call-rpc.eventbasedchannel.md)<!-- -->&gt; | The message channel to exchange messages between server and client |
 |  [key?](./async-call-rpc.asynccalloptions.key.md) |  | string | _(Optional)_ This option is used for better log print. |
 |  [log?](./async-call-rpc.asynccalloptions.log.md) |  | [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) \| boolean \| 'all' | _(Optional)_ Choose log level. |
 |  [logger?](./async-call-rpc.asynccalloptions.logger.md) |  | [ConsoleInterface](./async-call-rpc.consoleinterface.md) | _(Optional)_ Provide the logger of AsyncCall |

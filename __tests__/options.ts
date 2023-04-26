@@ -95,7 +95,7 @@ it(
         const server = f({
             opts: { mapError: () => ({ code: -233, message: 'Oh my message', data: { custom_data: true } }) },
         })
-        await expect(server.throws()).rejects.toThrowErrorMatchingInlineSnapshot(`"Oh my message"`)
+        await expect(server.throws()).rejects.toThrowErrorMatchingInlineSnapshot('"Oh my message"')
     }),
 )
 

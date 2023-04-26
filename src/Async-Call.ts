@@ -60,8 +60,11 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     options: AsyncCallOptions,
 ): AsyncVersionOf<OtherSideImplementedFunctions> {
     let isThisSideImplementationPending = true
-    let resolvedThisSideImplementationValue: unknown = undefined
-    let rejectedThisSideImplementation: unknown = undefined
+    let resolvedThisSideImplementationValue: unknown
+    let rejectedThisSideImplementation: unknown
+
+    let resolvedChannel: EventBasedChannel | CallbackBasedChannel | undefined
+    let channelPromise: Promise<EventBasedChannel | CallbackBasedChannel> | undefined
     // This promise should never fail
     const awaitThisSideImplementation = async () => {
         try {
@@ -72,6 +75,29 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         } finally {
             isThisSideImplementationPending = false
         }
+    }
+    const onChannelResolved = (channel: EventBasedChannel | CallbackBasedChannel) => {
+        resolvedChannel = channel
+        if (isCallbackBasedChannel(channel)) {
+            channel.setup(
+                (data) => rawMessageReceiver(data).then(rawMessageSender),
+                (data) => {
+                    const _ = deserialization(data)
+                    if (isJSONRPCObject(_)) return true
+                    return Promise_resolve(_).then(isJSONRPCObject)
+                },
+            )
+        }
+        if (isEventBasedChannel(channel)) {
+            const m = channel
+            m.on &&
+                m.on((_) =>
+                    rawMessageReceiver(_)
+                        .then(rawMessageSender)
+                        .then((x) => x && m.send!(x)),
+                )
+        }
+        return channel
     }
 
     const {
@@ -243,28 +269,10 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     }
     const serialization = serializer ? (x: unknown) => serializer.serialization(x) : Object
     const deserialization = serializer ? (x: unknown) => serializer.deserialization(x) : Object
-    const isEventBasedChannel = (x: typeof channel): x is EventBasedChannel => 'send' in x && isFunction(x.send)
-    const isCallbackBasedChannel = (x: typeof channel): x is CallbackBasedChannel => 'setup' in x && isFunction(x.setup)
 
-    if (isCallbackBasedChannel(channel)) {
-        channel.setup(
-            (data) => rawMessageReceiver(data).then(rawMessageSender),
-            (data) => {
-                const _ = deserialization(data)
-                if (isJSONRPCObject(_)) return true
-                return Promise_resolve(_).then(isJSONRPCObject)
-            },
-        )
-    }
-    if (isEventBasedChannel(channel)) {
-        const m = channel as EventBasedChannel | CallbackBasedChannel
-        m.on &&
-            m.on((_) =>
-                rawMessageReceiver(_)
-                    .then(rawMessageSender)
-                    .then((x) => x && m.send!(x)),
-            )
-    }
+    if (channel instanceof Promise) channelPromise = channel.then(onChannelResolved)
+    else onChannelResolved(channel)
+
     const makeErrorObject = (e: any, frameworkStack: string, data: Request) => {
         if (isObject(e) && 'stack' in e)
             e.stack = frameworkStack
@@ -277,7 +285,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     const sendPayload = async (payload: unknown, removeQueueR = false) => {
         if (removeQueueR) payload = [...(payload as BatchQueue)]
         const data = await serialization(payload)
-        return channel.send!(data)
+        return (resolvedChannel || (await channelPromise))!.send!(data)
     }
     const rejectsQueue = (queue: BatchQueue, error: unknown) => {
         for (const x of queue) {
@@ -379,3 +387,8 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
 }
 // Assume a console object in global if there is no custom logger provided
 declare const console: ConsoleInterface
+
+const isEventBasedChannel = (x: EventBasedChannel | CallbackBasedChannel): x is EventBasedChannel =>
+    'send' in x && isFunction(x.send)
+const isCallbackBasedChannel = (x: EventBasedChannel | CallbackBasedChannel): x is CallbackBasedChannel =>
+    'setup' in x && isFunction(x.setup)

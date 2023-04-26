@@ -19,7 +19,7 @@ export interface AsyncCallLogLevel {
 
 // @public
 export interface AsyncCallOptions {
-    channel: CallbackBasedChannel | EventBasedChannel;
+    channel: CallbackBasedChannel | EventBasedChannel | Promise<CallbackBasedChannel | EventBasedChannel>;
     idGenerator?(): string | number;
     key?: string;
     log?: AsyncCallLogLevel | boolean | 'all';

@@ -11,10 +11,10 @@ it(
         await Promise.all([
             expect(server.add(1, 2)).resolves.toMatchInlineSnapshot(`3`),
             expect(server.echo('string')).resolves.toMatchInlineSnapshot(`"string"`),
-            expect(server.throws()).rejects.toThrowErrorMatchingInlineSnapshot(`"impl error"`),
-            expect(server.throwEcho('1')).rejects.toThrowErrorMatchingInlineSnapshot(`"1"`),
+            expect(server.throws()).rejects.toThrowErrorMatchingInlineSnapshot('"impl error"'),
+            expect(server.throwEcho('1')).rejects.toThrowErrorMatchingInlineSnapshot('"1"'),
             // Unknown methods
-            expect((server as any).not_found()).rejects.toThrowErrorMatchingInlineSnapshot(`"Method not found"`),
+            expect((server as any).not_found()).rejects.toThrowErrorMatchingInlineSnapshot('"Method not found"'),
             // Keep this reference
             expect(server.withThisRef()).resolves.toMatchInlineSnapshot(`3`),
         ])
