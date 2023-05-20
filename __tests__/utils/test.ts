@@ -37,7 +37,6 @@ export const defaultImpl = {
         } else if (type === 'c') {
             throw {
                 message: 'normal',
-                // @ts-expect-error
                 get constructor() {
                     throw 2
                 },
@@ -125,7 +124,7 @@ export function withSnapshotDefault(
     return testImpl
 }
 withSnapshotDefault.debugger = (...[name, snap, f]: Parameters<typeof withSnapshotDefault>) => {
-    withSnapshotDefault('DBG ONLY ' + name, snap, f)
+    return withSnapshotDefault('DBG ONLY ' + name, snap, f)
 }
 export type DefaultImpl = typeof defaultImpl
 type DefaultImplG = typeof defaultImplGenerator
