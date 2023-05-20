@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.3.0
+
+### Minor Changes
+
+- b9d8410: allow channel to be async
+
 ## 6.2.1
 
 ### Patch Changes
