@@ -9,7 +9,10 @@ Create a RPC server &amp; client.
 **Signature:**
 
 ```typescript
-export declare function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: null | undefined | object | Promise<object>, options: AsyncCallOptions): AsyncVersionOf<OtherSideImplementedFunctions>;
+export declare function AsyncCall<OtherSideImplementedFunctions = {}>(
+    thisSideImplementation: null | undefined | object | Promise<object>,
+    options: AsyncCallOptions,
+): AsyncVersionOf<OtherSideImplementedFunctions>
 ```
 
 ## Parameters

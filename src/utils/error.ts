@@ -15,7 +15,7 @@ const Messages = [
     Err_Then_is_accessed_on_local_implementation_Please_explicitly_mark_if_it_is_thenable_in_the_options,
 ] as const
 // https://github.com/Jack-Works/async-call-rpc/wiki/Error-messages
-export const makeHostedMessage = (id: typeof Messages[number], error: Error) => {
+export const makeHostedMessage = (id: (typeof Messages)[number], error: Error) => {
     const n = Messages.indexOf(id)
     error.message += `Error ${n}: https://github.com/Jack-Works/async-call-rpc/wiki/Errors#` + n
     return error

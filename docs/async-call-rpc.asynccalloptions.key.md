@@ -9,5 +9,5 @@ This option is used for better log print.
 **Signature:**
 
 ```typescript
-key?: string;
+key?: string
 ```

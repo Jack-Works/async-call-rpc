@@ -263,8 +263,8 @@ export type AsyncVersionOf<T> = T extends Record<keyof T, (...args: any) => Prom
     : _AsyncVersionOf<T>
 /** @internal */
 export type _AsyncVersionOf<T> = {
-    readonly // Explicitly exclude key called "then" because it will cause problem in promise auto-unwrap.
-    [key in keyof T as key extends 'then' ? never : T[key] extends Function ? key : never]: T[key] extends (
+    // Explicitly exclude key called "then" because it will cause problem in promise auto-unwrap.
+    readonly [key in keyof T as key extends 'then' ? never : T[key] extends Function ? key : never]: T[key] extends (
         ...args: any
     ) => Promise<any>
         ? T[key] // If it is returning Promise<any>, we use T[key] to preserve generics on function signatures

@@ -7,7 +7,7 @@
 **Signature:**
 
 ```typescript
-log(...args: unknown[]): void;
+log(...args: unknown[]): void
 ```
 
 ## Parameters

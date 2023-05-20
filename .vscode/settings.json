@@ -1,7 +1,3 @@
 {
-    "typescript.tsdk": "node_modules\\typescript\\lib",
-    "vitest.include": [
-        "__tests__/*.ts"
-    ],
-    "vitest.commandLine": "npx vitest"
+    "typescript.tsdk": "node_modules\\typescript\\lib"
 }

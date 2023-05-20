@@ -9,5 +9,5 @@ Log all requests to this instance
 **Signature:**
 
 ```typescript
-beCalled?: boolean;
+beCalled?: boolean
 ```

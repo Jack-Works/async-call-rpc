@@ -9,7 +9,7 @@ Control the behavior that different from the JSON RPC spec. See [AsyncCallStrict
 **Signature:**
 
 ```typescript
-strict?: AsyncCallStrictJSONRPC | boolean;
+strict?: AsyncCallStrictJSONRPC | boolean
 ```
 
 ## Remarks

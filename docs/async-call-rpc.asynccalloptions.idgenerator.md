@@ -9,7 +9,7 @@ The ID generator of each JSON RPC request
 **Signature:**
 
 ```typescript
-idGenerator?(): string | number;
+idGenerator?(): string | number
 ```
 **Returns:**
 

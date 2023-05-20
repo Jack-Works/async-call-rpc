@@ -9,5 +9,5 @@ Control how to report error response according to the exception
 **Signature:**
 
 ```typescript
-mapError?: ErrorMapFunction<unknown>;
+mapError?: ErrorMapFunction<unknown>
 ```

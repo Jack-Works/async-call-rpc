@@ -1,15 +1,14 @@
 lockfileVersion: 5.4
 
 specifiers:
-  async-call-rpc: file:..
+    async-call-rpc: file:..
 
 dependencies:
-  async-call-rpc: file:..
+    async-call-rpc: file:..
 
 packages:
-
-  file:..:
-    resolution: {directory: .., type: directory}
-    name: async-call-rpc
-    version: 6.1.2
-    dev: false
+    file:..:
+        resolution: { directory: .., type: directory }
+        name: async-call-rpc
+        version: 6.1.2
+        dev: false

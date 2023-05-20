@@ -9,7 +9,7 @@ The message channel to exchange messages between server and client
 **Signature:**
 
 ```typescript
-channel: CallbackBasedChannel | EventBasedChannel | Promise<CallbackBasedChannel | EventBasedChannel>;
+channel: CallbackBasedChannel | EventBasedChannel | Promise<CallbackBasedChannel | EventBasedChannel>
 ```
 
 ## Example

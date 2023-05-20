@@ -9,5 +9,5 @@ Log remote errors
 **Signature:**
 
 ```typescript
-remoteError?: boolean;
+remoteError?: boolean
 ```

@@ -9,7 +9,7 @@ Log a function that allows to execute the request with same arguments again
 **Signature:**
 
 ```typescript
-requestReplay?: boolean;
+requestReplay?: boolean
 ```
 
 ## Remarks

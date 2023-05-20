@@ -9,7 +9,7 @@ Serialize data
 **Signature:**
 
 ```typescript
-serialization(from: any): unknown | PromiseLike<unknown>;
+serialization(from: any): unknown | PromiseLike<unknown>
 ```
 
 ## Parameters
