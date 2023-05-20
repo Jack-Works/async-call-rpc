@@ -22,13 +22,14 @@ jobs:
       - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v3
         with:
-          node-version: "19"
+          node-version: "20"
           cache: "pnpm"
       - run: pnpm install
       - run: npm install -g npm
+      - run: pnpm run build
       - uses: changesets/action@v1
         with:
-          publish: pnpm run publish
+          publish: npx changeset publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
