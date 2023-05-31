@@ -27,6 +27,7 @@ jobs:
       - run: pnpm install
       - run: npm install -g npm
       - run: pnpm run build
+      - run: pnpm run doc:api
       - uses: changesets/action@v1
         with:
           publish: npx changeset publish

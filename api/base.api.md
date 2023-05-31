@@ -5,137 +5,103 @@
 ```ts
 
 // @public
-export function AsyncCall<OtherSideImplementedFunctions = {}>(
-thisSideImplementation: null | undefined | object | Promise<object>,
-options: AsyncCallOptions,
-): AsyncVersionOf<OtherSideImplementedFunctions>
+export function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: null | undefined | object | Promise<object>, options: AsyncCallOptions): AsyncVersionOf<OtherSideImplementedFunctions>;
 
 // @public
 export interface AsyncCallLogLevel {
-    beCalled?: boolean
-    localError?: boolean
-    remoteError?: boolean
-    requestReplay?: boolean
-    sendLocalStack?: boolean
-    type?: 'basic' | 'pretty'
+    beCalled?: boolean;
+    localError?: boolean;
+    remoteError?: boolean;
+    requestReplay?: boolean;
+    sendLocalStack?: boolean;
+    type?: 'basic' | 'pretty';
 }
 
 // @public
 export interface AsyncCallOptions {
-    channel: CallbackBasedChannel | EventBasedChannel | Promise<CallbackBasedChannel | EventBasedChannel>
-    idGenerator?(): string | number
-    key?: string
-    log?: AsyncCallLogLevel | boolean | 'all'
-    logger?: ConsoleInterface
-    mapError?: ErrorMapFunction<unknown>
-    parameterStructures?: 'by-position' | 'by-name'
-    preferLocalImplementation?: boolean
-    serializer?: Serialization
-    strict?: AsyncCallStrictJSONRPC | boolean
-    thenable?: boolean
+    channel: CallbackBasedChannel | EventBasedChannel | Promise<CallbackBasedChannel | EventBasedChannel>;
+    idGenerator?(): string | number;
+    key?: string;
+    log?: AsyncCallLogLevel | boolean | 'all';
+    logger?: ConsoleInterface;
+    mapError?: ErrorMapFunction<unknown>;
+    parameterStructures?: 'by-position' | 'by-name';
+    preferLocalImplementation?: boolean;
+    serializer?: Serialization;
+    strict?: AsyncCallStrictJSONRPC | boolean;
+    thenable?: boolean;
 }
 
 // @public
 export interface AsyncCallStrictJSONRPC {
-    methodNotFound?: boolean
-    unknownMessage?: boolean
+    methodNotFound?: boolean;
+    unknownMessage?: boolean;
 }
 
 // Warning: (ae-incompatible-release-tags) The symbol "AsyncVersionOf" is marked as @public, but its signature references "_AsyncVersionOf" which is marked as @internal
 //
 // @public
-export type AsyncVersionOf<T> = T extends Record<keyof T, (...args: any) => PromiseLike<any>>
-? 'then' extends keyof T
-? Omit<Readonly<T>, 'then'>
-: T
-: _AsyncVersionOf<T>
+export type AsyncVersionOf<T> = T extends Record<keyof T, (...args: any) => PromiseLike<any>> ? 'then' extends keyof T ? Omit<Readonly<T>, 'then'> : T : _AsyncVersionOf<T>;
 
 // @internal (undocumented)
 export type _AsyncVersionOf<T> = {
-    readonly [key in keyof T as key extends 'then' ? never : T[key] extends Function ? key : never]: T[key] extends (
-    ...args: any
-    ) => Promise<any>
-    ? T[key]
-    : T[key] extends (...args: infer Args) => infer Return
-    ? (...args: Args) => Promise<Awaited<Return>>
-    : never
-}
+    readonly [key in keyof T as key extends 'then' ? never : T[key] extends Function ? key : never]: T[key] extends (...args: any) => Promise<any> ? T[key] : T[key] extends (...args: infer Args) => infer Return ? (...args: Args) => Promise<Awaited<Return>> : never;
+};
 
 // @public
-export function batch<T extends object>(asyncCallInstance: T): [T, () => void, (error?: unknown) => void]
+export function batch<T extends object>(asyncCallInstance: T): [T, () => void, (error?: unknown) => void];
 
 // @public
 export interface CallbackBasedChannel<Data = unknown> extends Partial<EventBasedChannel<Data>> {
-    setup(
-    jsonRPCHandlerCallback: (jsonRPCPayload: unknown) => Promise<unknown | undefined>,
-    isValidJSONRPCPayload: (data: unknown) => boolean | Promise<boolean>,
-    ): (() => void) | void
+    setup(jsonRPCHandlerCallback: (jsonRPCPayload: unknown) => Promise<unknown | undefined>, isValidJSONRPCPayload: (data: unknown) => boolean | Promise<boolean>): (() => void) | void;
 }
 
 // @public
 interface ConsoleInterface {
     // (undocumented)
-    debug?(...args: unknown[]): void
+    debug?(...args: unknown[]): void;
     // (undocumented)
-    error?(...args: unknown[]): void
+    error?(...args: unknown[]): void;
     // (undocumented)
-    groupCollapsed?(...args: unknown[]): void
+    groupCollapsed?(...args: unknown[]): void;
     // (undocumented)
-    groupEnd?(...args: unknown[]): void
+    groupEnd?(...args: unknown[]): void;
     // (undocumented)
-    log(...args: unknown[]): void
+    log(...args: unknown[]): void;
     // (undocumented)
-    warn?(...args: unknown[]): void
+    warn?(...args: unknown[]): void;
 }
 export { ConsoleInterface as Console }
 export { ConsoleInterface }
 
 // @public (undocumented)
-export type ErrorMapFunction<T = unknown> = (
-error: unknown,
-request: Readonly<JSONRPCRequest>,
-) => {
-    code: number
-    message: string
-    data?: T
-}
+export type ErrorMapFunction<T = unknown> = (error: unknown, request: Readonly<JSONRPCRequest>) => {
+    code: number;
+    message: string;
+    data?: T;
+};
 
 // @public
 export interface EventBasedChannel<Data = unknown> {
-    on(listener: (data: Data) => void): void | (() => void)
-    send(data: Data): void
+    on(listener: (data: Data) => void): void | (() => void);
+    send(data: Data): void;
 }
 
 // @internal
-export type _IgnoreResponse<T> = T extends (...args: infer Args) => unknown
-? (...args: Args) => Promise<void>
-: {
-    [key in keyof T as T[key] extends Function ? key : never]: T[key] extends (
-    ...args: infer Args
-    ) => infer Return
-    ? Return extends Promise<void>
-    ? T[key]
-    : (...args: Args) => Promise<void>
-    : never
-}
+export type _IgnoreResponse<T> = T extends (...args: infer Args) => unknown ? (...args: Args) => Promise<void> : {
+    [key in keyof T as T[key] extends Function ? key : never]: T[key] extends (...args: infer Args) => infer Return ? Return extends Promise<void> ? T[key] : (...args: Args) => Promise<void> : never;
+};
 
 // @public
 export type JSONRPCRequest = {
-    jsonrpc: '2.0'
-    id?: string | number | null
-    method: string
-    params: readonly unknown[] | object
-}
+    jsonrpc: '2.0';
+    id?: string | number | null;
+    method: string;
+    params: readonly unknown[] | object;
+};
 
 // @public
-export const JSONSerialization: (
-replacerAndReceiver?: [
-(((key: string, value: any) => any) | undefined)?,
-(((key: string, value: any) => any) | undefined)?,
-],
-space?: string | number | undefined,
-undefinedKeepingBehavior?: 'keep' | 'null' | false,
-) => Serialization;
+export const JSONSerialization: (replacerAndReceiver?: [(((key: string, value: any) => any) | undefined)?, (((key: string, value: any) => any) | undefined)?], space?: string | number | undefined, undefinedKeepingBehavior?: 'keep' | 'null' | false) => Serialization;
 
 // @public @deprecated
 export const NoSerialization: Serialization;
@@ -143,12 +109,12 @@ export const NoSerialization: Serialization;
 // Warning: (ae-incompatible-release-tags) The symbol "notify" is marked as @public, but its signature references "_IgnoreResponse" which is marked as @internal
 //
 // @public
-export function notify<T extends object>(instanceOrFnOnInstance: T): _IgnoreResponse<T>
+export function notify<T extends object>(instanceOrFnOnInstance: T): _IgnoreResponse<T>;
 
 // @public
 export interface Serialization {
-    deserialization(serialized: unknown): unknown | PromiseLike<unknown>
-    serialization(from: any): unknown | PromiseLike<unknown>
+    deserialization(serialized: unknown): unknown | PromiseLike<unknown>;
+    serialization(from: any): unknown | PromiseLike<unknown>;
 }
 
 // (No @packageDocumentation comment for this package)
