@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.3.1
+
+### Patch Changes
+
+- 9561d3f: build: fix type declaration file not generated
+
 ## 6.3.0
 
 ### Minor Changes
