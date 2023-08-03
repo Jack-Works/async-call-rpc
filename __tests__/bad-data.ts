@@ -25,7 +25,6 @@ it('can handle bad exception', () => {
     }
     const bad2 = {
         message: 'normal',
-        // @ts-expect-error
         get constructor() {
             throw 2
         },

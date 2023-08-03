@@ -37,7 +37,6 @@ export const defaultImpl = {
         } else if (type === 'c') {
             throw {
                 message: 'normal',
-                // @ts-expect-error
                 get constructor() {
                     throw 2
                 },
