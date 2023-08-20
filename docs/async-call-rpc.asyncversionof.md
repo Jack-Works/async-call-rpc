@@ -9,11 +9,7 @@ Make all function in the type T becomes async functions and filtering non-Functi
 **Signature:**
 
 ```typescript
-export type AsyncVersionOf<T> = T extends Record<keyof T, (...args: any) => PromiseLike<any>>
-    ? 'then' extends keyof T
-        ? Omit<Readonly<T>, 'then'>
-        : T
-    : _AsyncVersionOf<T>
+export type AsyncVersionOf<T> = T extends Record<keyof T, (...args: any) => PromiseLike<any>> ? 'then' extends keyof T ? Omit<Readonly<T>, 'then'> : T : _AsyncVersionOf<T>;
 ```
 
 ## Remarks

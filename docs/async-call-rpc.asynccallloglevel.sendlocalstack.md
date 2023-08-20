@@ -9,5 +9,5 @@ Send the call stack to the remote when making requests
 **Signature:**
 
 ```typescript
-sendLocalStack?: boolean
+sendLocalStack?: boolean;
 ```

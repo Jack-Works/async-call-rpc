@@ -9,7 +9,7 @@ If the instance should be "thenable".
 **Signature:**
 
 ```typescript
-thenable?: boolean
+thenable?: boolean;
 ```
 
 ## Remarks

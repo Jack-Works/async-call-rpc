@@ -7,7 +7,7 @@
 **Signature:**
 
 ```typescript
-warn?(...args: unknown[]): void
+warn?(...args: unknown[]): void;
 ```
 
 ## Parameters

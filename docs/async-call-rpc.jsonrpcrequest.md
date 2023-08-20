@@ -10,9 +10,9 @@ JSON RPC Request object
 
 ```typescript
 export type JSONRPCRequest = {
-    jsonrpc: '2.0'
-    id?: string | number | null
-    method: string
-    params: readonly unknown[] | object
-}
+    jsonrpc: '2.0';
+    id?: string | number | null;
+    method: string;
+    params: readonly unknown[] | object;
+};
 ```

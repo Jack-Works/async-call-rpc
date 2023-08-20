@@ -9,5 +9,5 @@ Log all errors produced when responding requests
 **Signature:**
 
 ```typescript
-localError?: boolean
+localError?: boolean;
 ```

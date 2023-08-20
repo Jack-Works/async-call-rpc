@@ -7,7 +7,7 @@
 **Signature:**
 
 ```typescript
-error?(...args: unknown[]): void
+error?(...args: unknown[]): void;
 ```
 
 ## Parameters

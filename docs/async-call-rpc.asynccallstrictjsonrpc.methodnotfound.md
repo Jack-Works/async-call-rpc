@@ -9,7 +9,7 @@ Controls if AsyncCall send an ErrorResponse when the requested method is not def
 **Signature:**
 
 ```typescript
-methodNotFound?: boolean
+methodNotFound?: boolean;
 ```
 
 ## Remarks

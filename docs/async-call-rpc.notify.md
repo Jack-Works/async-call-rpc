@@ -9,7 +9,7 @@ Wrap the AsyncCall instance to send notification.
 **Signature:**
 
 ```typescript
-export declare function notify<T extends object>(instanceOrFnOnInstance: T): _IgnoreResponse<T>
+export declare function notify<T extends object>(instanceOrFnOnInstance: T): _IgnoreResponse<T>;
 ```
 
 ## Parameters

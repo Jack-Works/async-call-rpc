@@ -9,7 +9,7 @@ Prefer local implementation than remote.
 **Signature:**
 
 ```typescript
-preferLocalImplementation?: boolean
+preferLocalImplementation?: boolean;
 ```
 
 ## Remarks

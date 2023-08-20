@@ -7,7 +7,7 @@
 **Signature:**
 
 ```typescript
-groupCollapsed?(...args: unknown[]): void
+groupCollapsed?(...args: unknown[]): void;
 ```
 
 ## Parameters

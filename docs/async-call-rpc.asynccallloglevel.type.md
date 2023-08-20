@@ -9,7 +9,7 @@ Control if AsyncCall should make the log better
 **Signature:**
 
 ```typescript
-type?: 'basic' | 'pretty'
+type?: 'basic' | 'pretty';
 ```
 
 ## Remarks

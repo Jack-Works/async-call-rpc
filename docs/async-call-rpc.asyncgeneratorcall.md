@@ -9,10 +9,7 @@ The async generator version of the AsyncCall
 **Signature:**
 
 ```typescript
-export declare function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
-    thisSideImplementation: null | undefined | object | Promise<object>,
-    options: AsyncCallOptions,
-): AsyncGeneratorVersionOf<OtherSideImplementedFunctions>
+export declare function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: null | undefined | object | Promise<object>, options: AsyncCallOptions): AsyncGeneratorVersionOf<OtherSideImplementedFunctions>;
 ```
 
 ## Parameters

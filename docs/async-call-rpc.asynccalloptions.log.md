@@ -9,7 +9,7 @@ Choose log level.
 **Signature:**
 
 ```typescript
-log?: AsyncCallLogLevel | boolean | 'all'
+log?: AsyncCallLogLevel | boolean | 'all';
 ```
 
 ## Remarks

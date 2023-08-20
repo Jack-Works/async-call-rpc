@@ -9,7 +9,7 @@ Choose flavor of parameter structures defined in the spec
 **Signature:**
 
 ```typescript
-parameterStructures?: 'by-position' | 'by-name'
+parameterStructures?: 'by-position' | 'by-name';
 ```
 
 ## Remarks

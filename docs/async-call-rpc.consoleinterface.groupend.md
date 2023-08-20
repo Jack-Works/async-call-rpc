@@ -7,7 +7,7 @@
 **Signature:**
 
 ```typescript
-groupEnd?(...args: unknown[]): void
+groupEnd?(...args: unknown[]): void;
 ```
 
 ## Parameters

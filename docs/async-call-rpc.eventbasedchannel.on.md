@@ -9,7 +9,7 @@ Register the message listener.
 **Signature:**
 
 ```typescript
-on(listener: (data: Data) => void): void | (() => void)
+on(listener: (data: Data) => void): void | (() => void);
 ```
 
 ## Parameters

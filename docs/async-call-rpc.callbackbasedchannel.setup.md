@@ -9,10 +9,7 @@ Setup the CallbackBasedChannel.
 **Signature:**
 
 ```typescript
-setup(
-        jsonRPCHandlerCallback: (jsonRPCPayload: unknown) => Promise<unknown | undefined>,
-        isValidJSONRPCPayload: (data: unknown) => boolean | Promise<boolean>,
-    ): (() => void) | void
+setup(jsonRPCHandlerCallback: (jsonRPCPayload: unknown) => Promise<unknown | undefined>, isValidJSONRPCPayload: (data: unknown) => boolean | Promise<boolean>): (() => void) | void;
 ```
 
 ## Parameters
