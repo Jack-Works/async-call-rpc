@@ -16,8 +16,6 @@ serializer?: Serialization;
 
 See [Serialization](./async-call-rpc.serialization.md)<!-- -->. There is some built-in serializer:
 
-- [NoSerialization](./async-call-rpc.noserialization.md) (Not doing anything to the message)
-
 - [JSONSerialization](./async-call-rpc.jsonserialization.md) (Using JSON.parse/stringify in the backend)
 
 - [BSONSerialization](https://github.com/jack-works/async-call-rpc#web-deno-and-node-bson) (use the [bson](https://npmjs.org/bson) as the serializer)

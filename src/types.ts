@@ -125,13 +125,9 @@ export interface AsyncCallOptions {
      * See {@link Serialization}.
      * There is some built-in serializer:
      *
-     * - {@link NoSerialization} (Not doing anything to the message)
-     *
      * - {@link JSONSerialization} (Using JSON.parse/stringify in the backend)
      *
      * - {@link https://github.com/jack-works/async-call-rpc#web-deno-and-node-bson | BSONSerialization} (use the {@link https://npmjs.org/bson | bson} as the serializer)
-     *
-     * @defaultValue {@link NoSerialization}
      */
     serializer?: Serialization
     /**
