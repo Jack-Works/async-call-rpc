@@ -4,7 +4,7 @@
 
 ## AsyncVersionOf type
 
-Make all function in the type T becomes async functions and filtering non-Functions out.
+Make all functions in T becomes an async function and filter non-Functions out.
 
 **Signature:**
 

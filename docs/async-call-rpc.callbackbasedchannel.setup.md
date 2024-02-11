@@ -9,15 +9,15 @@ Setup the CallbackBasedChannel.
 **Signature:**
 
 ```typescript
-setup(jsonRPCHandlerCallback: (jsonRPCPayload: unknown) => Promise<unknown | undefined>, isValidJSONRPCPayload: (data: unknown) => boolean | Promise<boolean>): (() => void) | void;
+setup(jsonRPCHandlerCallback: (jsonRPCPayload: unknown, hint?: undefined | 'request' | 'response') => Promise<unknown | undefined>, isValidJSONRPCPayload: (data: unknown, hint?: undefined | 'request' | 'response') => boolean | Promise<boolean>): (() => void) | void;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  jsonRPCHandlerCallback | (jsonRPCPayload: unknown) =&gt; Promise&lt;unknown \| undefined&gt; | A function that will execute the JSON RPC request then give the result back. If the result is undefined, it means no response is created. |
-|  isValidJSONRPCPayload | (data: unknown) =&gt; boolean \| Promise&lt;boolean&gt; |  |
+|  jsonRPCHandlerCallback | (jsonRPCPayload: unknown, hint?: undefined \| 'request' \| 'response') =&gt; Promise&lt;unknown \| undefined&gt; | A function that will execute the JSON RPC request then give the result back. If the result is undefined, it means no response is created. |
+|  isValidJSONRPCPayload | (data: unknown, hint?: undefined \| 'request' \| 'response') =&gt; boolean \| Promise&lt;boolean&gt; |  |
 
 **Returns:**
 

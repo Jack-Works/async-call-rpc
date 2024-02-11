@@ -4,7 +4,7 @@
 
 ## AsyncCallLogLevel.beCalled property
 
-Log all requests to this instance
+Log all incoming requests
 
 **Signature:**
 

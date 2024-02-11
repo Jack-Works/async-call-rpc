@@ -18,8 +18,9 @@ export interface AsyncCallLogLevel {
 }
 
 // @public
-export interface AsyncCallOptions {
-    channel: CallbackBasedChannel | EventBasedChannel | Promise<CallbackBasedChannel | EventBasedChannel>;
+export interface AsyncCallOptions<EncodedRequest = unknown, EncodedResponse = unknown> {
+    channel: CallbackBasedChannel<EncodedRequest | EncodedResponse> | EventBasedChannel<EncodedRequest | EncodedResponse> | Promise<CallbackBasedChannel<EncodedRequest | EncodedResponse> | EventBasedChannel<EncodedRequest | EncodedResponse>>;
+    encoder?: IsomorphicEncoder<EncodedRequest, EncodedResponse> | IsomorphicEncoderFull<EncodedRequest, EncodedResponse>;
     idGenerator?(): string | number;
     key?: string;
     log?: AsyncCallLogLevel | boolean | 'all';
@@ -27,6 +28,7 @@ export interface AsyncCallOptions {
     mapError?: ErrorMapFunction<unknown>;
     parameterStructures?: 'by-position' | 'by-name';
     preferLocalImplementation?: boolean;
+    // @deprecated
     serializer?: Serialization;
     strict?: AsyncCallStrictJSONRPC | boolean;
     thenable?: boolean;
@@ -53,7 +55,13 @@ export function batch<T extends object>(asyncCallInstance: T): [T, () => void, (
 
 // @public
 export interface CallbackBasedChannel<Data = unknown> extends Partial<EventBasedChannel<Data>> {
-    setup(jsonRPCHandlerCallback: (jsonRPCPayload: unknown) => Promise<unknown | undefined>, isValidJSONRPCPayload: (data: unknown) => boolean | Promise<boolean>): (() => void) | void;
+    setup(jsonRPCHandlerCallback: (jsonRPCPayload: unknown, hint?: undefined | 'request' | 'response') => Promise<unknown | undefined>, isValidJSONRPCPayload: (data: unknown, hint?: undefined | 'request' | 'response') => boolean | Promise<boolean>): (() => void) | void;
+}
+
+// @public
+export interface ClientEncoding<EncodedRequest = unknown, EncodedResponse = unknown> {
+    decodeResponse(encoded: EncodedResponse): Responses | PromiseLike<Responses>;
+    encodeRequest(data: Requests): EncodedRequest | PromiseLike<EncodedRequest>;
 }
 
 // @public
@@ -75,17 +83,40 @@ export { ConsoleInterface as Console }
 export { ConsoleInterface }
 
 // @public (undocumented)
-export type ErrorMapFunction<T = unknown> = (error: unknown, request: Readonly<JSONRPCRequest>) => {
+export type ErrorMapFunction<T = unknown> = (error: unknown, request: Readonly<Request>) => {
     code: number;
     message: string;
     data?: T;
 };
 
 // @public
-export interface EventBasedChannel<Data = unknown> {
-    on(listener: (data: Data) => void): void | (() => void);
-    send(data: Data): void;
+export interface ErrorResponse<Error = unknown> {
+    // (undocumented)
+    readonly error: ErrorResponseDetail<Error>;
+    // (undocumented)
+    readonly id?: ID;
+    // (undocumented)
+    readonly jsonrpc: '2.0';
 }
+
+// @public
+export interface ErrorResponseDetail<Error = unknown> {
+    // (undocumented)
+    readonly code: number;
+    // (undocumented)
+    readonly data?: Error;
+    // (undocumented)
+    readonly message: string;
+}
+
+// @public
+export interface EventBasedChannel<Data = unknown> {
+    on(listener: (data: Data, hint?: 'request' | 'response' | undefined) => void): void | (() => void);
+    send(data: Data): void | Promise<void>;
+}
+
+// @public
+export type ID = string | number | null | undefined;
 
 // @internal
 export type _IgnoreResponse<T> = T extends (...args: infer Args) => unknown ? (...args: Args) => Promise<void> : {
@@ -93,12 +124,31 @@ export type _IgnoreResponse<T> = T extends (...args: infer Args) => unknown ? (.
 };
 
 // @public
-export type JSONRPCRequest = {
-    jsonrpc: '2.0';
-    id?: string | number | null;
-    method: string;
-    params: readonly unknown[] | object;
-};
+export interface IsomorphicEncoder<EncodedRequest = unknown, EncodedResponse = unknown> {
+    decode(encoded: EncodedRequest | EncodedResponse): Requests | Responses | PromiseLike<Requests | Responses>;
+    encode(data: Requests | Responses): EncodedRequest | EncodedResponse | PromiseLike<EncodedRequest | EncodedResponse>;
+}
+
+// @public
+export interface IsomorphicEncoderFull<EncodedRequest = unknown, EncodedResponse = unknown> extends ClientEncoding<EncodedRequest, EncodedResponse>, ServerEncoding<EncodedRequest, EncodedResponse>, Partial<Pick<IsomorphicEncoder, 'decode'>> {
+}
+
+// @public
+export function JSONEncoder({ keepUndefined, replacer, reviver, space, }?: JSONEncoderOptions): IsomorphicEncoder;
+
+// @public (undocumented)
+export namespace JSONEncoder {
+    const // (undocumented)
+    Default: IsomorphicEncoder<unknown, unknown>;
+}
+
+// @public
+export interface JSONEncoderOptions {
+    keepUndefined?: false | 'null' | undefined;
+    replacer?: ((this: any, key: string, value: any) => any) | undefined;
+    reviver?: ((this: any, key: string, value: any) => any) | undefined;
+    space?: string | number | undefined;
+}
 
 // @public
 export const JSONSerialization: (replacerAndReceiver?: [(((key: string, value: any) => any) | undefined)?, (((key: string, value: any) => any) | undefined)?], space?: string | number | undefined, undefinedKeepingBehavior?: 'keep' | 'null' | false) => Serialization;
@@ -112,9 +162,48 @@ export const NoSerialization: Serialization;
 export function notify<T extends object>(instanceOrFnOnInstance: T): _IgnoreResponse<T>;
 
 // @public
+export interface Request {
+    // (undocumented)
+    readonly id?: ID;
+    // (undocumented)
+    readonly jsonrpc: '2.0';
+    // (undocumented)
+    readonly method: string;
+    // (undocumented)
+    readonly params: readonly unknown[] | object;
+    readonly remoteStack?: string | undefined;
+}
+
+// @public
+export type Requests = Request | readonly Request[];
+
+// @public
+export type Response = SuccessResponse | ErrorResponse;
+
+// @public
+export type Responses = Response | readonly Response[];
+
+// @public @deprecated
 export interface Serialization {
     deserialization(serialized: unknown): unknown | PromiseLike<unknown>;
     serialization(from: any): unknown | PromiseLike<unknown>;
+}
+
+// @public
+export interface ServerEncoding<EncodedRequest = unknown, EncodedResponse = unknown> {
+    decodeRequest(encoded: EncodedRequest): Requests | PromiseLike<Requests>;
+    encodeResponse(data: Responses): EncodedResponse | PromiseLike<EncodedResponse>;
+}
+
+// @public
+export interface SuccessResponse {
+    // (undocumented)
+    readonly id?: ID;
+    // (undocumented)
+    readonly jsonrpc: '2.0';
+    // (undocumented)
+    result: unknown;
+    undef?: unknown;
 }
 
 // (No @packageDocumentation comment for this package)

@@ -1,4 +1,5 @@
 class CustomError extends Error {
+    // TODO: support cause
     constructor(public name: string, message: string, public code: number, public stack: string) {
         super(message)
     }
@@ -39,8 +40,8 @@ export const DOMExceptionHeader = 'DOMException:'
  */
 export const RecoverError = (type: string, message: string, code: number, stack: string): Error => {
     try {
-        const E = globalDOMException()
-        if (type.startsWith(DOMExceptionHeader) && E) {
+        let E
+        if (type.startsWith(DOMExceptionHeader) && (E = globalDOMException())) {
             const name = type.slice(DOMExceptionHeader.length)
             return new E(message, name)
         } else if (type in errors) {

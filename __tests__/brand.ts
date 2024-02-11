@@ -3,8 +3,8 @@ import { expect, it } from 'vitest'
 
 it(
     'methods and prototype brand check',
-    withSnapshotDefault('async-call-brand', async (f) => {
-        const server = f()
+    withSnapshotDefault('async-call-brand', async ({ init }) => {
+        const server = init()
 
         // Prototype check
         expect(Object.getPrototypeOf(server)).toBeNull()
@@ -34,8 +34,8 @@ it(
 
 it(
     '(generator) methods and prototype brand check',
-    withSnapshotDefault('async-call-generator-brand', async (_, f) => {
-        const server = f()
+    withSnapshotDefault('async-call-generator-brand', async ({ initIterator }) => {
+        const server = initIterator()
 
         // Prototype check
         expect(Object.getPrototypeOf(server)).toBeNull()

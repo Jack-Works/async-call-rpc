@@ -5,12 +5,28 @@ import { delay } from './test.js'
 
 export class TestEventBasedChannel implements EventBasedChannel {
     channel = new EventEmitter()
-    constructor(public otherSide: TestCallbackBasedChannel | TestEventBasedChannel, private logger: Logger) {
+    constructor(
+        public otherSide: TestCallbackBasedChannel | TestEventBasedChannel,
+        private logger: Logger,
+        private hint = true,
+    ) {
         this.channel.addListener('message', this.logger.receive)
     }
-    on(callback: any) {
-        this.channel.addListener('message', callback)
-        return () => this.channel.removeListener('message', callback)
+    on(callback: (data: any, hint?: 'request' | 'response' | undefined) => void) {
+        const f = (data: any) => {
+            callback(
+                data,
+                this.hint
+                    ? typeof data === 'object'
+                        ? 'result' in data
+                            ? 'response'
+                            : 'request'
+                        : undefined
+                    : undefined,
+            )
+        }
+        this.channel.addListener('message', f)
+        return () => this.channel.removeListener('message', f)
     }
     async send(data: any) {
         this.logger.send(data)
@@ -20,14 +36,33 @@ export class TestEventBasedChannel implements EventBasedChannel {
 }
 export class TestCallbackBasedChannel implements CallbackBasedChannel {
     channel = new EventEmitter()
-    constructor(public otherSide: TestCallbackBasedChannel | TestEventBasedChannel, private logger: Logger) {
+    constructor(
+        public otherSide: TestCallbackBasedChannel | TestEventBasedChannel,
+        private logger: Logger,
+        private hint = true,
+    ) {
         this.channel.addListener('message', this.logger.receive)
     }
-    setup(jsonRPCHandlerCallback: Function, isValidJSONRPCPayload: (data: unknown) => boolean | Promise<boolean>) {
+    setup(
+        jsonRPCHandlerCallback: (
+            jsonRPCPayload: unknown,
+            hint?: undefined | 'request' | 'response',
+        ) => Promise<unknown | undefined>,
+        isValidJSONRPCPayload: (data: unknown) => boolean | Promise<boolean>,
+    ) {
         this.channel.addListener('message', async (msg) => {
             if (!(await isValidJSONRPCPayload(msg)))
                 return this.logger.log.log('Invalid JSON RPC received, ignore', msg)
-            const payload = await jsonRPCHandlerCallback(msg)
+            const payload = await jsonRPCHandlerCallback(
+                msg,
+                this.hint
+                    ? typeof msg === 'object'
+                        ? 'result' in msg
+                            ? 'response'
+                            : 'request'
+                        : undefined
+                    : undefined,
+            )
             if (!payload) return
             this.logger.send(payload)
             await delay(25)
@@ -40,7 +75,7 @@ export class TestCallbackBasedChannel implements CallbackBasedChannel {
         this.otherSide.channel.emit('message', data)
     }
 }
-export function createChannelPair(
+export function createChannelPairFromConstructor(
     logger: { server: Logger; client: Logger },
     C: typeof TestCallbackBasedChannel | typeof TestEventBasedChannel = TestEventBasedChannel,
 ) {

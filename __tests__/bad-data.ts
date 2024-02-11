@@ -1,15 +1,17 @@
 import { delay, withSnapshotDefault } from './utils/test.js'
-import { defaultErrorMapper, ErrorResponse, Request, SuccessResponse } from '../src/utils/jsonrpc.js'
+import { defaultErrorMapper } from '../src/utils/jsonrpc.js'
 import { JSONSerialization } from '../src/index.js'
+import { makeRequest, makeSuccessResponse, makeErrorResponse } from '../src/utils/jsonrpc.js'
 import { reproduceError } from './utils/reproduce.js'
 import { expect, it } from 'vitest'
 
 it(
     'can handle deserialize failed',
-    withSnapshotDefault('deserialize-failed', async (f, _, _log, raw) => {
+    withSnapshotDefault('deserialize-failed', async ({ init, channel }) => {
         await reproduceError(async () => {
-            f({ opts: { serializer: JSONSerialization() } })
-            await raw.client.send('invalid JSON')
+            init({ options: { serializer: JSONSerialization() } })
+            if (!('send' in channel.client)) throw new Error('test error')
+            await channel.client.send!('invalid JSON')
             await delay(50)
         })
     }),
@@ -17,7 +19,7 @@ it(
 
 it('can handle bad exception', () => {
     const f = defaultErrorMapper('', 0)
-    const r = Request(0, '1', [])
+    const r = makeRequest(0, '1', [])
     const bad1 = {
         get message() {
             throw 1
@@ -70,41 +72,45 @@ it('can handle bad exception', () => {
 
 it(
     'can handle bad channel data',
-    withSnapshotDefault('bad-data', async (f, _, _log, raw) => {
-        f({ opts: { strict: false } })
-        await raw.client.send(0)
-        await raw.client.send({})
-        await raw.client.send({ jsonrpc: '1.0' })
-        await raw.client.send({ jsonrpc: '2.0', params: 1 })
-        await raw.client.send(ErrorResponse(undefined, NaN, 'what'))
+    withSnapshotDefault('bad-data', async ({ init, channel }) => {
+        init({ options: { strict: false } })
+        if (!('send' in channel.client) || !channel.client.send) throw new Error('test error')
+        await channel.client.send(0)
+        await channel.client.send({})
+        await channel.client.send({ jsonrpc: '1.0' })
+        await channel.client.send({ jsonrpc: '2.0', params: 1 })
+        await channel.client.send(makeErrorResponse(undefined, NaN, 'what'))
     }),
 )
 
 it(
     'can handle invalid state: response without a request',
-    withSnapshotDefault('bad-state', async (f, _, _log, raw) => {
-        f()
-        await raw.server.send(SuccessResponse(123, {}))
+    withSnapshotDefault('bad-state', async ({ init, channel }) => {
+        init()
+        if (!('send' in channel.server)) throw new Error('test error')
+        await channel.server.send!(makeSuccessResponse(123, {}))
         await delay(20)
     }),
 )
 
 it(
     '(generator) can handle invalid state: missing generator instance',
-    withSnapshotDefault('bad-state-generator', async (_f, _, _log, raw) => {
-        const server = _()
-        raw.client.send(Request('a', 'rpc.async-iterator.next', ['b', undefined]))
+    withSnapshotDefault('bad-state-generator', async ({ initIterator, channel }) => {
+        const server = initIterator()
+        if (!('send' in channel.client)) throw new Error('test error')
+        channel.client.send!(makeRequest('a', 'rpc.async-iterator.next', ['b', undefined]))
         const iter = (server as any).not_found()
-        expect(iter.next()).rejects.toThrowErrorMatchingInlineSnapshot('"not_found is not a function"')
+        expect(iter.next()).rejects.toThrowErrorMatchingInlineSnapshot(`[TypeError: not_found is not a function]`)
         await delay(100)
     }),
 )
 
 it(
     '(generator) can handle invalid state: allows method not found',
-    withSnapshotDefault('bad-state-generator-non-strict', async (_f, _, _log, raw) => {
-        const server = _({ opts: { strict: false } })
-        await raw.client.send(Request('a', 'rpc.async-iterator.next', ['b', undefined]))
+    withSnapshotDefault('bad-state-generator-non-strict', async ({ initIterator, channel }) => {
+        const server = initIterator({ options: { strict: false } })
+        if (!('send' in channel.client)) throw new Error('test error')
+        await channel.client.send!(makeRequest('a', 'rpc.async-iterator.next', ['b', undefined]))
         ;(server as any).not_found()
         await delay(40)
     }),

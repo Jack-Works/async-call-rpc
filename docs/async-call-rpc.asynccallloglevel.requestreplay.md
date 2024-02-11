@@ -4,7 +4,7 @@
 
 ## AsyncCallLogLevel.requestReplay property
 
-Log a function that allows to execute the request with same arguments again
+If log a function that can replay the request
 
 **Signature:**
 
@@ -14,5 +14,5 @@ requestReplay?: boolean;
 
 ## Remarks
 
-Do not use this options in the production environment because it will log a closure that captures the arguments of requests. This may cause memory leak.
+Do not use this options in the production environment because it will log a closure that captures all arguments of requests. This may cause memory leak.
 

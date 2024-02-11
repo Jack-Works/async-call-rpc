@@ -4,7 +4,7 @@
 
 ## AsyncCallLogLevel interface
 
-Log options of AsyncCall
+Log options
 
 **Signature:**
 
@@ -14,16 +14,16 @@ export interface AsyncCallLogLevel
 
 ## Remarks
 
-This option controls how AsyncCall should log RPC calls to the console.
+This option controls how AsyncCall log requests to the console.
 
 ## Properties
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [beCalled?](./async-call-rpc.asynccallloglevel.becalled.md) |  | boolean | _(Optional)_ Log all requests to this instance |
-|  [localError?](./async-call-rpc.asynccallloglevel.localerror.md) |  | boolean | _(Optional)_ Log all errors produced when responding requests |
-|  [remoteError?](./async-call-rpc.asynccallloglevel.remoteerror.md) |  | boolean | _(Optional)_ Log remote errors |
-|  [requestReplay?](./async-call-rpc.asynccallloglevel.requestreplay.md) |  | boolean | _(Optional)_ Log a function that allows to execute the request with same arguments again |
-|  [sendLocalStack?](./async-call-rpc.asynccallloglevel.sendlocalstack.md) |  | boolean | _(Optional)_ Send the call stack to the remote when making requests |
-|  [type?](./async-call-rpc.asynccallloglevel.type.md) |  | 'basic' \| 'pretty' | _(Optional)_ Control if AsyncCall should make the log better |
+|  [beCalled?](./async-call-rpc.asynccallloglevel.becalled.md) |  | boolean | _(Optional)_ Log all incoming requests |
+|  [localError?](./async-call-rpc.asynccallloglevel.localerror.md) |  | boolean | _(Optional)_ Log all errors when responding requests |
+|  [remoteError?](./async-call-rpc.asynccallloglevel.remoteerror.md) |  | boolean | _(Optional)_ Log errors from the remote |
+|  [requestReplay?](./async-call-rpc.asynccallloglevel.requestreplay.md) |  | boolean | _(Optional)_ If log a function that can replay the request |
+|  [sendLocalStack?](./async-call-rpc.asynccallloglevel.sendlocalstack.md) |  | boolean | _(Optional)_ Send the stack to the remote when making requests |
+|  [type?](./async-call-rpc.asynccallloglevel.type.md) |  | 'basic' \| 'pretty' | _(Optional)_ Style of the log |
 

@@ -4,8 +4,8 @@ import { expect, it } from 'vitest'
 
 it(
     'can send batch request',
-    withSnapshotDefault('async-call-batch', async (f, _, log) => {
-        const [server, send, drop] = batch(f())
+    withSnapshotDefault('async-call-batch', async ({ init, log }) => {
+        const [server, send, drop] = batch(init())
 
         // brand check
         expect(Object.getPrototypeOf(server)).toBeNull()
@@ -32,8 +32,8 @@ it(
             const b = server.echo(1)
             log('In this part it should be no log')
             drop()
-            expect(a).rejects.toThrowErrorMatchingInlineSnapshot(`"Aborted"`)
-            expect(b).rejects.toThrowErrorMatchingInlineSnapshot(`"Aborted"`)
+            expect(a).rejects.toThrowErrorMatchingInlineSnapshot(`[Error: Aborted]`)
+            expect(b).rejects.toThrowErrorMatchingInlineSnapshot(`[Error: Aborted]`)
             log('Part 2 end')
         }
         // Keep identity

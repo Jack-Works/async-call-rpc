@@ -1,4 +1,4 @@
-import { createLogger } from './logger.js'
+import { createLogger, type Logger } from './logger.js'
 import { join } from 'path'
 import {
     type AsyncVersionOf,
@@ -7,7 +7,7 @@ import {
     type AsyncCallOptions,
     AsyncGeneratorCall,
 } from '../../src/index.js'
-import { createChannelPair, TestCallbackBasedChannel, TestEventBasedChannel } from './channels.js'
+import { createChannelPairFromConstructor, TestEventBasedChannel } from './channels.js'
 import { reproduceIDGenerator } from './reproduce.js'
 import { expect } from 'vitest'
 
@@ -15,6 +15,7 @@ export const defaultImpl = {
     add: (x: number, y: number) => x + y,
     echo: async <T>(x: T) => x,
     undefined: () => {},
+    deep_undefined: () => ({ a: { b: { c: undefined } } }),
     throws: async () => {
         throw new Error('impl error')
     },
@@ -87,47 +88,64 @@ const defaultImplGenerator = {
 type Options<T> = {
     client?: Partial<AsyncCallOptions>
     server?: Partial<AsyncCallOptions>
-    opts?: Partial<AsyncCallOptions>
+    options?: Partial<AsyncCallOptions>
     impl?: T | Promise<T>
 }
 export function withSnapshotDefault(
-    snapshot: string,
-    f: (
-        call: <T extends object = DefaultImpl>(option?: Options<T>) => AsyncVersionOf<T>,
-        generatorCall: <T extends object = DefaultImplG>(option?: Options<T>) => AsyncGeneratorVersionOf<T>,
-        log: (...args: any) => void,
-        rawChannel: Record<'server' | 'client', TestCallbackBasedChannel | TestEventBasedChannel>,
-    ) => Promise<void>,
-    timeout = 800,
-    C: typeof TestCallbackBasedChannel | typeof TestEventBasedChannel = TestEventBasedChannel,
+    snapshotName: string,
+    runner: (context: {
+        init: <T extends object = DefaultImpl>(option?: Options<T>) => AsyncVersionOf<T>
+        initIterator: <T extends object = DefaultImplIterator>(option?: Options<T>) => AsyncGeneratorVersionOf<T>
+        log: (...args: any) => void
+        channel: Record<'server' | 'client', AsyncCallOptions['channel']>
+    }) => Promise<void>,
+    {
+        timeout = 800,
+        createChannelPair = (log) => createChannelPairFromConstructor(log, TestEventBasedChannel),
+    }: {
+        timeout?: number
+        createChannelPair?: (
+            logger: Record<'server' | 'client', Logger>,
+        ) => Record<'server' | 'client', AsyncCallOptions['channel']>
+    } = {},
 ) {
     async function testImpl() {
-        const { emit, log } = createLogger(['server', 'client', 'testRunner'] as const)
-        const { client, server } = createChannelPair(log, C)
+        const { emit, log } = createLogger(['server', 'client', 'testRunner'])
+        const { client, server } = createChannelPair(log)
         const idGenerator = reproduceIDGenerator()
 
         const serverShared = { channel: server, logger: log.server.log, idGenerator }
         const clientShared = { channel: client, logger: log.client.log, idGenerator }
-        function setup<T extends object = DefaultImpl>(opt: Options<T> = {}): AsyncVersionOf<T> {
-            const { client, server, impl, opts } = opt
-            AsyncCall(impl || defaultImpl, { ...serverShared, ...opts, ...server })
-            return AsyncCall<T>(impl || defaultImpl, { ...clientShared, ...opts, ...client })
+        function init<T extends object = DefaultImpl>(initOptions: Options<T> = {}): AsyncVersionOf<T> {
+            const { client, server, impl = defaultImpl, options } = initOptions
+            AsyncCall(impl, Object.assign(serverShared, options, server))
+            return AsyncCall<T>(impl, Object.assign(clientShared, options, client))
         }
-        function setupGenerator<T extends object = DefaultImplG>(opt: Options<T> = {}): AsyncGeneratorVersionOf<T> {
-            const { client, server, impl, opts } = opt
-            AsyncGeneratorCall(impl || defaultImplGenerator, { ...serverShared, ...opts, ...server })
-            return AsyncGeneratorCall<T>(impl || defaultImplGenerator, { ...clientShared, ...opts, ...client })
+        function initIterator<T extends object = DefaultImplIterator>(
+            initOptions: Options<T> = {},
+        ): AsyncGeneratorVersionOf<T> {
+            const { client, server, impl = defaultImplGenerator, options } = initOptions
+            AsyncGeneratorCall(impl, Object.assign(serverShared, options, server))
+            return AsyncGeneratorCall<T>(impl, Object.assign(clientShared, options, client))
         }
-        await race(f(setup, setupGenerator, log.testRunner.log.log, { client, server }), timeout)
-        expect(emit()).toMatchFile(join(__dirname, '../__file_snapshots__/', snapshot + '.md'))
+        await race(
+            runner({
+                log: log.testRunner.log.log,
+                channel: { client, server },
+                init,
+                initIterator: initIterator,
+            }),
+            timeout,
+        )
+        expect(emit()).toMatchFile(join(__dirname, '../__file_snapshots__/', snapshotName + '.md'))
     }
     return testImpl
 }
-withSnapshotDefault.debugger = (...[name, snap, f]: Parameters<typeof withSnapshotDefault>) => {
-    return withSnapshotDefault('DBG ONLY ' + name, snap, f)
+withSnapshotDefault.debugger = (...[name, runner, options]: Parameters<typeof withSnapshotDefault>) => {
+    return withSnapshotDefault('DBG ONLY ' + name, runner, options)
 }
 export type DefaultImpl = typeof defaultImpl
-type DefaultImplG = typeof defaultImplGenerator
+type DefaultImplIterator = typeof defaultImplGenerator
 
 async function race<T>(x: Promise<T>, timeoutTime: number): Promise<T> {
     return Promise.race([x, timeout(timeoutTime)])

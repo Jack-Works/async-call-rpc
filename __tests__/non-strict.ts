@@ -4,10 +4,12 @@ it(
     'non strict behaviors',
     withSnapshotDefault(
         'async-call-non-strict',
-        async (f, _, _log, raw) => {
-            const server: any = f({ opts: { strict: false } })
+        async ({ init, channel }) => {
+            const server: any = init({ options: { strict: false } })
+            if (!('send' in channel.client)) throw new Error('test error')
+
             // send unknown message should not return an error
-            raw.client.send('unknown message')
+            channel.client.send!('unknown message')
             // this promise should never resolves
             const promise: Promise<void> = server.not_defined_method()
             let fail = false
@@ -15,24 +17,30 @@ it(
             await delay(800)
             if (fail) throw new Error('This promise should never resolves')
         },
-        1000,
+        { timeout: 1000 },
     ),
 )
 
 it(
     'strict behaviors',
-    withSnapshotDefault('async-call-strict', async (f, _, _log, raw) => {
-        const server: any = f()
-        raw.client.send('unknown message')
-        await expect(server.not_defined_method()).rejects.toThrowErrorMatchingInlineSnapshot('"Method not found"')
+    withSnapshotDefault('async-call-strict', async ({ init, channel }) => {
+        const server: any = init()
+        if (!('send' in channel.client)) throw new Error('test error')
+        channel.client.send!('unknown message')
+        await expect(server.not_defined_method()).rejects.toThrowErrorMatchingInlineSnapshot(
+            `[Error: Method not found]`,
+        )
     }),
 )
 
 it(
     'partial strict behaviors',
-    withSnapshotDefault('async-call-strict-partial', async (f, _, _log, raw) => {
-        const server: any = f({ opts: { strict: { methodNotFound: true } } })
-        raw.client.send('unknown message')
-        await expect(server.not_defined_method()).rejects.toThrowErrorMatchingInlineSnapshot('"Method not found"')
+    withSnapshotDefault('async-call-strict-partial', async ({ init, channel }) => {
+        const server: any = init({ options: { strict: { methodNotFound: true } } })
+        if (!('send' in channel.client)) throw new Error('test error')
+        channel.client.send!('unknown message')
+        await expect(server.not_defined_method()).rejects.toThrowErrorMatchingInlineSnapshot(
+            `[Error: Method not found]`,
+        )
     }),
 )

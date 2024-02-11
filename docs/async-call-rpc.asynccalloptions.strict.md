@@ -4,7 +4,7 @@
 
 ## AsyncCallOptions.strict property
 
-Control the behavior that different from the JSON RPC spec. See [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md)
+Control the behavior that different from the JSON-RPC spec
 
 **Signature:**
 

@@ -4,13 +4,17 @@
 
 ## AsyncCallStrictJSONRPC interface
 
-Control the behavior that different from the JSON RPC spec.
+Strict options
 
 **Signature:**
 
 ```typescript
 export interface AsyncCallStrictJSONRPC 
 ```
+
+## Remarks
+
+Control the behavior that different from the JSON-RPC specification.
 
 ## Properties
 

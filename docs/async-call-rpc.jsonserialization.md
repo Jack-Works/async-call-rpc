@@ -2,7 +2,7 @@
 
 [Home](./index.md) &gt; [async-call-rpc](./async-call-rpc.md) &gt; [JSONSerialization](./async-call-rpc.jsonserialization.md)
 
-## JSONSerialization variable
+## JSONSerialization() function
 
 Create a serialization by JSON.parse/stringify
 
@@ -11,6 +11,18 @@ Create a serialization by JSON.parse/stringify
 ```typescript
 JSONSerialization: (replacerAndReceiver?: [(((key: string, value: any) => any) | undefined)?, (((key: string, value: any) => any) | undefined)?], space?: string | number | undefined, undefinedKeepingBehavior?: 'keep' | 'null' | false) => Serialization
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  replacerAndReceiver | \[(((key: string, value: any) =&gt; any) \| undefined)?, (((key: string, value: any) =&gt; any) \| undefined)?\] | _(Optional)_ Replacer and receiver of JSON.parse/stringify |
+|  space | string \| number \| undefined | _(Optional)_ Adds indentation, white space, and line break characters to the return-value JSON text to make it easier to read. |
+|  undefinedKeepingBehavior | 'keep' \| 'null' \| false | <p>_(Optional)_ How to keep "undefined" in result of SuccessResponse?</p><p>If it is not handled properly, JSON.stringify will emit an invalid JSON RPC object.</p><p>Options: - <code>&quot;null&quot;</code>(\*\*default\*\*): convert it to null. - <code>&quot;keep&quot;</code>: try to keep it by additional property "undef". - <code>false</code>: Don't keep it, let it break.</p> |
+
+**Returns:**
+
+[Serialization](./async-call-rpc.serialization.md)
 
 ## Remarks
 

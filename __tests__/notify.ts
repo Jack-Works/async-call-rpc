@@ -4,8 +4,8 @@ import { expect, it } from 'vitest'
 
 it(
     'can send notify-only request',
-    withSnapshotDefault('async-call-notify', async (f, _, log) => {
-        const orig_s = f()
+    withSnapshotDefault('async-call-notify', async ({ init, log }) => {
+        const orig_s = init()
         const server = notify(orig_s)
         log(
             'Before this line should have no response.',

@@ -4,7 +4,7 @@
 
 ## AsyncCallOptions.key property
 
-This option is used for better log print.
+Name used when pretty log is enabled.
 
 **Signature:**
 

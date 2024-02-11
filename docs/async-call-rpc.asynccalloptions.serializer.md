@@ -4,19 +4,15 @@
 
 ## AsyncCallOptions.serializer property
 
-How to serialize and deserialize the JSON RPC payload
+> Warning: This API is now obsolete.
+> 
+> Use "encoding" option instead. This option will be removed in the next major version.
+> 
+
+Serializer of the requests and responses.
 
 **Signature:**
 
 ```typescript
 serializer?: Serialization;
 ```
-
-## Remarks
-
-See [Serialization](./async-call-rpc.serialization.md)<!-- -->. There is some built-in serializer:
-
-- [JSONSerialization](./async-call-rpc.jsonserialization.md) (Using JSON.parse/stringify in the backend)
-
-- [BSONSerialization](https://github.com/jack-works/async-call-rpc#web-deno-and-node-bson) (use the [bson](https://npmjs.org/bson) as the serializer)
-

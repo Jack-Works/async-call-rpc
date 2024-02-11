@@ -17,25 +17,41 @@ See the introduction at [Github](https://github.com/Jack-Works/async-call)
 |  [AsyncCall(thisSideImplementation, options)](./async-call-rpc.asynccall.md) | Create a RPC server &amp; client. |
 |  [AsyncGeneratorCall(thisSideImplementation, options)](./async-call-rpc.asyncgeneratorcall.md) | The async generator version of the AsyncCall |
 |  [batch(asyncCallInstance)](./async-call-rpc.batch.md) | Wrap the AsyncCall instance to use batch call. |
+|  [JSONEncoder({ keepUndefined, replacer, reviver, space, })](./async-call-rpc.jsonencoder.md) | Create a encoder by JSON.parse/stringify |
+|  [JSONSerialization(replacerAndReceiver, space, undefinedKeepingBehavior)](./async-call-rpc.jsonserialization.md) | Create a serialization by JSON.parse/stringify |
 |  [notify(instanceOrFnOnInstance)](./async-call-rpc.notify.md) | Wrap the AsyncCall instance to send notification. |
 
 ## Interfaces
 
 |  Interface | Description |
 |  --- | --- |
-|  [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) | Log options of AsyncCall |
+|  [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) | Log options |
 |  [AsyncCallOptions](./async-call-rpc.asynccalloptions.md) | Options for [AsyncCall()](./async-call-rpc.asynccall.md) |
-|  [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) | Control the behavior that different from the JSON RPC spec. |
+|  [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) | Strict options |
 |  [CallbackBasedChannel](./async-call-rpc.callbackbasedchannel.md) | This interface represents a "callback" model. |
+|  [ClientEncoding](./async-call-rpc.clientencoding.md) | Encoder of the client. |
 |  [ConsoleInterface](./async-call-rpc.consoleinterface.md) | The minimal Console interface that AsyncCall needs. |
+|  [ErrorResponse](./async-call-rpc.errorresponse.md) | JSON-RPC ErrorResponse object. |
+|  [ErrorResponseDetail](./async-call-rpc.errorresponsedetail.md) | The "error" record on the JSON-RPC ErrorResponse object. |
 |  [EventBasedChannel](./async-call-rpc.eventbasedchannel.md) | This interface represents a "on message" - "send response" model. |
-|  [Serialization](./async-call-rpc.serialization.md) | Serialize and deserialize of the JSON RPC payload |
+|  [IsomorphicEncoder](./async-call-rpc.isomorphicencoder.md) | Encoder that work for both server and client. |
+|  [IsomorphicEncoderFull](./async-call-rpc.isomorphicencoderfull.md) | Encoder that work for both server and client. |
+|  [JSONEncoderOptions](./async-call-rpc.jsonencoderoptions.md) | Options of [JSONEncoder()](./async-call-rpc.jsonencoder.md) |
+|  [Request](./async-call-rpc.request.md) | JSON-RPC Request object. |
+|  [Serialization](./async-call-rpc.serialization.md) | Serialize and deserialize of the JSON-RPC payload |
+|  [ServerEncoding](./async-call-rpc.serverencoding.md) | Encoder of the server. |
+|  [SuccessResponse](./async-call-rpc.successresponse.md) | JSON-RPC SuccessResponse object. |
+
+## Namespaces
+
+|  Namespace | Description |
+|  --- | --- |
+|  [JSONEncoder](./async-call-rpc.jsonencoder.md) |  |
 
 ## Variables
 
 |  Variable | Description |
 |  --- | --- |
-|  [JSONSerialization](./async-call-rpc.jsonserialization.md) | Create a serialization by JSON.parse/stringify |
 |  [NoSerialization](./async-call-rpc.noserialization.md) | Serialization implementation that do nothing |
 
 ## Type Aliases
@@ -43,7 +59,10 @@ See the introduction at [Github](https://github.com/Jack-Works/async-call)
 |  Type Alias | Description |
 |  --- | --- |
 |  [AsyncGeneratorVersionOf](./async-call-rpc.asyncgeneratorversionof.md) | Make all generator in the type T becomes AsyncGenerator |
-|  [AsyncVersionOf](./async-call-rpc.asyncversionof.md) | Make all function in the type T becomes async functions and filtering non-Functions out. |
+|  [AsyncVersionOf](./async-call-rpc.asyncversionof.md) | Make all functions in T becomes an async function and filter non-Functions out. |
 |  [ErrorMapFunction](./async-call-rpc.errormapfunction.md) |  |
-|  [JSONRPCRequest](./async-call-rpc.jsonrpcrequest.md) | JSON RPC Request object |
+|  [ID](./async-call-rpc.id.md) | ID of a JSON-RPC request/response. |
+|  [Requests](./async-call-rpc.requests.md) | A request object or an array of request objects. |
+|  [Response](./async-call-rpc.response.md) | A JSON-RPC response object |
+|  [Responses](./async-call-rpc.responses.md) | A response object or an array of response objects. |
 

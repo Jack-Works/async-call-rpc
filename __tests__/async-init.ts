@@ -4,34 +4,34 @@ import { expect, it } from 'vitest'
 
 it(
     'launches with resolved implementation',
-    withSnapshotDefault('async-call-impl-resolved', async (f) => {
-        const server = f({ impl: Promise.resolve(defaultImpl) })
+    withSnapshotDefault('async-call-impl-resolved', async ({ init }) => {
+        const server = init({ impl: Promise.resolve(defaultImpl) })
         expect(await server.add(1, 2)).toMatchInlineSnapshot(`3`)
     }),
 )
 
 it(
     'launches with rejected implementation',
-    withSnapshotDefault('async-call-impl-rejected', async (f) => {
-        const server = f({ impl: Promise.reject(new TypeError('Import failed')) })
-        await expect((server as any).add(1, 2)).rejects.toThrowErrorMatchingInlineSnapshot('"Import failed"')
+    withSnapshotDefault('async-call-impl-rejected', async ({ init }) => {
+        const server = init({ impl: Promise.reject(new TypeError('Import failed')) })
+        await expect((server as any).add(1, 2)).rejects.toThrowErrorMatchingInlineSnapshot(`[TypeError: Import failed]`)
     }),
 )
 
 it(
     'should not treat a promise-like as a real Promise',
-    withSnapshotDefault('async-call-impl-promise-like', async (f) => {
-        const server = f({ impl: { then: () => 1, otherMethods: () => 1 } })
+    withSnapshotDefault('async-call-impl-promise-like', async ({ init }) => {
+        const server = init({ impl: { then: () => 1, otherMethods: () => 1 } })
         await expect(server.otherMethods()).resolves.toMatchInlineSnapshot(`1`)
     }),
 )
 
 it(
     'launches with pending implementation',
-    withSnapshotDefault('async-call-impl-pending', async (f, _, log) => {
+    withSnapshotDefault('async-call-impl-pending', async ({ init, log }) => {
         let r: Function
         const impl = new Promise<DefaultImpl>((resolve) => (r = resolve))
-        const server = f({ impl })
+        const server = init({ impl })
         const pending = server.add(1, 2)
         log('Request should not resolve before this line')
         await delay(200)
@@ -42,9 +42,9 @@ it(
 
 it(
     'launches with resolved channel',
-    withSnapshotDefault('async-call-channel-resolved', async (f, _, __, raw) => {
-        const server = f({
-            client: { channel: Promise.resolve(raw.client) },
+    withSnapshotDefault('async-call-channel-resolved', async ({ init, channel }) => {
+        const server = init({
+            client: { channel: Promise.resolve(channel.client) },
         })
         expect(await server.add(1, 2)).toMatchInlineSnapshot(`3`)
     }),
@@ -52,8 +52,8 @@ it(
 
 it(
     'launches with rejected channel',
-    withSnapshotDefault('async-call-channel-rejected', async (f) => {
-        const server = f({
+    withSnapshotDefault('async-call-channel-rejected', async ({ init }) => {
+        const server = init({
             client: { channel: Promise.reject(new Error()) },
         })
         await expect(server.add(1, 2)).rejects.toMatchInlineSnapshot('[Error]')
@@ -62,27 +62,27 @@ it(
 
 it(
     'should not treat a promise-like channel as a real Promise',
-    withSnapshotDefault('async-call-channel-promise-like', async (f, _, __, raw) => {
-        Object.defineProperty(raw.client, 'then', {
+    withSnapshotDefault('async-call-channel-promise-like', async ({ init, channel }) => {
+        Object.defineProperty(channel.client, 'then', {
             value: () => {
                 throw new Error('This method should never be called.')
             },
         })
-        const server = f()
+        const server = init()
         expect(await server.add(1, 2)).toMatchInlineSnapshot(`3`)
     }),
 )
 
 it(
     'launches with pending channel',
-    withSnapshotDefault('async-call-channel-pending', async (f, _, log, raw) => {
+    withSnapshotDefault('async-call-channel-pending', async ({ init, log, channel }) => {
         let r: Function
-        const channel = new Promise<TestEventBasedChannel>((resolve) => (r = resolve))
-        const server = f({ client: { channel } })
+        const channelPromise = new Promise<TestEventBasedChannel>((resolve) => (r = resolve))
+        const server = init({ client: { channel: channelPromise } })
         const pending = server.add(1, 2)
         log('Request should not resolve before this line')
         await delay(200)
-        r!(raw.client)
+        r!(channel.client)
         await expect(pending).resolves.toMatchInlineSnapshot(`3`)
     }),
 )

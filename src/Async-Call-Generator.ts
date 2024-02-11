@@ -6,7 +6,7 @@ import { AsyncCall } from './Async-Call.js'
 import { AsyncCallIgnoreResponse } from './utils/internalSymbol.js'
 import { normalizeStrictOptions } from './utils/normalizeOptions.js'
 import { generateRandomID } from './utils/generateRandomID.js'
-import { isFunction, isString, Object_setPrototypeOf } from './utils/constants.js'
+import { isFunction, isString, setPrototypeOf } from './utils/constants.js'
 import {
     Err_Cannot_find_a_running_iterator_with_given_ID,
     Err_Only_string_can_be_the_RPC_method_name,
@@ -114,6 +114,14 @@ export function AsyncGeneratorCall<OtherSideImplementedFunctions = {}>(
     thisSideImplementation: null | undefined | object | Promise<object>,
     options: AsyncCallOptions,
 ): AsyncGeneratorVersionOf<OtherSideImplementedFunctions> {
+    if (!AsyncGeneratorPrototypeSet) {
+        const EmptyAsyncGenerator = async function* () {}
+        const AsyncGeneratorConstructor = (AsyncGeneratorPrototypeSet = EmptyAsyncGenerator.constructor)
+        const AsyncGeneratorConstructorPrototype = AsyncGeneratorConstructor.prototype
+        setPrototypeOf(_AsyncGenerator, AsyncGeneratorConstructorPrototype)
+        const AsyncGeneratorPrototype = Object.getPrototypeOf(EmptyAsyncGenerator())
+        setPrototypeOf(_AsyncGenerator.prototype, AsyncGeneratorPrototype)
+    }
     const iterators = new Map<string | number, Iter>()
     const [methodNotFound] = normalizeStrictOptions(options.strict ?? true)
     const { idGenerator = generateRandomID } = options
@@ -189,7 +197,10 @@ class _AsyncGenerator implements AsyncIterableIterator<unknown>, AsyncIterator<u
      * @param r Remote Implementation
      * @param i id
      */
-    constructor(private r: AsyncGeneratorInternalMethods, private i: Promise<string>) {}
+    constructor(
+        private r: AsyncGeneratorInternalMethods,
+        private i: Promise<string>,
+    ) {}
     async return(val: unknown) {
         if (this.d) return makeIteratorResult(true, val)
         return this.c(this.r[AsyncIteratorReturn](await this.i, val))
@@ -205,13 +216,7 @@ class _AsyncGenerator implements AsyncIterableIterator<unknown>, AsyncIterator<u
     // Inherited from AsyncGeneratorPrototype
     declare [Symbol.asyncIterator]: () => this
 }
-// ! side effect
-const EmptyAsyncGenerator = async function* () {}
-const AsyncGeneratorConstructor = EmptyAsyncGenerator.constructor
-const AsyncGeneratorConstructorPrototype = AsyncGeneratorConstructor.prototype
-Object_setPrototypeOf(_AsyncGenerator, AsyncGeneratorConstructorPrototype)
-const AsyncGeneratorPrototype = Object.getPrototypeOf(EmptyAsyncGenerator())
-Object_setPrototypeOf(_AsyncGenerator.prototype, AsyncGeneratorPrototype)
+let AsyncGeneratorPrototypeSet: unknown = false
 
 const isFinished = async (result: IterResult | undefined | false, cb: () => void) => {
     try {

@@ -1,7 +1,4 @@
-//#region Serialization
-
-import { isObject } from './jsonrpc.js'
-import { undefined } from './constants.js'
+import { isObject, undefined } from './constants.js'
 import type { Serialization } from '../types.js'
 
 /**
@@ -67,4 +64,3 @@ export const JSONSerialization = (
         return result
     },
 })
-//#endregion

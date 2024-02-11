@@ -4,7 +4,7 @@
 
 ## AsyncCallLogLevel.type property
 
-Control if AsyncCall should make the log better
+Style of the log
 
 **Signature:**
 
@@ -14,5 +14,5 @@ type?: 'basic' | 'pretty';
 
 ## Remarks
 
-If use "pretty", it will call the logger with some CSS to make the log easier to read. Check out this article to know more about it: [Console.log with CSS Style](https://dev.to/annlin/consolelog-with-css-style-1mmp)
+If this option is set to "pretty", it will log with some CSS to make the log easier to read in the browser devtools. Check out this article to know more about it: [Console.log with CSS Style](https://dev.to/annlin/consolelog-with-css-style-1mmp)
 
