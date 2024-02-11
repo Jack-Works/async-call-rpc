@@ -2,17 +2,17 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "module": "NodeNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "NodeNext",
+    "verbatimModuleSyntax": false,
     "lib": ["ES2018"],
     "types": ["node"],
     "outDir": "../../utils/node/",
     "rootDir": "./",
     "baseUrl": "./",
-    "esModuleInterop": true,
     "tsBuildInfoFile": "../../dist/node.tsbuildinfo",
     "paths": {
-      "async-call-rpc": ["../../src/index.ts"],
-      "bson": ["../../node_modules/bson"]
+      "bson": ["../../node_modules/bson"],
+      "async-call-rpc": ["../../src/Async-Call.ts"]
     }
   },
   "include": ["./**/*.ts"],

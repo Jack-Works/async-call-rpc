@@ -14,5 +14,5 @@ methodNotFound?: boolean;
 
 ## Remarks
 
-Set this options to false, AsyncCall will ignore the request (but print a log) if the method is not defined.
+If this option is set to false, AsyncCall will ignore the request and print a log if the method is not defined.
 

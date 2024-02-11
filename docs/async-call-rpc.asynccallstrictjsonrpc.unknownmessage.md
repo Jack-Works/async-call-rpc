@@ -14,5 +14,5 @@ unknownMessage?: boolean;
 
 ## Remarks
 
-Set this options to false, AsyncCall will ignore the request that cannot be parsed as a valid JSON RPC payload. This is useful when the message channel is also used to transfer other kinds of messages.
+If this option is set to false, AsyncCall will ignore the request that cannot be parsed as a valid JSON RPC payload. This is useful when the message channel is also used to transfer other kinds of messages.
 

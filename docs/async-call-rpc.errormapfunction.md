@@ -7,11 +7,11 @@
 **Signature:**
 
 ```typescript
-export type ErrorMapFunction<T = unknown> = (error: unknown, request: Readonly<JSONRPCRequest>) => {
+export type ErrorMapFunction<T = unknown> = (error: unknown, request: Readonly<Request>) => {
     code: number;
     message: string;
     data?: T;
 };
 ```
-**References:** [JSONRPCRequest](./async-call-rpc.jsonrpcrequest.md)
+**References:** [Request](./async-call-rpc.request.md)
 

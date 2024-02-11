@@ -9,14 +9,14 @@ Register the message listener.
 **Signature:**
 
 ```typescript
-on(listener: (data: Data) => void): void | (() => void);
+on(listener: (data: Data, hint?: 'request' | 'response' | undefined) => void): void | (() => void);
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  listener | (data: Data) =&gt; void | The message listener. |
+|  listener | (data: Data, hint?: 'request' \| 'response' \| undefined) =&gt; void | The message listener. |
 
 **Returns:**
 

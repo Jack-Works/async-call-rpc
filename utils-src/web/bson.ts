@@ -1,5 +1,9 @@
 import type { Serialization } from 'async-call-rpc'
 import type { serialize as S, deserialize as D } from 'bson'
+
+/**
+ * @deprecated This will be removed in the next major version.
+ */
 export const BSON_Serialization = ({
     deserialize,
     serialize,

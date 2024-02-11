@@ -1,20 +1,20 @@
-import { TestCallbackBasedChannel } from './utils/channels.js'
+import { TestCallbackBasedChannel, createChannelPairFromConstructor } from './utils/channels.js'
 import { reproduceRandomID } from './utils/reproduce.js'
 import { delay, withSnapshotDefault } from './utils/test.js'
 import { expect, it } from 'vitest'
 
 it(
     'should work for basic use case',
-    withSnapshotDefault('async-call-basic', async (call) => {
-        const server = call()
+    withSnapshotDefault('async-call-basic', async ({ init }) => {
+        const server = init()
         // Method calls
         await Promise.all([
             expect(server.add(1, 2)).resolves.toMatchInlineSnapshot(`3`),
             expect(server.echo('string')).resolves.toMatchInlineSnapshot(`"string"`),
-            expect(server.throws()).rejects.toThrowErrorMatchingInlineSnapshot('"impl error"'),
-            expect(server.throwEcho('1')).rejects.toThrowErrorMatchingInlineSnapshot('"1"'),
+            expect(server.throws()).rejects.toThrowErrorMatchingInlineSnapshot(`[Error: impl error]`),
+            expect(server.throwEcho('1')).rejects.toThrowErrorMatchingInlineSnapshot(`[Error: 1]`),
             // Unknown methods
-            expect((server as any).not_found()).rejects.toThrowErrorMatchingInlineSnapshot('"Method not found"'),
+            expect((server as any).not_found()).rejects.toThrowErrorMatchingInlineSnapshot(`[Error: Method not found]`),
             // Keep this reference
             expect(server.withThisRef()).resolves.toMatchInlineSnapshot(`3`),
         ])
@@ -26,8 +26,8 @@ it(
 
 it(
     '(generator) should work for basic use case',
-    withSnapshotDefault('async-call-generator-basic', async (_, call) => {
-        const server = call()
+    withSnapshotDefault('async-call-generator-basic', async ({ initIterator }) => {
+        const server = initIterator()
         // Normal call
         {
             const iter = server.echo([1, 2, 3])
@@ -103,9 +103,9 @@ it(
 
 it(
     'default generateRandomID',
-    withSnapshotDefault('generateRandomID', async (f) => {
+    withSnapshotDefault('generateRandomID', async ({ init }) => {
         await reproduceRandomID(async () => {
-            const server = f({ opts: { idGenerator: undefined } })
+            const server = init({ options: { idGenerator: undefined } })
             await server.add(1, 2)
         })
     }),
@@ -113,9 +113,9 @@ it(
 
 it(
     '(generator) default generateRandomID',
-    withSnapshotDefault('generateRandomID-2', async (_, f) => {
+    withSnapshotDefault('generateRandomID-2', async ({ initIterator }) => {
         await reproduceRandomID(async () => {
-            const server = f({ opts: { idGenerator: undefined } })
+            const server = initIterator({ options: { idGenerator: undefined } })
             for await (const _x of server.echo([])) {
             }
         })
@@ -126,24 +126,23 @@ it(
     'can used with CallbackBasedChannel',
     withSnapshotDefault(
         'CallbackBasedChannel',
-        async (f) => {
-            const server = f({})
+        async ({ init }) => {
+            const server = init({})
             await server.add(1, 2)
         },
-        800,
-        TestCallbackBasedChannel,
+        { createChannelPair: (log) => createChannelPairFromConstructor(log, TestCallbackBasedChannel) },
     ),
 )
 it(
     'ignores invalid channel message in CallbackBasedChannel (by 2nd parameter of setup function)',
     withSnapshotDefault(
         'CallbackBasedChannel-2',
-        async (f, _, __, raw) => {
-            f({})
-            await raw.client.send({ invalid: true })
+        async ({ init, channel }) => {
+            init({})
+            if (!('send' in channel.client)) throw new Error('test error')
+            channel.client.send!({ invalid: true })
             await delay(40)
         },
-        800,
-        TestCallbackBasedChannel,
+        { createChannelPair: (log) => createChannelPairFromConstructor(log, TestCallbackBasedChannel) },
     ),
 )

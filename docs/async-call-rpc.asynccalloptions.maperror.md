@@ -4,7 +4,7 @@
 
 ## AsyncCallOptions.mapError property
 
-Control how to report error response according to the exception
+Change the [ErrorResponseDetail](./async-call-rpc.errorresponsedetail.md)<!-- -->.
 
 **Signature:**
 

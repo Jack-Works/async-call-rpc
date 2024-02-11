@@ -1,55 +1,21 @@
 import { globalDOMException as DOMException, DOMExceptionHeader } from './error.js'
 import type { ErrorMapFunction } from '../Async-Call.js'
-import { ERROR, isArray, isBoolean, isFunction, isObject, isString, undefined } from './constants.js'
+import { ERROR, isArray, isFunction, isObject, undefined } from './constants.js'
+import type { Request, SuccessResponse, ErrorResponse, ID, Response } from '../types.js'
 
 export const jsonrpc = '2.0'
-export type ID = string | number | null | undefined
-/**
- * JSONRPC Request object.
- */
-export interface Request
-    extends Readonly<{
-        jsonrpc: typeof jsonrpc
-        id?: ID
-        method: string
-        params: readonly unknown[] | object
-        remoteStack?: string
-    }> {}
-
-export const Request = (id: ID, method: string, params: readonly unknown[] | object, remoteStack?: string): Request => {
+export const makeRequest = (id: ID, method: string, params: readonly unknown[] | object, remoteStack?: string): Request => {
     const x: Request = { jsonrpc, id, method, params, remoteStack }
     deleteUndefined(x, 'id')
     deleteFalsy(x, 'remoteStack')
     return x
 }
-
-/**
- * JSONRPC SuccessResponse object.
- */
-export interface SuccessResponse
-    extends Readonly<{
-        jsonrpc: typeof jsonrpc
-        id?: ID
-        result: unknown
-    }> {}
-export const SuccessResponse = (id: ID, result: unknown): SuccessResponse => {
+export const makeSuccessResponse = (id: ID, result: unknown): SuccessResponse => {
     const x: SuccessResponse = { jsonrpc, id, result }
     deleteUndefined(x, 'id')
     return x
 }
-
-/**
- * JSONRPC ErrorResponse object.
- * @public
- */
-export interface ErrorResponse<E = unknown>
-    extends Readonly<{
-        jsonrpc: typeof jsonrpc
-        id?: ID
-        error: Readonly<{ code: number; message: string; data?: E }>
-    }> {}
-
-export const ErrorResponse = <T>(id: ID, code: number, message: string, data?: T): ErrorResponse<T> => {
+export const makeErrorResponse = <T>(id: ID, code: number, message: string, data?: T): ErrorResponse<T> => {
     if (id === undefined) id = null
     code = Math.floor(code)
     if (Number.isNaN(code)) code = -1
@@ -70,8 +36,8 @@ export const ErrorResponseParseError = <T>(e: unknown, mapper: ErrorMapFunction<
 // Not using.
 // InvalidParams -32602 'Invalid params'
 // InternalError -32603 'Internal error'
-export const ErrorResponseInvalidRequest = (id: ID) => ErrorResponse(id, -32600, 'Invalid Request')
-export const ErrorResponseMethodNotFound = (id: ID) => ErrorResponse(id, -32601, 'Method not found')
+export const ErrorResponseInvalidRequest = (id: ID) => makeErrorResponse(id, -32600, 'Invalid Request')
+export const ErrorResponseMethodNotFound = (id: ID) => makeErrorResponse(id, -32601, 'Method not found')
 
 type AsyncCallErrorDetail = {
     stack?: string
@@ -80,7 +46,7 @@ type AsyncCallErrorDetail = {
 export const ErrorResponseMapped = <T>(request: Request, e: unknown, mapper: ErrorMapFunction<T>): ErrorResponse<T> => {
     const { id } = request
     const { code, message, data } = mapper(e, request)
-    return ErrorResponse(id, code, message, data)
+    return makeErrorResponse(id, code, message, data)
 }
 
 export const defaultErrorMapper =
@@ -90,7 +56,8 @@ export const defaultErrorMapper =
         let type = toString(ERROR, (ctor = (e as any).constructor) => isFunction(ctor) && ctor.name)
         const E = DOMException()
         if (E && e instanceof E) type = DOMExceptionHeader + e.name
-        if (isString(e) || typeof e === 'number' || isBoolean(e) || typeof e === 'bigint') {
+        const eType = typeof e
+        if (eType == 'string' || eType === 'number' || eType == 'boolean' || eType == 'bigint') {
             type = ERROR
             message = String(e)
         }
@@ -98,10 +65,6 @@ export const defaultErrorMapper =
         return { code, message, data }
     }
 
-/**
- * A JSONRPC response object
- */
-export type Response = SuccessResponse | ErrorResponse
 
 export const isJSONRPCObject = (data: any): data is Response | Request => {
     if (!isObject(data)) return false
@@ -113,8 +76,6 @@ export const isJSONRPCObject = (data: any): data is Response | Request => {
     }
     return true
 }
-
-export { isObject } from './constants.js'
 
 const toString = (_default: string, val: () => any) => {
     try {

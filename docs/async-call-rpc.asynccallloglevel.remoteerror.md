@@ -4,7 +4,7 @@
 
 ## AsyncCallLogLevel.remoteError property
 
-Log remote errors
+Log errors from the remote
 
 **Signature:**
 

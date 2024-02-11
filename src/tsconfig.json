@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "module": "ESNext",
+    "module": "NodeNext",
     "rootDir": "./",
     "outDir": "../dist/core/",
     // This lib does not require any external libs

@@ -4,15 +4,10 @@
 
 ## AsyncCallOptions.logger property
 
-Provide the logger of AsyncCall
+Provide the logger
 
 **Signature:**
 
 ```typescript
 logger?: ConsoleInterface;
 ```
-
-## Remarks
-
-See [ConsoleInterface](./async-call-rpc.consoleinterface.md)
-

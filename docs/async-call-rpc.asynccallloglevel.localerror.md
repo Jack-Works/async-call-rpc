@@ -4,7 +4,7 @@
 
 ## AsyncCallLogLevel.localError property
 
-Log all errors produced when responding requests
+Log all errors when responding requests
 
 **Signature:**
 

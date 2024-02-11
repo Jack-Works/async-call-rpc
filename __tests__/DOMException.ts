@@ -4,9 +4,9 @@ import { expect, it } from 'vitest'
 
 it(
     'able to serialize DOMException',
-    withSnapshotDefault('DOMException', async (f) => {
+    withSnapshotDefault('DOMException', async ({ init }) => {
         await reproduceDOMException(false, async () => {
-            const server = f()
+            const server = init()
             const promise: Promise<never> = server.DOMException()
             try {
                 await promise
@@ -22,10 +22,10 @@ it(
 
 it(
     'able to recover from Error constructor with a bad implementation',
-    withSnapshotDefault('recover-error-with-bad-implementation', async (f) => {
+    withSnapshotDefault('recover-error-with-bad-implementation', async ({ init }) => {
         await reproduceError(() =>
             reproduceDOMException(true, async () => {
-                const server = f()
+                const server = init()
                 const promise = server.DOMException()
                 await expect(promise).rejects.toThrowError()
             }),

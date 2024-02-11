@@ -4,7 +4,12 @@
 
 ## Serialization interface
 
-Serialize and deserialize of the JSON RPC payload
+> Warning: This API is now obsolete.
+> 
+> Use [IsomorphicEncoder](./async-call-rpc.isomorphicencoder.md) instead.
+> 
+
+Serialize and deserialize of the JSON-RPC payload
 
 **Signature:**
 

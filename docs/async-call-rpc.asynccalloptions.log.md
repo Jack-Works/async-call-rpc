@@ -14,7 +14,7 @@ log?: AsyncCallLogLevel | boolean | 'all';
 
 ## Remarks
 
-- `true` is a reasonable default value, which means all options are the default options in the [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md)
+- `true` is a reasonable default value, which means all options are the default in the [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md)
 
 - `false` is disable all logs
 

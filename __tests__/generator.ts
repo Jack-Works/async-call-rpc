@@ -3,8 +3,8 @@ import { expect, it } from 'vitest'
 
 it(
     '(generator) behavior correct',
-    withSnapshotDefault('generator-detailed', async (_, f) => {
-        const server = f()
+    withSnapshotDefault('generator-detailed', async ({ initIterator }) => {
+        const server = initIterator()
         const gen = server.endless()
         expect(await gen.next()).toMatchInlineSnapshot(`
           {

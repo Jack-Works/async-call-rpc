@@ -13,7 +13,7 @@ export type Logger = {
     receive(msg: unknown): void
     log: Console
 }
-export function createLogger<T extends string>(roles: readonly T[]) {
+export function createLogger<const T extends string>(roles: readonly T[]) {
     const timeline: TimelineItem[] = []
     function emit() {
         let str = ['# Timeline\n']

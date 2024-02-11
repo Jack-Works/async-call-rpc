@@ -9,7 +9,7 @@ Send the data to the remote side.
 **Signature:**
 
 ```typescript
-send(data: Data): void;
+send(data: Data): void | Promise<void>;
 ```
 
 ## Parameters
@@ -20,5 +20,5 @@ send(data: Data): void;
 
 **Returns:**
 
-void
+void \| Promise&lt;void&gt;
 

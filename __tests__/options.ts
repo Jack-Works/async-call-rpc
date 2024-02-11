@@ -4,11 +4,11 @@ import { expect, it, vi } from 'vitest'
 
 it(
     'options.logger',
-    withSnapshotDefault('async-call-default-logger', async (f, _, log) => {
+    withSnapshotDefault('async-call-default-logger', async ({ init, log }) => {
         log('In other tests we provide logger.', "So we'd test no logger here.", 'It should use globalThis.logger')
         const old = console
         globalThis.console = { log } as any
-        const server = f({ opts: { logger: undefined } })
+        const server = init({ options: { logger: undefined } })
         globalThis.console = old
         await server.add(1, 2)
     }),
@@ -16,9 +16,9 @@ it(
 
 it(
     'options.log=all',
-    withSnapshotDefault('async-call-log-all', async (f) => {
+    withSnapshotDefault('async-call-log-all', async ({ init }) => {
         await reproduceError(async () => {
-            const server = f({ opts: { log: 'all' } })
+            const server = init({ options: { log: 'all' } })
             await server.add(1, 2)
             await server.throws().catch(() => {})
         })
@@ -27,8 +27,8 @@ it(
 
 it(
     'options.log=false',
-    withSnapshotDefault('async-call-log-false', async (f) => {
-        const server = f({ opts: { log: false } })
+    withSnapshotDefault('async-call-log-false', async ({ init }) => {
+        const server = init({ options: { log: false } })
         await server.add(1, 2)
         await server.throws().catch(() => {})
     }),
@@ -36,8 +36,8 @@ it(
 
 it(
     'options.log=true',
-    withSnapshotDefault('async-call-log-true', async (f) => {
-        const server = f({ opts: { log: true } })
+    withSnapshotDefault('async-call-log-true', async ({ init }) => {
+        const server = init({ options: { log: true } })
         await server.add(1, 2)
         await server.throws().catch(() => {})
     }),
@@ -45,8 +45,8 @@ it(
 
 it(
     'options.log=object',
-    withSnapshotDefault('async-call-log-object', async (f) => {
-        const server = f({ opts: { log: { type: 'basic', beCalled: true, localError: false } } })
+    withSnapshotDefault('async-call-log-object', async ({ init }) => {
+        const server = init({ options: { log: { type: 'basic', beCalled: true, localError: false } } })
         await server.add(1, 2)
         await server.throws().catch(() => {})
     }),
@@ -54,11 +54,11 @@ it(
 
 it(
     'options.requestReplay',
-    withSnapshotDefault('async-call-log-requestReplay', async (f) => {
+    withSnapshotDefault('async-call-log-requestReplay', async ({ init }) => {
         const logs = [] as any[]
         const fn = vi.fn()
-        const server = f({
-            opts: {
+        const server = init({
+            options: {
                 log: { requestReplay: true, beCalled: true },
                 logger: { log: (...args: any[]) => logs.push(...args) },
             },
@@ -75,35 +75,35 @@ it(
 
 it(
     'options.parameterStructures',
-    withSnapshotDefault('async-call-parameterStructures-by-name', async (f) => {
-        const server = f({ opts: { parameterStructures: 'by-name' } })
+    withSnapshotDefault('async-call-parameterStructures-by-name', async ({ init }) => {
+        const server = init({ options: { parameterStructures: 'by-name' } })
         await expect(server.byPos({ a: 1, b: 2 })).resolves.toMatchInlineSnapshot(`3`)
     }),
 )
 
 it(
     'options.preferLocalImplementation',
-    withSnapshotDefault('async-call-preferLocalImplementation', async (f) => {
-        const server = f({ opts: { preferLocalImplementation: true } })
+    withSnapshotDefault('async-call-preferLocalImplementation', async ({ init }) => {
+        const server = init({ options: { preferLocalImplementation: true } })
         await expect(server.add(1, 2)).resolves.toMatchInlineSnapshot(`3`)
     }),
 )
 
 it(
     'custom error mapper',
-    withSnapshotDefault('async-call-custom-error-mapper', async (f) => {
-        const server = f({
-            opts: { mapError: () => ({ code: -233, message: 'Oh my message', data: { custom_data: true } }) },
+    withSnapshotDefault('async-call-custom-error-mapper', async ({ init }) => {
+        const server = init({
+            options: { mapError: () => ({ code: -233, message: 'Oh my message', data: { custom_data: true } }) },
         })
-        await expect(server.throws()).rejects.toThrowErrorMatchingInlineSnapshot('"Oh my message"')
+        await expect(server.throws()).rejects.toThrowErrorMatchingInlineSnapshot(`[Error: Oh my message]`)
     }),
 )
 
 it(
     'thenable = false',
-    withSnapshotDefault('async-call-thenable-false', async (f) => {
-        const a = f({
-            opts: { thenable: false },
+    withSnapshotDefault('async-call-thenable-false', async ({ init }) => {
+        const a = init({
+            options: { thenable: false },
         })
         expect(a).toHaveProperty('then', undefined)
     }),
