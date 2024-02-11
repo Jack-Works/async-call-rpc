@@ -126,10 +126,16 @@ export interface AsyncCallOptions<EncodedRequest = unknown, EncodedResponse = un
     /**
      * Name used when pretty log is enabled.
      * @defaultValue `rpc`
+     * @deprecated Renamed to "name".
      * @privateRemarks
      * TODO: rename this option to name.
      */
     key?: string
+    /**
+     * Name used when pretty log is enabled.
+     * @defaultValue `rpc`
+     */
+    name?: string
     /**
      * Serializer of the requests and responses.
      * @deprecated Use "encoding" option instead. This option will be removed in the next major version.

@@ -108,3 +108,14 @@ it(
         expect(a).toHaveProperty('then', undefined)
     }),
 )
+
+it(
+    'should error if both name and key are provided',
+    withSnapshotDefault('async-call-key-name', async ({ init }) => {
+        expect(() =>
+            init({
+                options: { key: 'a', name: 'b' },
+            }),
+        ).toThrowErrorMatchingInlineSnapshot(`[TypeError: Please remove key.]`)
+    }),
+)

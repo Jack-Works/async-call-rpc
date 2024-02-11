@@ -4,6 +4,11 @@
 
 ## AsyncCallOptions.key property
 
+> Warning: This API is now obsolete.
+> 
+> Renamed to "name".
+> 
+
 Name used when pretty log is enabled.
 
 **Signature:**

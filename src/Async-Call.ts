@@ -112,7 +112,8 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     const {
         serializer,
         encoder,
-        key: logKey = 'rpc',
+        key: deprecatedName,
+        name,
         strict = true,
         log = true,
         parameterStructures = 'by-position',
@@ -123,6 +124,11 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         channel,
         thenable,
     } = options
+
+    // Note: we're not shorten this error message because it will be removed in the next major version.
+    if (serializer && encoder) throw new TypeError('Please remove serializer.')
+    if (name && deprecatedName) throw new TypeError('Please remove key.')
+    const logKey = name || deprecatedName || 'rpc'
 
     const {
         encode: encodeFromOption,
@@ -136,8 +142,8 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     const encodeRequest: (data: Requests | Responses) => any = encoder
         ? (data) => apply(encodeRequestFromOption || encodeFromOption, encoder, [data])
         : serializer
-        ? (data) => serializer.serialization(data)
-        : Object
+          ? (data) => serializer.serialization(data)
+          : Object
 
     const encodeResponse: (data: Requests | Responses) => any = encoder
         ? (data) => apply(encodeResponseFromOption || encodeFromOption, encoder, [data])
@@ -150,14 +156,11 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
               hint == 'request'
                   ? apply(decodeRequest || decode, encoder, [data])
                   : hint == 'response'
-                  ? apply(decodeResponse || decode, encoder, [data])
-                  : apply(decode, encoder, [data])
+                    ? apply(decodeResponse || decode, encoder, [data])
+                    : apply(decode, encoder, [data])
         : serializer
-        ? (data) => serializer.deserialization(data)
-        : Object
-
-    // Note: we're not shorten this error message because it will be removed in the next major version.
-    if (serializer && encoder) throw new TypeError('Please remove serializer.')
+          ? (data) => serializer.deserialization(data)
+          : Object
 
     if (thisSideImplementation instanceof Promise) awaitThisSideImplementation()
     else {

@@ -22,6 +22,7 @@ export interface AsyncCallOptions<EncodedRequest = unknown, EncodedResponse = un
 |  [log?](./async-call-rpc.asynccalloptions.log.md) |  | [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) \| boolean \| 'all' | _(Optional)_ Choose log level. |
 |  [logger?](./async-call-rpc.asynccalloptions.logger.md) |  | [ConsoleInterface](./async-call-rpc.consoleinterface.md) | _(Optional)_ Provide the logger |
 |  [mapError?](./async-call-rpc.asynccalloptions.maperror.md) |  | [ErrorMapFunction](./async-call-rpc.errormapfunction.md)<!-- -->&lt;unknown&gt; | _(Optional)_ Change the [ErrorResponseDetail](./async-call-rpc.errorresponsedetail.md)<!-- -->. |
+|  [name?](./async-call-rpc.asynccalloptions.name.md) |  | string | _(Optional)_ Name used when pretty log is enabled. |
 |  [parameterStructures?](./async-call-rpc.asynccalloptions.parameterstructures.md) |  | 'by-position' \| 'by-name' | _(Optional)_ Choose flavor of parameter structures defined in the spec |
 |  [preferLocalImplementation?](./async-call-rpc.asynccalloptions.preferlocalimplementation.md) |  | boolean | _(Optional)_ Prefer local implementation than remote. |
 |  [serializer?](./async-call-rpc.asynccalloptions.serializer.md) |  | [Serialization](./async-call-rpc.serialization.md) | _(Optional)_ Serializer of the requests and responses. |

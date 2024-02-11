@@ -22,10 +22,12 @@ export interface AsyncCallOptions<EncodedRequest = unknown, EncodedResponse = un
     channel: CallbackBasedChannel<EncodedRequest | EncodedResponse> | EventBasedChannel<EncodedRequest | EncodedResponse> | Promise<CallbackBasedChannel<EncodedRequest | EncodedResponse> | EventBasedChannel<EncodedRequest | EncodedResponse>>;
     encoder?: IsomorphicEncoder<EncodedRequest, EncodedResponse> | IsomorphicEncoderFull<EncodedRequest, EncodedResponse>;
     idGenerator?(): string | number;
+    // @deprecated
     key?: string;
     log?: AsyncCallLogLevel | boolean | 'all';
     logger?: ConsoleInterface;
     mapError?: ErrorMapFunction<unknown>;
+    name?: string;
     parameterStructures?: 'by-position' | 'by-name';
     preferLocalImplementation?: boolean;
     // @deprecated
