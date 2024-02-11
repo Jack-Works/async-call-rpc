@@ -204,12 +204,12 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
                 if (log_pretty) {
                     const logArgs: unknown[] = [
                         `${logKey}.%c${method}%c(${args.map(() => '%o').join(', ')}%c)\n%o %c@${req_id}`,
-                        'color: #d2c057',
+                        'color:#d2c057',
                         '',
                         ...args,
                         '',
                         promise,
-                        'color: gray; font-style: italic;',
+                        'color:gray;font-style:italic;',
                     ]
                     if (log_requestReplay) {
                         const replay = () => {

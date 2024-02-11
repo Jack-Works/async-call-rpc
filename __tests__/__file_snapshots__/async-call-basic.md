@@ -93,13 +93,13 @@ Object {
 Array [
     "rpc.%cadd%c(%o, %o%c)
 %o %c@0",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     1,
     2,
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 
@@ -132,12 +132,12 @@ Object {
 Array [
     "rpc.%cecho%c(%o%c)
 %o %c@1",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     "string",
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 
@@ -168,11 +168,11 @@ Object {
 Array [
     "rpc.%cthrows%c(%c)
 %o %c@2",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 
@@ -219,12 +219,12 @@ Object {
 Array [
     "rpc.%cthrowEcho%c(%o%c)
 %o %c@3",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     "1",
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 
@@ -293,11 +293,11 @@ Object {
 Array [
     "rpc.%cwithThisRef%c(%c)
 %o %c@5",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 

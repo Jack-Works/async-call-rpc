@@ -22,7 +22,7 @@ Object {
 Array [
     "rpc.%crpc.async-iterator.start%c(%o, %o%c)
 %o %c@ndom-id-1",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     "echo",
     Array [
@@ -30,7 +30,7 @@ Array [
     ],
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 
@@ -64,13 +64,13 @@ Object {
 Array [
     "rpc.%crpc.async-iterator.next%c(%o, %o%c)
 %o %c@ndom-id-3",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     "ndom-id-2",
     undefined,
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 

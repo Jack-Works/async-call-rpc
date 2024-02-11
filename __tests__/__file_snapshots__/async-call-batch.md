@@ -38,13 +38,13 @@ Array [
 Array [
     "rpc.%cadd%c(%o, %o%c)
 %o %c@0",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     2,
     3,
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 
@@ -54,12 +54,12 @@ Array [
 Array [
     "rpc.%cecho%c(%o%c)
 %o %c@1",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     1,
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 

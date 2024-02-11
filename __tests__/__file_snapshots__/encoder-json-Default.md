@@ -12,11 +12,11 @@
 Array [
     "rpc.%cundefined%c(%c)
 %o %c@0",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 
@@ -38,11 +38,11 @@ Array [
 Array [
     "rpc.%cdeep_undefined%c(%c)
 %o %c@1",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 

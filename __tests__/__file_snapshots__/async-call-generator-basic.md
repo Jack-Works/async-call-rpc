@@ -26,7 +26,7 @@ Object {
 Array [
     "rpc.%crpc.async-iterator.start%c(%o, %o%c)
 %o %c@0",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     "echo",
     Array [
@@ -38,7 +38,7 @@ Array [
     ],
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 
@@ -72,13 +72,13 @@ Object {
 Array [
     "rpc.%crpc.async-iterator.next%c(%o, %o%c)
 %o %c@2",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     1,
     undefined,
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 
@@ -115,13 +115,13 @@ Object {
 Array [
     "rpc.%crpc.async-iterator.next%c(%o, %o%c)
 %o %c@3",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     1,
     undefined,
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 
@@ -158,13 +158,13 @@ Object {
 Array [
     "rpc.%crpc.async-iterator.next%c(%o, %o%c)
 %o %c@4",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     1,
     undefined,
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 
@@ -201,13 +201,13 @@ Object {
 Array [
     "rpc.%crpc.async-iterator.next%c(%o, %o%c)
 %o %c@5",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     1,
     undefined,
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 
@@ -244,13 +244,13 @@ Object {
 Array [
     "rpc.%crpc.async-iterator.start%c(%o, %o%c)
 %o %c@6",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     "magic",
     Array [],
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 
@@ -284,13 +284,13 @@ Object {
 Array [
     "rpc.%crpc.async-iterator.next%c(%o, %o%c)
 %o %c@8",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     7,
     0,
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 
@@ -327,13 +327,13 @@ Object {
 Array [
     "rpc.%crpc.async-iterator.next%c(%o, %o%c)
 %o %c@9",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     7,
     1,
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 
@@ -370,13 +370,13 @@ Object {
 Array [
     "rpc.%crpc.async-iterator.throw%c(%o, %o%c)
 %o %c@10",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     7,
     [Error: 2],
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 
@@ -413,13 +413,13 @@ Object {
 Array [
     "rpc.%crpc.async-iterator.next%c(%o, %o%c)
 %o %c@11",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     7,
     "well",
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 
@@ -456,13 +456,13 @@ Object {
 Array [
     "rpc.%crpc.async-iterator.return%c(%o, %o%c)
 %o %c@12",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     7,
     "bye",
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 

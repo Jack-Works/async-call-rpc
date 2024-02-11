@@ -20,13 +20,13 @@ Object {
 Array [
     "rpc.%cadd%c(%o, %o%c)
 %o %c@0",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     1,
     2,
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 
@@ -57,11 +57,11 @@ Object {
 Array [
     "rpc.%cthrows%c(%c)
 %o %c@1",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 

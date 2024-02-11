@@ -17,11 +17,11 @@ Object {
 Array [
     "rpc.%cotherMethods%c(%c)
 %o %c@0",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 

@@ -20,7 +20,7 @@ Object {
 Array [
     "rpc.%cbyPos%c(%o%c)
 %o %c@0",
-    "color: #d2c057",
+    "color:#d2c057",
     "",
     Object {
         "a": 1,
@@ -28,7 +28,7 @@ Array [
     },
     "",
     Promise {},
-    "color: gray; font-style: italic;",
+    "color:gray;font-style:italic;",
 ]
 ```
 
