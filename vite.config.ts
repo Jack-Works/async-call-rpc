@@ -5,6 +5,7 @@ export default defineConfig({
         include: ['./__tests__/*.ts'],
         coverage: {
             provider: 'v8',
+            include: ['src/**'],
         },
     },
 })
