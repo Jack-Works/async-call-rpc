@@ -28,6 +28,8 @@ export interface AsyncCallOptions<EncodedRequest = unknown, EncodedResponse = un
     logger?: ConsoleInterface;
     mapError?: ErrorMapFunction<unknown>;
     name?: string;
+    parameterStructure?: 'by-position' | 'by-name';
+    // @deprecated
     parameterStructures?: 'by-position' | 'by-name';
     preferLocalImplementation?: boolean;
     // @deprecated

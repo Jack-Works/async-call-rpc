@@ -114,6 +114,17 @@ export interface AsyncCallStrictOptions {
      * @defaultValue true
      */
     unknownMessage?: boolean
+    // TODO: implement this if there is needed
+    /**
+     * Controls if redundant arguments on the client triggers a warning or error.
+     * @see {@link https://www.jsonrpc.org/specification#parameter_structures}
+     * @remarks
+     * If this option is set and parameterStructure is "by-name",
+     * and the client calls with more than 1 argument, it will trigger a warning or error.
+     *
+     * @defaultValue false
+     */
+    // redundantArguments?: false | 'error' | 'warning'
 }
 /**
  * Strict options
@@ -133,8 +144,6 @@ export interface AsyncCallOptions<EncodedRequest = unknown, EncodedResponse = un
      * Name used when pretty log is enabled.
      * @defaultValue `rpc`
      * @deprecated Renamed to "name".
-     * @privateRemarks
-     * TODO: rename this option to name.
      */
     key?: string
     /**
@@ -210,13 +219,22 @@ export interface AsyncCallOptions<EncodedRequest = unknown, EncodedResponse = un
      * @remarks
      * When using `by-name`, only first parameter is sent to the remote and it must be an object.
      *
-     * @privateRemarks
-     * TODO: review the edge cases when using "by-name".
-     * TODO: throw an error/print a warning when using "by-name" and the first parameter is not an object/more than 1 parameter is given.
-     * TODO: rename to parameterStructure
+     * @deprecated renamed to "parameterStructure"
      * @defaultValue "by-position"
      */
     parameterStructures?: 'by-position' | 'by-name'
+    /**
+     * Choose flavor of parameter structures defined in the spec
+     * @see {@link https://www.jsonrpc.org/specification#parameter_structures}
+     * @remarks
+     * When using `by-name`, only first parameter is sent to the remote and it must be an object.
+     *
+     * @privateRemarks
+     * TODO: review the edge cases when using "by-name".
+     * TODO: throw an error/print a warning when using "by-name" and the first parameter is not an object/more than 1 parameter is given.
+     * @defaultValue "by-position"
+     */
+    parameterStructure?: 'by-position' | 'by-name'
     /**
      * Prefer local implementation than remote.
      * @remarks
@@ -227,8 +245,6 @@ export interface AsyncCallOptions<EncodedRequest = unknown, EncodedResponse = un
     /**
      * The ID generator of each JSON RPC request
      * @defaultValue () =\> Math.random().toString(36).slice(2)
-     * @privateRemarks
-     * TODO: rename to generateID
      */
     idGenerator?(): string | number
     /**

@@ -116,7 +116,8 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         name,
         strict = true,
         log = true,
-        parameterStructures = 'by-position',
+        parameterStructures: deprecatedParameterStructures,
+        parameterStructure,
         preferLocalImplementation = false,
         idGenerator = generateRandomID,
         mapError,
@@ -128,6 +129,8 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     // Note: we're not shorten this error message because it will be removed in the next major version.
     if (serializer && encoder) throw new TypeError('Please remove serializer.')
     if (name && deprecatedName) throw new TypeError('Please remove key.')
+    if (deprecatedParameterStructures && parameterStructure) throw new TypeError('Please remove parameterStructure.')
+    const paramStyle = deprecatedParameterStructures || parameterStructure || 'by-position'
     const logKey = name || deprecatedName || 'rpc'
 
     const {
@@ -190,8 +193,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             const { params, method, id: req_id, remoteStack } = data
             // ? We're mapping any method starts with 'rpc.' to a Symbol.for
             const key = (method.startsWith('rpc.') ? Symbol.for(method) : method) as keyof object
-            const executor: unknown =
-                resolvedThisSideImplementationValue && (resolvedThisSideImplementationValue as any)[key]
+            const executor: unknown = resolvedThisSideImplementationValue && resolvedThisSideImplementationValue[key]
             if (!isFunction(executor)) {
                 if (!banMethodNotFound) {
                     if (log_localError) console_debug('Missing method', key, data)
@@ -307,8 +309,11 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             }
         } catch (e) {
             if (log_localError) console_error(e, data, result)
-            // TODO: should check before access e.stack
-            return ErrorResponseParseError(e, mapError || defaultErrorMapper(e && (e as any).stack))
+            let stack: string | undefined
+            try {
+                stack = '' + (e as any).stack
+            } catch {}
+            return ErrorResponseParseError(e, mapError || defaultErrorMapper(stack))
         }
     }
     const rawMessageSender = async (res: undefined | Response | (Response | undefined)[]) => {
@@ -382,7 +387,7 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
             }
             const id = idGenerator()
             stack = removeStackHeader(stack)
-            const param = parameterStructures === 'by-name' && args.length === 1 && isObject(args[0]) ? args[0] : args
+            const param = paramStyle === 'by-name' && args.length === 1 && isObject(args[0]) ? args[0] : args
             const request = makeRequest(
                 notify ? undefined : id,
                 method as string,

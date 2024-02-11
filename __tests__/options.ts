@@ -119,3 +119,14 @@ it(
         ).toThrowErrorMatchingInlineSnapshot(`[TypeError: Please remove key.]`)
     }),
 )
+
+it(
+    'should error if both parameterStructure and parameterStructures are provided',
+    withSnapshotDefault('async-call-key-name', async ({ init }) => {
+        expect(() =>
+            init({
+                options: { parameterStructure: 'by-name', parameterStructures: 'by-name' },
+            }),
+        ).toThrowErrorMatchingInlineSnapshot(`[TypeError: Please remove key.]`)
+    }),
+)

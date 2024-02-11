@@ -4,6 +4,11 @@
 
 ## AsyncCallOptions.parameterStructures property
 
+> Warning: This API is now obsolete.
+> 
+> renamed to "parameterStructure"
+> 
+
 Choose flavor of parameter structures defined in the spec
 
 **Signature:**
