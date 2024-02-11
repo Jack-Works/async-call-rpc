@@ -127,6 +127,6 @@ it(
             init({
                 options: { parameterStructure: 'by-name', parameterStructures: 'by-name' },
             }),
-        ).toThrowErrorMatchingInlineSnapshot(`[TypeError: Please remove key.]`)
+        ).toThrowErrorMatchingInlineSnapshot(`[TypeError: Please remove parameterStructure.]`)
     }),
 )
