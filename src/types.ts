@@ -97,10 +97,8 @@ export interface AsyncCallLogLevel {
  * @remarks
  * Control the behavior that different from the JSON-RPC specification.
  * @public
- * @privateRemarks
- * TODO: rename to AsyncCallStrictOptions
  */
-export interface AsyncCallStrictJSONRPC {
+export interface AsyncCallStrictOptions {
     /**
      * Controls if AsyncCall send an ErrorResponse when the requested method is not defined.
      * @remarks
@@ -117,6 +115,14 @@ export interface AsyncCallStrictJSONRPC {
      */
     unknownMessage?: boolean
 }
+/**
+ * Strict options
+ * @remarks
+ * Control the behavior that different from the JSON-RPC specification.
+ * @public
+ * @deprecated renamed to {@link AsyncCallStrictOptions}
+ */
+export interface AsyncCallStrictJSONRPC extends AsyncCallStrictOptions {}
 
 /**
  * Options for {@link AsyncCall}

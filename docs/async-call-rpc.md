@@ -28,6 +28,7 @@ See the introduction at [Github](https://github.com/Jack-Works/async-call)
 |  [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) | Log options |
 |  [AsyncCallOptions](./async-call-rpc.asynccalloptions.md) | Options for [AsyncCall()](./async-call-rpc.asynccall.md) |
 |  [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) | Strict options |
+|  [AsyncCallStrictOptions](./async-call-rpc.asynccallstrictoptions.md) | Strict options |
 |  [CallbackBasedChannel](./async-call-rpc.callbackbasedchannel.md) | This interface represents a "callback" model. |
 |  [ClientEncoding](./async-call-rpc.clientencoding.md) | Encoder of the client. |
 |  [ConsoleInterface](./async-call-rpc.consoleinterface.md) | The minimal Console interface that AsyncCall needs. |

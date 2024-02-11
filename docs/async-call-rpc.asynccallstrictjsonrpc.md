@@ -4,22 +4,21 @@
 
 ## AsyncCallStrictJSONRPC interface
 
+> Warning: This API is now obsolete.
+> 
+> renamed to [AsyncCallStrictOptions](./async-call-rpc.asynccallstrictoptions.md)
+> 
+
 Strict options
 
 **Signature:**
 
 ```typescript
-export interface AsyncCallStrictJSONRPC 
+export interface AsyncCallStrictJSONRPC extends AsyncCallStrictOptions 
 ```
+**Extends:** [AsyncCallStrictOptions](./async-call-rpc.asynccallstrictoptions.md)
 
 ## Remarks
 
 Control the behavior that different from the JSON-RPC specification.
-
-## Properties
-
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [methodNotFound?](./async-call-rpc.asynccallstrictjsonrpc.methodnotfound.md) |  | boolean | _(Optional)_ Controls if AsyncCall send an ErrorResponse when the requested method is not defined. |
-|  [unknownMessage?](./async-call-rpc.asynccallstrictjsonrpc.unknownmessage.md) |  | boolean | _(Optional)_ Controls if AsyncCall send an ErrorResponse when the message is not valid. |
 

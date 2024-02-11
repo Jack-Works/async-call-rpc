@@ -36,8 +36,12 @@ export interface AsyncCallOptions<EncodedRequest = unknown, EncodedResponse = un
     thenable?: boolean;
 }
 
+// @public @deprecated
+export interface AsyncCallStrictJSONRPC extends AsyncCallStrictOptions {
+}
+
 // @public
-export interface AsyncCallStrictJSONRPC {
+export interface AsyncCallStrictOptions {
     methodNotFound?: boolean;
     unknownMessage?: boolean;
 }
