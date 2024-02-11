@@ -11,7 +11,8 @@
     "baseUrl": "./",
     "tsBuildInfoFile": "../../dist/node.tsbuildinfo",
     "paths": {
-      "bson": ["../../node_modules/bson"]
+      "bson": ["../../node_modules/bson"],
+      "async-call-rpc": ["../../src/Async-Call.ts"]
     }
   },
   "include": ["./**/*.ts"],

@@ -1,5 +1,5 @@
 import type { serialize as S, deserialize as D } from 'bson'
-import type { Serialization } from 'async-call-rpc'
+import type { Serialization } from 'async-call-rpc' with { 'resolution-mode': 'import' }
 
 /**
  * @deprecated This will be removed in the next major version.

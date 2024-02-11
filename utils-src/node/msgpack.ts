@@ -1,5 +1,5 @@
 import type { encode as S, decode as D } from '@msgpack/msgpack'
-import type { Serialization } from 'async-call-rpc'
+import type { Serialization } from 'async-call-rpc' with { 'resolution-mode': 'import' }
 
 /**
  * @deprecated This will be removed in the next major version.
