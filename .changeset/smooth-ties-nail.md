@@ -2,4 +2,4 @@
 "async-call-rpc": patch
 ---
 
-Add Promise&lt;void&gt; into return signature of EventBasedChannel.send
+Add `Promise&lt;void&gt;` into return signature of `EventBasedChannel.send`
