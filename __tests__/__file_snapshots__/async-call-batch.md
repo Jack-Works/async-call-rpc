@@ -108,7 +108,7 @@ Array [
 
 ```php
 Array [
-    "In this part it should be no log",
+    "In this part it should has no log",
 ]
 ```
 

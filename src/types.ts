@@ -114,7 +114,7 @@ export interface AsyncCallStrictOptions {
      * @defaultValue true
      */
     unknownMessage?: boolean
-    // TODO: implement this if there is needed
+    // TODO: implement this if there is need
     /**
      * Controls if redundant arguments on the client triggers a warning or error.
      * @see {@link https://www.jsonrpc.org/specification#parameter_structures}
@@ -278,6 +278,35 @@ export interface AsyncCallOptions<EncodedRequest = unknown, EncodedResponse = un
      * To avoid this problem, methods called "then" are omitted from the type signatures. Strongly suggest to not use "then" as your RPC method name.
      */
     thenable?: boolean
+    /**
+     * AbortSignal to stop the instance.
+     * @see {@link https://mdn.io/AbortSignal}
+     * @remarks
+     * `signal` is used to stop the instance. If the `signal` is aborted, then all new requests will be rejected, except for the pending ones.
+     */
+    signal?: AbortSignalLike
+    /**
+     * AbortSignal to force stop the instance.
+     * @see {@link https://mdn.io/AbortSignal}
+     * @remarks
+     * `signal` is used to stop the instance. If the `signal` is aborted, then all new requests will be rejected, and the pending requests will be forcibly rejected and pending results will be ignored.
+     */
+    forceSignal?: AbortSignalLike
+}
+
+/**
+ * AbortSignal
+ * @public
+ * @see {@link https://mdn.io/AbortSignal}
+ * @remarks
+ * This is a subset of the AbortSignal interface defined in the [WinterCG](https://wintercg.org/).
+ */
+export interface AbortSignalLike {
+    readonly aborted: boolean
+    addEventListener(type: 'abort', listener: () => void, options: { once: boolean }): void
+    removeEventListener(type: 'abort', listener: () => void): void
+    throwIfAborted(): void
+    reason: any
 }
 
 /**

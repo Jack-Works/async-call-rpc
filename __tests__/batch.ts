@@ -30,7 +30,7 @@ it(
             log('Part 2 start')
             const a = server.add(2, 3)
             const b = server.echo(1)
-            log('In this part it should be no log')
+            log('In this part it should has no log')
             drop()
             expect(a).rejects.toThrowErrorMatchingInlineSnapshot(`[Error: Aborted]`)
             expect(b).rejects.toThrowErrorMatchingInlineSnapshot(`[Error: Aborted]`)
@@ -38,5 +38,56 @@ it(
         }
         // Keep identity
         expect(server.add).toBe(server.add)
+    }),
+)
+
+it(
+    'can create multiple batch',
+    withSnapshotDefault('async-call-multiple-batch', async ({ init, log }) => {
+        const _server = init()
+        const [server, send, drop] = batch(_server)
+        const [server2, send2] = batch(_server)
+
+        // should not send anything
+        send()
+        {
+            const a = server.add(2, 3)
+            const b = server.echo(1)
+            const a2 = server2.add(4, 5)
+            const b2 = server2.echo(2)
+
+            log('Before this line no request from batch 1 was sent')
+            send()
+            await a
+            await b
+            log('After this line no request from batch 1 was sent')
+            send()
+
+            log('Before this line no request from batch 2 was sent')
+            send2()
+            await a2
+            await b2
+            log('After this line no request from batch 2 was sent')
+            send2()
+
+            log('Part 1 end')
+        }
+        {
+            log('Part 2 start')
+            const a = server.add(2, 3)
+            const b = server.echo(1)
+            const a2 = server2.add(4, 5)
+            const b2 = server2.echo(2)
+
+            drop()
+            await expect(a).rejects.toThrowErrorMatchingInlineSnapshot(`[Error: Aborted]`)
+            await expect(b).rejects.toThrowErrorMatchingInlineSnapshot(`[Error: Aborted]`)
+
+            send2()
+            await a2
+            await b2
+
+            log('Part 2 end')
+        }
     }),
 )

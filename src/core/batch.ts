@@ -19,6 +19,7 @@ import type { Request } from '../types.js'
  * The third item is a function to drop and reject all pending requests.
  * @public
  */
+// TODO: use private field in the future.
 export function batch<T extends object>(asyncCallInstance: T): [T, () => void, (error?: unknown) => void] {
     const queue: BatchQueue = []
     const getTrap = new Proxy(

@@ -147,13 +147,13 @@ withSnapshotDefault.debugger = (...[name, runner, options]: Parameters<typeof wi
 export type DefaultImpl = typeof defaultImpl
 type DefaultImplIterator = typeof defaultImplGenerator
 
-async function race<T>(x: Promise<T>, timeoutTime: number): Promise<T> {
+export async function race<T>(x: Promise<T>, timeoutTime: number): Promise<T> {
     return Promise.race([x, timeout(timeoutTime)])
 }
 async function timeout(x: number): Promise<never> {
     await delay(x)
-    throw new Error('Timeout')
+    throw new Error('Test timed out: ' + x + 'ms')
 }
 export function delay(x: number) {
-    return new Promise((r) => setTimeout(r, x))
+    return new Promise<void>((r) => setTimeout(r, x))
 }

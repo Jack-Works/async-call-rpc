@@ -1,6 +1,13 @@
+import type { AbortSignalLike } from '../types.js'
+
 class CustomError extends Error {
     // TODO: support cause
-    constructor(public name: string, message: string, public code: number, public stack: string) {
+    constructor(
+        public name: string,
+        message: string,
+        public code: number,
+        public stack: string,
+    ) {
         super(message)
     }
 }
@@ -66,3 +73,6 @@ export const globalDOMException = (() => {
     } catch {}
 }) as () => DOMException | undefined
 type DOMException = { new (message: string, name: string): any }
+export function onAbort(signal: AbortSignalLike | undefined, callback: () => void) {
+    signal && signal.addEventListener('abort', callback, { once: true })
+}

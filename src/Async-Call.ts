@@ -21,6 +21,7 @@ import {
     makeHostedMessage,
     Err_Cannot_call_method_starts_with_rpc_dot_directly,
     Err_Then_is_accessed_on_local_implementation_Please_explicitly_mark_if_it_is_thenable_in_the_options,
+    onAbort,
 } from './utils/error.js'
 import { generateRandomID } from './utils/generateRandomID.js'
 import { normalizeStrictOptions, normalizeLogOptions } from './utils/normalizeOptions.js'
@@ -124,6 +125,8 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         logger,
         channel,
         thenable,
+        signal,
+        forceSignal,
     } = options
 
     // Note: we're not shorten this error message because it will be removed in the next major version.
@@ -132,6 +135,11 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     if (deprecatedParameterStructures && parameterStructure) throw new TypeError('Please remove parameterStructure.')
     const paramStyle = deprecatedParameterStructures || parameterStructure || 'by-position'
     const logKey = name || deprecatedName || 'rpc'
+
+    const throwIfAborted = () => {
+        signal && signal.throwIfAborted()
+        forceSignal && forceSignal.throwIfAborted()
+    }
 
     const {
         encode: encodeFromOption,
@@ -184,7 +192,15 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
     } = (logger || console) as ConsoleInterface
     type PromiseParam = [resolve: (value?: any) => void, reject: (reason?: any) => void, stack?: string]
     const requestContext = new Map<string | number, PromiseParam>()
+
+    onAbort(forceSignal, () => {
+        requestContext.forEach((x) => x[1](forceSignal!.reason))
+        requestContext.clear()
+    })
+
     const onRequest = async (data: Request): Promise<Response | undefined> => {
+        if ((signal && signal.aborted) || (forceSignal && forceSignal.aborted))
+            return makeErrorObject((signal && signal.reason) || (forceSignal && forceSignal.reason), '', data)
         if (isThisSideImplementationPending) await awaitThisSideImplementation()
         // TODO: in next major version we should not send this message since it might contain sensitive info.
         else if (rejectedThisSideImplementation) return makeErrorObject(rejectedThisSideImplementation, '', data)
@@ -356,15 +372,24 @@ export function AsyncCall<OtherSideImplementedFunctions = {}>(
         data: SuccessResponse | ErrorResponse | Request,
     ): Promise<SuccessResponse | ErrorResponse | undefined> => {
         if ('method' in data) {
-            const r = onRequest(data)
-            if ('id' in data) return r
-            Promise_resolve(r).catch(() => {})
+            if ('id' in data) {
+                if (!forceSignal) return onRequest(data)
+                return new Promise((resolve, reject) => {
+                    const handleForceAbort = () => resolve(makeErrorObject(forceSignal.reason, '', data))
+                    onRequest(data)
+                        .then(resolve, reject)
+                        .finally(() => forceSignal.removeEventListener('abort', handleForceAbort))
+                    onAbort(forceSignal, handleForceAbort)
+                })
+            }
+            onRequest(data).catch(() => {})
             return // Skip response for notifications
         }
         return onResponse(data) as Promise<undefined>
     }
     const call = (method: string | symbol, args: unknown[], stack: string | undefined, notify = false) => {
         return new Promise<void>((resolve, reject) => {
+            throwIfAborted()
             let queue: BatchQueue | undefined = undefined
             if (method === AsyncCallBatch) {
                 queue = args.shift() as any
