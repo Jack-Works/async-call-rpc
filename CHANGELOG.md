@@ -1,5 +1,83 @@
 # Changelog
 
+## 6.4.0
+
+### Minor Changes
+
+- fd34f22: add new `encoder` option and deprecate old `serializer` option
+
+  how to migrate:
+
+  ```ts
+  // before
+  const options = {
+      channel,
+      serializer: {
+          serialization(data) { return ... },
+          deserialization(data) { return ... },
+      },
+  }
+
+  // after
+  const options = {
+      channel,
+      encoder: {
+          encode(data) { return ... },
+          decode(data) { return ... },
+      },
+  }
+  ```
+
+  ```ts
+  // before
+  const options = {
+    channel,
+    serializer: NoSerialization,
+  };
+
+  // after
+  const options = {
+    channel,
+  };
+  ```
+
+  ```ts
+  // before
+  const options = {
+    channel,
+    serializer: JSONSerialization(),
+  };
+
+  // after
+  const options = {
+    channel,
+    encoder: JSONEncoder(),
+  };
+  ```
+
+- fd34f22: `hint` added to the `CallbackBasedChannel.setup(jsonRPCHandlerCallback)` and `EventBasedChannel.on(listener)`.
+
+  For an isomorphic instance of `AsyncCall` (used as both a server and a client),
+  when a new message comes, it does not clear if to call `decodeRequest` or `decodeRespones`.
+
+  This version introduce a new option `encoder` to replace `serialization`. `serialization` is always working in isomorphic way.
+
+  - If `hint` is `"request"`, `(encoder as ServerEncoding).decodeRequest` will be called first, if this method does not exist, `(encoder as IsomorphicEncoder).decode` will be called.
+  - If `hint` is `"response"`, `(encoder as ClientEncoding).decodeResponse` will be called first, if this method does not exist, `(encoder as IsomorphicEncoder).decode` will be called.
+  - If `hint` does not present, only `encoder.decode` will be called.
+
+- 0d0900b: rename "key" to "name"
+- fd34f22: `BSON_Serialization` and `Msgpack_Serialization` is now deprecated
+- 0431c15: rename `AsyncCallStrictJSONRPC` to `AsyncCallStrictOptions`
+- 8a38d8b: add `signal` and `forceSignal` to stop the instance
+- c9bbbd2: rename `parameterStructures` to `parameterStructure`
+- fd34f22: expose JSON-RPC interfaces
+- fd34f22: new built-in `JSONEncoder` for the new encode option.
+
+### Patch Changes
+
+- fd34f22: Add `Promise&lt;void&gt;` into return signature of `EventBasedChannel.send`
+
 ## 6.3.1
 
 ### Patch Changes
