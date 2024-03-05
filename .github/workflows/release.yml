@@ -30,7 +30,7 @@ jobs:
       - run: pnpm run doc:api
       - uses: changesets/action@v1
         with:
-          publish: npx changeset publish
+          publish: node ./.github/workflows && npx jsr publish && npx changeset publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

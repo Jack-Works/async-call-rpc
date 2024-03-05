@@ -1,5 +1,5 @@
-import type { IsomorphicEncoder, Request, Requests, Response, Responses, SuccessResponse } from '../types.js'
-import { isArray, undefined } from './constants.js'
+import type { IsomorphicEncoder, Request, Requests, Response, Responses, SuccessResponse } from '../types.ts'
+import { isArray, undefined } from './constants.ts'
 
 /**
  * @public
@@ -62,5 +62,5 @@ const undefinedEncode = (i: Response | Request) => {
 
 /** @public */
 export namespace JSONEncoder {
-    export const Default = JSONEncoder()
+    export const Default: IsomorphicEncoder<unknown, unknown> = JSONEncoder()
 }

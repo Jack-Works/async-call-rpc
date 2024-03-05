@@ -1,5 +1,5 @@
-import { AsyncCallNotify } from '../utils/internalSymbol.js'
-import { isFunction } from '../utils/constants.js'
+import { AsyncCallNotify } from '../utils/internalSymbol.ts'
+import { isFunction } from '../utils/constants.ts'
 
 /**
  * Make the returning type to `Promise<void>`

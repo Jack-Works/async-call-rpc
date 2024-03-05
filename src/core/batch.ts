@@ -1,6 +1,6 @@
-import { isString } from '../utils/constants.js'
-import { AsyncCallBatch, AsyncCallNotify } from '../utils/internalSymbol.js'
-import type { Request } from '../types.js'
+import { isString } from '../utils/constants.ts'
+import { AsyncCallBatch, AsyncCallNotify } from '../utils/internalSymbol.ts'
+import type { Request } from '../types.ts'
 /**
  * Wrap the AsyncCall instance to use batch call.
  * @param asyncCallInstance - The AsyncCall instance

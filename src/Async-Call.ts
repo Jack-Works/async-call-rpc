@@ -1,9 +1,9 @@
-export * from './types.js'
-export type { _IgnoreResponse } from './core/notify.js'
-export { JSONSerialization, NoSerialization } from './utils/serialization.js'
-export { JSONEncoder, type JSONEncoderOptions } from './utils/encoder.js'
-export { notify } from './core/notify.js'
-export { batch } from './core/batch.js'
+export type * from './types.ts'
+export type { _IgnoreResponse } from './core/notify.ts'
+export { JSONSerialization, NoSerialization } from './utils/serialization.ts'
+export { JSONEncoder, type JSONEncoderOptions } from './utils/encoder.ts'
+export { notify } from './core/notify.ts'
+export { batch } from './core/batch.ts'
 
 import {
     makeRequest,
@@ -14,7 +14,7 @@ import {
     ErrorResponseMethodNotFound,
     ErrorResponseInvalidRequest,
     ErrorResponseParseError,
-} from './utils/jsonrpc.js'
+} from './utils/jsonrpc.ts'
 import {
     removeStackHeader,
     RecoverError,
@@ -22,11 +22,11 @@ import {
     Err_Cannot_call_method_starts_with_rpc_dot_directly,
     Err_Then_is_accessed_on_local_implementation_Please_explicitly_mark_if_it_is_thenable_in_the_options,
     onAbort,
-} from './utils/error.js'
-import { generateRandomID } from './utils/generateRandomID.js'
-import { normalizeStrictOptions, normalizeLogOptions } from './utils/normalizeOptions.js'
-import { AsyncCallIgnoreResponse, AsyncCallNotify, AsyncCallBatch } from './utils/internalSymbol.js'
-import type { BatchQueue } from './core/batch.js'
+} from './utils/error.ts'
+import { generateRandomID } from './utils/generateRandomID.ts'
+import { normalizeStrictOptions, normalizeLogOptions } from './utils/normalizeOptions.ts'
+import { AsyncCallIgnoreResponse, AsyncCallNotify, AsyncCallBatch } from './utils/internalSymbol.ts'
+import type { BatchQueue } from './core/batch.ts'
 import type {
     CallbackBasedChannel,
     EventBasedChannel,
@@ -41,8 +41,8 @@ import type {
     IsomorphicEncoder,
     Requests,
     Responses,
-} from './types.js'
-import { apply, ERROR, isArray, isFunction, isObject, isString, Promise_resolve, undefined } from './utils/constants.js'
+} from './types.ts'
+import { apply, ERROR, isArray, isFunction, isObject, isString, Promise_resolve, undefined } from './utils/constants.ts'
 
 /**
  * Create a RPC server & client.

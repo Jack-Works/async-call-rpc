@@ -1,4 +1,4 @@
-import type { AbortSignalLike } from '../types.js'
+import type { AbortSignalLike } from '../types.ts'
 
 class CustomError extends Error {
     // TODO: support cause

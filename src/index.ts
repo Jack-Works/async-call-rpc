@@ -5,5 +5,5 @@
  * See the introduction at {@link https://github.com/Jack-Works/async-call | Github}
  */
 
-export * from './Async-Call.js'
-export * from './Async-Call-Generator.js'
+export * from './Async-Call.ts'
+export * from './Async-Call-Generator.ts'

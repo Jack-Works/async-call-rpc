@@ -5,6 +5,22 @@
 ```ts
 
 // @public
+export interface AbortSignalLike {
+    // (undocumented)
+    readonly aborted: boolean;
+    // (undocumented)
+    addEventListener(type: 'abort', listener: () => void, options: {
+        once: boolean;
+    }): void;
+    // (undocumented)
+    reason: any;
+    // (undocumented)
+    removeEventListener(type: 'abort', listener: () => void): void;
+    // (undocumented)
+    throwIfAborted(): void;
+}
+
+// @public
 export function AsyncCall<OtherSideImplementedFunctions = {}>(thisSideImplementation: null | undefined | object | Promise<object>, options: AsyncCallOptions): AsyncVersionOf<OtherSideImplementedFunctions>;
 
 // @public
@@ -21,6 +37,7 @@ export interface AsyncCallLogLevel {
 export interface AsyncCallOptions<EncodedRequest = unknown, EncodedResponse = unknown> {
     channel: CallbackBasedChannel<EncodedRequest | EncodedResponse> | EventBasedChannel<EncodedRequest | EncodedResponse> | Promise<CallbackBasedChannel<EncodedRequest | EncodedResponse> | EventBasedChannel<EncodedRequest | EncodedResponse>>;
     encoder?: IsomorphicEncoder<EncodedRequest, EncodedResponse> | IsomorphicEncoderFull<EncodedRequest, EncodedResponse>;
+    forceSignal?: AbortSignalLike;
     idGenerator?(): string | number;
     // @deprecated
     key?: string;
@@ -34,6 +51,7 @@ export interface AsyncCallOptions<EncodedRequest = unknown, EncodedResponse = un
     preferLocalImplementation?: boolean;
     // @deprecated
     serializer?: Serialization;
+    signal?: AbortSignalLike;
     strict?: AsyncCallStrictJSONRPC | boolean;
     thenable?: boolean;
 }

@@ -18,6 +18,7 @@ export interface AsyncCallOptions<EncodedRequest = unknown, EncodedResponse = un
 |  --- | --- | --- | --- |
 |  [channel](./async-call-rpc.asynccalloptions.channel.md) |  | [CallbackBasedChannel](./async-call-rpc.callbackbasedchannel.md)<!-- -->&lt;EncodedRequest \| EncodedResponse&gt; \| [EventBasedChannel](./async-call-rpc.eventbasedchannel.md)<!-- -->&lt;EncodedRequest \| EncodedResponse&gt; \| Promise&lt;[CallbackBasedChannel](./async-call-rpc.callbackbasedchannel.md)<!-- -->&lt;EncodedRequest \| EncodedResponse&gt; \| [EventBasedChannel](./async-call-rpc.eventbasedchannel.md)<!-- -->&lt;EncodedRequest \| EncodedResponse&gt;&gt; | The message channel to exchange messages between server and client |
 |  [encoder?](./async-call-rpc.asynccalloptions.encoder.md) |  | [IsomorphicEncoder](./async-call-rpc.isomorphicencoder.md)<!-- -->&lt;EncodedRequest, EncodedResponse&gt; \| [IsomorphicEncoderFull](./async-call-rpc.isomorphicencoderfull.md)<!-- -->&lt;EncodedRequest, EncodedResponse&gt; | _(Optional)_ Encoder of requests and responses. |
+|  [forceSignal?](./async-call-rpc.asynccalloptions.forcesignal.md) |  | [AbortSignalLike](./async-call-rpc.abortsignallike.md) | _(Optional)_ AbortSignal to force stop the instance. |
 |  [key?](./async-call-rpc.asynccalloptions.key.md) |  | string | _(Optional)_ Name used when pretty log is enabled. |
 |  [log?](./async-call-rpc.asynccalloptions.log.md) |  | [AsyncCallLogLevel](./async-call-rpc.asynccallloglevel.md) \| boolean \| 'all' | _(Optional)_ Choose log level. |
 |  [logger?](./async-call-rpc.asynccalloptions.logger.md) |  | [ConsoleInterface](./async-call-rpc.consoleinterface.md) | _(Optional)_ Provide the logger |
@@ -27,6 +28,7 @@ export interface AsyncCallOptions<EncodedRequest = unknown, EncodedResponse = un
 |  [parameterStructures?](./async-call-rpc.asynccalloptions.parameterstructures.md) |  | 'by-position' \| 'by-name' | _(Optional)_ Choose flavor of parameter structures defined in the spec |
 |  [preferLocalImplementation?](./async-call-rpc.asynccalloptions.preferlocalimplementation.md) |  | boolean | _(Optional)_ Prefer local implementation than remote. |
 |  [serializer?](./async-call-rpc.asynccalloptions.serializer.md) |  | [Serialization](./async-call-rpc.serialization.md) | _(Optional)_ Serializer of the requests and responses. |
+|  [signal?](./async-call-rpc.asynccalloptions.signal.md) |  | [AbortSignalLike](./async-call-rpc.abortsignallike.md) | _(Optional)_ AbortSignal to stop the instance. |
 |  [strict?](./async-call-rpc.asynccalloptions.strict.md) |  | [AsyncCallStrictJSONRPC](./async-call-rpc.asynccallstrictjsonrpc.md) \| boolean | _(Optional)_ Control the behavior that different from the JSON-RPC spec |
 |  [thenable?](./async-call-rpc.asynccalloptions.thenable.md) |  | boolean | _(Optional)_ If the instance is "thenable". |
 

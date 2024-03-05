@@ -1,0 +1,25 @@
+{
+    "name": "@jwk/json-rpc",
+    "version": "{{version}}",
+    "exports": {
+        ".": "./src/Async-Call.ts",
+        "./full": "./src/index.ts"
+    },
+    "include": ["src/**"],
+    // https://github.com/jsr-io/jsr/issues/194
+    "exclude": [
+        "__tests__",
+        "docs",
+        "*.json",
+        "src/*.json",
+        "api",
+        "examples",
+        "utils-src",
+        "vite.config.ts",
+        "index.html",
+        "*.yaml",
+        "rollup.config.mjs",
+        "utils",
+        "next-docs"
+    ]
+}
