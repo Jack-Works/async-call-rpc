@@ -4,7 +4,7 @@
 
 [![Code coverage](https://codecov.io/gh/Jack-Works/async-call-rpc/branch/main/graph/badge.svg)](https://codecov.io/gh/Jack-Works/async-call-rpc)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Jack-Works/async-call-rpc/build.yml?branch=main)](https://github.com/Jack-Works/async-call-rpc/actions)
-[![npm](https://img.shields.io/npm/v/async-call-rpc)](https://npmjs.org/async-call-rpc)
+[![npm](https://img.shields.io/npm/v/async-call-rpc)](https://npmjs.org/async-call-rpc) [![@works/json-rpc on jsr](https://jsr.io/badges/@works/json-rpc)](https://jsr.io/@works/json-rpc)
 ![ES2015+](https://img.shields.io/badge/ECMAScript-2015%2B-brightgreen)
 
 ## Links
@@ -49,9 +49,26 @@ Chapters:
 >
 > pnpm i async-call-rpc
 
-### Import from browser or Deno
+### Install via [jsr](https://jsr.io/@works/json-rpc)
+
+This package is published as `@works/json-rpc` on the jsr.
+If you install it via jsr, you should import this package from `"@works/json-rpc"` instead of `"async-call-rpc"`
+
+> deno add @works/json-rpc
+>
+> npx jsr add @works/json-rpc
+>
+> yarn dlx jsr add @works/json-rpc
+>
+> pnpm dlx jsr add @works/json-rpc
+>
+> bunx jsr add @works/json-rpc
+
+### Import from browser
 
 You can access <https://www.jsdelivr.com/package/npm/async-call-rpc?path=out> to get the latest URL and [SRI](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity).
+
+Note: the `utils/` entrypoint is not published on the jsr.
 
 ```js
 import { AsyncCall } from 'https://cdn.jsdelivr.net/npm/async-call-rpc@latest/out/base.mjs'
