@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.4.2
+
+### Patch Changes
+
+- jsr readme update
+
 ## 6.4.1
 
 ### Patch Changes
