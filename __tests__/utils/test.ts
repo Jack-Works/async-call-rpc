@@ -1,4 +1,6 @@
+import '../../src/types.js'
 import { createLogger, type Logger } from './logger.js'
+
 import { join } from 'path'
 import {
     type AsyncVersionOf,
