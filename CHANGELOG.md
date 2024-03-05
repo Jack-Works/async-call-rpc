@@ -1,88 +1,94 @@
 # Changelog
 
+## 6.4.1
+
+### Patch Changes
+
+- 609bfed: publish on jsr registry
+
 ## 6.4.0
 
 ### Minor Changes
 
--   fd34f22: add a new `encoder` option and deprecate the old `serializer` option
+- fd34f22: add a new `encoder` option and deprecate the old `serializer` option
 
-    how to migrate:
+  how to migrate:
 
-    ```ts
-    // before
-    const options = {
-        channel,
-        serializer: {
-            serialization(data) { return ... },
-            deserialization(data) { return ... },
-        },
-    }
-
-    // after
-    const options = {
-        channel,
-        encoder: {
-            encode(data) { return ... },
-            decode(data) { return ... },
-        },
-    }
-    ```
-
-    ```ts
-    // before
-    const options = {
+  ```ts
+  // before
+  const options = {
       channel,
-      serializer: NoSerialization,
-    };
+      serializer: {
+          serialization(data) { return ... },
+          deserialization(data) { return ... },
+      },
+  }
 
-    // after
-    const options = {
+  // after
+  const options = {
       channel,
-    };
-    ```
+      encoder: {
+          encode(data) { return ... },
+          decode(data) { return ... },
+      },
+  }
+  ```
 
-    ```ts
-    // before
-    const options = {
-      channel,
-      serializer: JSONSerialization(),
-    };
+  ```ts
+  // before
+  const options = {
+    channel,
+    serializer: NoSerialization,
+  };
 
-    // after
-    const options = {
-      channel,
-      encoder: JSONEncoder(),
-    };
-    ```
+  // after
+  const options = {
+    channel,
+  };
+  ```
 
--   fd34f22: `hint` added to the `CallbackBasedChannel.setup(jsonRPCHandlerCallback)` and `EventBasedChannel.on(listener)`.
+  ```ts
+  // before
+  const options = {
+    channel,
+    serializer: JSONSerialization(),
+  };
 
-    For an isomorphic instance of `AsyncCall` (used as both a server and a client),
-    when a new message comes, it does not clear if to call `decodeRequest` or `decodeRespones`.
+  // after
+  const options = {
+    channel,
+    encoder: JSONEncoder(),
+  };
+  ```
 
-    This version introduces a new option `encoder` to replace `serialization`. `serialization` is always working in isomorphic way.
+- fd34f22: `hint` added to the `CallbackBasedChannel.setup(jsonRPCHandlerCallback)` and `EventBasedChannel.on(listener)`.
 
-    -   If `hint` is `"request"`, `(encoder as ServerEncoding).decodeRequest` will be called first, if this method does not exist, `(encoder as IsomorphicEncoder).decode` will be called.
-    -   If `hint` is `"response"`, `(encoder as ClientEncoding).decodeResponse` will be called first, if this method does not exist, `(encoder as IsomorphicEncoder).decode` will be called.
-    -   If `hint` is not present, only `encoder.decode` will be called.
+  For an isomorphic instance of `AsyncCall` (used as both a server and a client),
+  when a new message comes, it does not clear if to call `decodeRequest` or `decodeRespones`.
 
--   0d0900b: rename "key" to "name"
+  This version introduces a new option `encoder` to replace `serialization`. `serialization` is always working in isomorphic way.
 
--   fd34f22: `BSON_Serialization` and `Msgpack_Serialization` is now deprecated
+  - If `hint` is `"request"`, `(encoder as ServerEncoding).decodeRequest` will be called first, if this method does not exist, `(encoder as IsomorphicEncoder).decode` will be called.
+  - If `hint` is `"response"`, `(encoder as ClientEncoding).decodeResponse` will be called first, if this method does not exist, `(encoder as IsomorphicEncoder).decode` will be called.
+  - If `hint` is not present, only `encoder.decode` will be called.
 
--   0431c15: rename `AsyncCallStrictJSONRPC` to `AsyncCallStrictOptions`
+- 0d0900b: rename "key" to "name"
 
--   8a38d8b: add `signal` and `forceSignal` to stop the instance
+- fd34f22: `BSON_Serialization` and `Msgpack_Serialization` is now deprecated
 
--   c9bbbd2: rename `parameterStructures` to `parameterStructure`
+- 0431c15: rename `AsyncCallStrictJSONRPC` to `AsyncCallStrictOptions`
 
--   fd34f22: expose JSON-RPC interfaces
+- 8a38d8b: add `signal` and `forceSignal` to stop the instance
 
--   fd34f22: new built-in `JSONEncoder` for the new encode option.
+- c9bbbd2: rename `parameterStructures` to `parameterStructure`
+
+- fd34f22: expose JSON-RPC interfaces
+
+- fd34f22: new built-in `JSONEncoder` for the new encode option.
 
 ### Patch Changes
 
--   fd34f22: Add `Promise<void>` into return signature of `EventBasedChannel.send`
+- fd34f22: Add `Promise<void>` into return signature of `EventBasedChannel.send`
 
 ## 6.3.1
 

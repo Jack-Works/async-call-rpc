@@ -1,7 +1,7 @@
 {
   "name": "async-call-rpc",
   "packageManager": "pnpm@8.15.1",
-  "version": "6.4.0",
+  "version": "6.4.1",
   "description": "A lightweight JSON RPC server & client",
   "main": "out/base.js",
   "module": "out/base.mjs",
@@ -87,7 +87,8 @@
     "doc:post": "git checkout HEAD -- ./docs/index.html ./docs/_config.yml",
     "doc": "run-s doc:api doc:md doc:post",
     "start": "run-p watch:rollup watch:tsc watch:test",
-    "test": "vitest --coverage"
+    "test": "vitest --coverage",
+    "ci:release": "node ./.github/publish.mjs && npx jsr publish && npx changeset publish"
   },
   "repository": {
     "type": "git",

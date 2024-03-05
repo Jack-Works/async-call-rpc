@@ -1,10 +1,15 @@
-import { globalDOMException as DOMException, DOMExceptionHeader } from './error.js'
-import type { ErrorMapFunction } from '../Async-Call.js'
-import { ERROR, isArray, isFunction, isObject, undefined } from './constants.js'
-import type { Request, SuccessResponse, ErrorResponse, ID, Response } from '../types.js'
+import { globalDOMException as DOMException, DOMExceptionHeader } from './error.ts'
+import type { ErrorMapFunction } from '../Async-Call.ts'
+import { ERROR, isArray, isFunction, isObject, undefined } from './constants.ts'
+import type { Request, SuccessResponse, ErrorResponse, ID, Response } from '../types.ts'
 
 export const jsonrpc = '2.0'
-export const makeRequest = (id: ID, method: string, params: readonly unknown[] | object, remoteStack?: string): Request => {
+export const makeRequest = (
+    id: ID,
+    method: string,
+    params: readonly unknown[] | object,
+    remoteStack?: string,
+): Request => {
     const x: Request = { jsonrpc, id, method, params, remoteStack }
     deleteUndefined(x, 'id')
     deleteFalsy(x, 'remoteStack')
@@ -64,7 +69,6 @@ export const defaultErrorMapper =
         const data: AsyncCallErrorDetail = stack ? { stack, type } : { type }
         return { code, message, data }
     }
-
 
 export const isJSONRPCObject = (data: any): data is Response | Request => {
     if (!isObject(data)) return false

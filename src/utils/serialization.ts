@@ -1,5 +1,5 @@
-import { isObject, undefined } from './constants.js'
-import type { Serialization } from '../types.js'
+import { isObject, undefined } from './constants.ts'
+import type { Serialization } from '../types.ts'
 
 /**
  * Serialization implementation that do nothing

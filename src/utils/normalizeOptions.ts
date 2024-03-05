@@ -1,5 +1,5 @@
-import type { AsyncCallOptions } from '../Async-Call.js'
-import { isBoolean } from './constants.js'
+import type { AsyncCallOptions } from '../Async-Call.ts'
+import { isBoolean } from './constants.ts'
 const undefinedToTrue = (x: undefined | boolean) => (x === void 0 ? true : x)
 type NormalizedLogOptions = readonly [
     beCalled: boolean,

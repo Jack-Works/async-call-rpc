@@ -1,0 +1,28 @@
+{
+    "name": "@works/json-rpc",
+    "version": "{{version}}",
+    "exports": {
+        ".": "./src/Async-Call.ts",
+        "./full": "./src/index.ts"
+    },
+    "include": ["src/**", "jsr.json"],
+    // https://github.com/jsr-io/jsr/issues/194
+    "exclude": [
+        "__tests__",
+        "docs",
+        "api-extractor-base.json",
+        "api-extractor.json",
+        "package.json",
+        "tsconfig.json",
+        "src/*.json",
+        "api",
+        "examples",
+        "utils-src",
+        "vite.config.ts",
+        "index.html",
+        "*.yaml",
+        "rollup.config.mjs",
+        "utils",
+        "next-docs"
+    ]
+}
