@@ -110,7 +110,6 @@
     "@swc/core": "^1.4.0",
     "@types/node": "^20.11.17",
     "@types/ws": "^8.5.10",
-    "@vitest/coverage-c8": "^0.33.0",
     "@vitest/coverage-v8": "^1.2.2",
     "@vitest/ui": "^1.2.2",
     "async-call-rpc": "link:",
